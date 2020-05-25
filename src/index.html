@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      html,
+      body {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      textarea {
+        display: block;
+        font-family: monospace;
+        font-size: 16px;
+      }
+      @media (orientation: landscape) {
+        textarea {
+          float: left;
+          width: 30%;
+          height: 100vh;
+        }
+        iframe {
+          position: absolute;
+          width: 70%;
+          height: 100vh;
+        }
+      }
+      @media (orientation: portrait) {
+        textarea {
+          width: 100%;
+          height: 40vh;
+        }
+        iframe {
+          width: 100%;
+          height: 59vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <form action="/" method="POST" target="iframe">
+      <input type="hidden" name="script_src" />
+      <input type="hidden" name="position" />
+      <input type="hidden" name="rotation" />
+      <textarea name="scene">
+// Untitled scene
+scene(
+  box()
+)
+</textarea
+      >
+    </form>
+    <iframe allowfullscreen="" name="iframe" src=""></iframe>
+
+    <script id="pan_script" src="index.ts"></script>
+
+    <script>
+      const scene_source = localStorage.getItem(location.pathname);
+      if (scene_source) {
+        document.querySelector("textarea").value = scene_source;
+      }
+
+      function submit() {
+        document.querySelector(
+          '[name="script_src"]'
+        ).value = document.querySelector("#pan_script").src;
+
+        const scene = document.querySelector("iframe").contentWindow._scene;
+        if (scene) {
+          const camera = scene.cameras[0];
+
+          document.querySelector("input[name=position]").value = JSON.stringify(
+            camera.position.asArray()
+          );
+
+          document.querySelector("input[name=rotation]").value = JSON.stringify(
+            camera.rotation.asArray()
+          );
+        }
+        document.querySelector("form").submit();
+      }
+
+      submit();
+
+      document.querySelector("textarea").addEventListener("keydown", e => {
+        if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+          submit();
+          localStorage.setItem(
+            location.pathname,
+            document.querySelector("textarea").value
+          );
+          e.preventDefault();
+        }
+      });
+    </script>
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./sw.ts")
+            .catch(err => console.log("failed to register service worker!"));
+        });
+      }
+    </script>
+  </body>
+</html>

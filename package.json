@@ -1,0 +1,37 @@
+{
+  "name": "@atmin/pan",
+  "version": "0.0.1",
+  "description": "Scripting engine for BabylonJS",
+  "keywords": [
+    "3d",
+    "scene",
+    "realtime",
+    "engine",
+    "babylonjs"
+  ],
+  "homepage": "https://github.com/atmin/pan#readme",
+  "bugs": {
+    "url": "https://github.com/atmin/pan/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atmin/pan.git"
+  },
+  "license": "MIT",
+  "author": "Atanas Minev",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^4.1.0",
+    "pepjs": "^0.5.2"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.3.1",
+    "typescript": "^3.9.3"
+  }
+}
