@@ -85,12 +85,18 @@ scene(
       submit();
 
       document.querySelector("textarea").addEventListener("keydown", e => {
+        // Cmd-S saves { urlPath: sceneSource } pair to localStorage
         if ((e.metaKey || e.ctrlKey) && e.key === "s") {
           submit();
           localStorage.setItem(
             location.pathname,
             document.querySelector("textarea").value
           );
+          e.preventDefault();
+        }
+        // Cmd+Shift+S downloads scene snapshot
+        if ((e.metaKey || e.ctrlKey) && e.key === "S") {
+          console.log("shift-s");
           e.preventDefault();
         }
       });

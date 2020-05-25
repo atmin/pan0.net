@@ -6,12 +6,12 @@ import "pepjs";
 import { UniversalCamera } from "@babylonjs/core/Cameras/universalCamera";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
-import { StandardMaterial } from "@babylonjs/core/materials/standardMaterial";
 import { RenderTargetTexture } from "@babylonjs/core/Materials/Textures/renderTargetTexture";
 import { Color3, Vector3 } from "@babylonjs/core/Maths/math";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { ReflectionProbe } from "@babylonjs/core/Probes/reflectionProbe";
 import { Scene } from "@babylonjs/core/scene";
+import { SceneSerializer } from "@babylonjs/core/Misc/sceneSerializer";
 
 import {
   box,
@@ -21,7 +21,7 @@ import {
   intersection,
   sphere,
   union,
-  image,
+  image
 } from "./objects";
 import {
   color,
@@ -34,7 +34,7 @@ import {
   roughness,
   translate,
   opacity,
-  wireframe,
+  wireframe
 } from "./operators";
 import { environment, ground, lights } from "./statements";
 import { PanOperator, PanScene, PanStatement } from "./types";
@@ -44,7 +44,7 @@ export default pan;
 function pan(
   options: { canvasSelector: string; fpsSelector: string } = {
     canvasSelector: "canvas",
-    fpsSelector: "#panfps",
+    fpsSelector: "#panfps"
   }
 ) {
   const canvas = document.querySelector(
@@ -53,7 +53,7 @@ function pan(
   const fps = document.querySelector(options.fpsSelector) as HTMLElement;
 
   const statement = (func: (...args: any) => PanStatement) =>
-    function (...args: []) {
+    function(...args: []) {
       const context = this._operators
         ? this
         : { _operators: [], ...operators, ...objects };
@@ -61,7 +61,7 @@ function pan(
     };
 
   const operator = (func: (...args: any) => PanOperator) =>
-    function (...args: []) {
+    function(...args: []) {
       const context = this._operators
         ? this
         : { _operators: [], ...operators, ...objects };
@@ -87,7 +87,7 @@ function pan(
   };
 
   const object_creator = (func: (...args: any) => PanStatement) =>
-    function (...args: []) {
+    function(...args: []) {
       const context = this._operators
         ? this
         : { _operators: [], ...operators, ...objects };
@@ -107,7 +107,7 @@ function pan(
     roughness: operator(roughness),
     microsurface: operator(microsurface),
     reflection: operator(reflection),
-    opacity: operator(opacity),
+    opacity: operator(opacity)
   };
 
   const objects = {
@@ -119,7 +119,7 @@ function pan(
     union: object_creator(union),
     difference: object_creator(difference),
     intersection: object_creator(intersection),
-    image: object_creator(image),
+    image: object_creator(image)
   };
 
   const globals = {
@@ -127,7 +127,7 @@ function pan(
     environment: statement(environment),
     lights: statement(lights),
     ...operators,
-    ...objects,
+    ...objects
   };
 
   function global() {
@@ -141,7 +141,7 @@ function pan(
     speed = 0.1,
     ellipsoid = [0.8, 0.9, 0.8],
     applyGravity = true,
-    checkCollisions = true,
+    checkCollisions = true
   } = {}) {
     return (_scene: PanScene) => {
       const camera = new UniversalCamera(
@@ -179,19 +179,19 @@ function pan(
       environment()(_scene);
     }
 
-    statements.flat().forEach((statement) => statement(_scene));
+    statements.flat().forEach(statement => statement(_scene));
 
     if (!_scene.lightsApplied) {
       lights([
         {
           type: "hemispheric",
-          direction: [0, 1, 0],
+          direction: [0, 1, 0]
         },
         {
           type: "directional",
           direction: [0, -1, 0],
-          position: [0, 10, 0],
-        },
+          position: [0, 10, 0]
+        }
       ])(_scene);
     }
 
@@ -214,7 +214,7 @@ function pan(
     (_scene.defaultMaterial as PBRMaterial).reflectionTexture =
       _scene.blurredReflectionTexture;
 
-    _scene.initializers.forEach((initializer) => initializer(_scene));
+    _scene.initializers.forEach(initializer => initializer(_scene));
 
     engine.runRenderLoop(() => {
       _scene.render();
@@ -229,6 +229,12 @@ function pan(
     });
 
     (window as any)._scene = _scene;
+
+    // Instrument so scene can be serialized
+    (_scene as any).isPhysicsEnabled = () => false;
+    (window as any).snapshot = () => {
+      return SceneSerializer.Serialize(_scene);
+    };
   }
 
   return { global, ...globals };
