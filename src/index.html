@@ -85,7 +85,7 @@ scene(
       submit();
 
       document.querySelector("textarea").addEventListener("keydown", e => {
-        // Cmd-S saves { urlPath: sceneSource } pair to localStorage
+        // Cmd-S (s)aves { urlPath: sceneSource } pair to localStorage
         if ((e.metaKey || e.ctrlKey) && e.key === "s") {
           submit();
           localStorage.setItem(
@@ -94,9 +94,14 @@ scene(
           );
           e.preventDefault();
         }
-        // Cmd+Shift+S downloads scene snapshot
-        if ((e.metaKey || e.ctrlKey) && e.key === "S") {
-          console.log("shift-s");
+        // Cmd+J puts (J)SON scene snapshot in the textarea
+        if ((e.metaKey || e.ctrlKey) && e.key === "j") {
+          const { snapshot } = document.querySelector("iframe").contentWindow;
+          if (typeof snapshot === "function") {
+            document.querySelector("textarea").value = JSON.stringify(
+              snapshot()
+            );
+          }
           e.preventDefault();
         }
       });

@@ -232,8 +232,42 @@ function pan(
 
     // Instrument so scene can be serialized
     (_scene as any).isPhysicsEnabled = () => false;
-    (window as any).snapshot = () => {
-      return SceneSerializer.Serialize(_scene);
+    const hashCode = (s: string) => {
+      let hash = 0;
+      for (let i = 0; i < s.length; i++) {
+        hash = (hash << 5) - hash + s.charCodeAt(i);
+        hash |= 0; // Convert to 32bit integer
+      }
+      return hash;
+    };
+    (window as any).snapshot = (hashLongData = true) => {
+      let result = SceneSerializer.Serialize(_scene);
+      if (hashLongData) {
+        const walk = (root: Iterable<any>) => {
+          Object.entries(root).forEach(([key, value]) => {
+            if (
+              Array.isArray(value) &&
+              value.length > 4 &&
+              !["meshes", "materials"].includes(key)
+            ) {
+              root[key] = hashCode(JSON.stringify(value));
+              return;
+            }
+            if (typeof value === "string" && value.length > 42) {
+              root[key] = hashCode(value);
+              return;
+            }
+            if (Array.isArray(value)) {
+              value.forEach(item => typeof item === "object" && walk(item));
+            }
+            if (!Array.isArray(value) && typeof value === "object" && value) {
+              walk(value);
+            }
+          });
+        };
+        walk(result);
+      }
+      return result;
     };
   }
 
