@@ -1,11 +1,13 @@
 {
   "name": "@atmin/pan",
   "version": "0.0.1",
-  "description": "Scripting engine for BabylonJS",
+  "description": "Scene format / scripting engine for BabylonJS",
   "keywords": [
     "3d",
     "scene",
+    "format",
     "realtime",
+    "scripting",
     "engine",
     "babylonjs"
   ],
@@ -23,7 +25,7 @@
   "scripts": {
     "start": "parcel src/index.html",
     "build": "",
-    "test": "jest"
+    "test": "echo `npm start` and type `tests()` in the browser console"
   },
   "dependencies": {
     "@babylonjs/core": "^4.1.0",
@@ -31,7 +33,6 @@
   },
   "devDependencies": {
     "jiff": "^0.7.3",
-    "json-diff": "^0.5.4",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.3.1",
     "typescript": "^3.9.3"

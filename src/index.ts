@@ -9,19 +9,19 @@ import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { RenderTargetTexture } from "@babylonjs/core/Materials/Textures/renderTargetTexture";
 import { Color3, Vector3 } from "@babylonjs/core/Maths/math";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import { SceneSerializer } from "@babylonjs/core/Misc/sceneSerializer";
 import { ReflectionProbe } from "@babylonjs/core/Probes/reflectionProbe";
 import { Scene } from "@babylonjs/core/scene";
-import { SceneSerializer } from "@babylonjs/core/Misc/sceneSerializer";
 
 import {
   box,
   difference,
   group,
   ico_sphere,
+  image,
   intersection,
   sphere,
-  union,
-  image
+  union
 } from "./objects";
 import {
   color,
@@ -29,11 +29,11 @@ import {
   material,
   metallic,
   microsurface,
+  opacity,
   reflection,
   rotation,
   roughness,
   translate,
-  opacity,
   wireframe
 } from "./operators";
 import { environment, ground, lights } from "./statements";
