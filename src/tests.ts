@@ -24,10 +24,19 @@ async function obtain_snapshot(scene: string) {
 
 (window as any).tests = async () => {
   const collected = {};
+
+  let total = 0;
+  let failed = 0;
+  let passed = 0;
+  let ignored = 0;
+  let new_ = 0;
+
   for (let scene of test_scenes) {
+    total++;
+
     if (scene.startsWith("//")) {
-      // Disabled test, just copy old snapshot
-      collected[scene] = snapshots[scene] || {};
+      console.warn("Ignored scene ", scene);
+      ignored++;
       continue;
     }
 
@@ -37,21 +46,40 @@ async function obtain_snapshot(scene: string) {
 
     if (!snapshots[scene]) {
       console.warn("New snapshot for ", scene);
+      new_++;
       continue;
     }
 
     const diff = jiff.diff(snapshots[scene], shot);
     if (diff.length) {
-      console.error(scene, diff);
+      console.error(scene);
+      console.log(diff);
+      failed++;
+      continue;
     }
+
+    passed++;
+    continue;
   }
+
+  const all = { ...snapshots, ...collected };
   (window as any).snapshots = {
     ts: `// DO NOT EDIT. Auto-generated test snapshots file. From JS console:
 // tests() -> run tests
 // copy(snapshots.ts) -> copies snapshots to clipboard, paste into this file
 
-export default ${JSON.stringify(collected, null, 2)}`
+export default ${JSON.stringify(all, null, 2)}`
   };
 
-  return collected;
+  console.log("total: ", total);
+  console.log("failed: ", failed);
+  console.log("passed: ", passed);
+  console.log("ignored: ", ignored);
+  console.log("new: ", new_);
+
+  if (failed || new_) {
+    console.log("Type `copy(snapshots.ts)` to copy new snapshots");
+  }
+
+  return all;
 };

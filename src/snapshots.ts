@@ -3,8 +3,8 @@
 // copy(snapshots.ts) -> copies snapshots to clipboard, paste into this file
 
 export default {
-  "//scene(box())": {
-    autoClear: false,
+  "scene(box())": {
+    autoClear: true,
     clearColor: [0.2, 0.2, 0.3, 1],
     ambientColor: [0, 0, 0],
     gravity: [0, -9.81, 0],
