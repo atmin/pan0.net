@@ -16,52 +16,27 @@ export const REFLECT_TEMPLATE = `
         height: 100%;
         touch-action: none;
       }
-      #panlogo {
+      #panfps {
         position: absolute;
         top: 1vh;
         left: 1.6vh;
         font-family: sans-serif;
-        font-size: 2.5vmax;
-        line-height: 2.5vmax;
+        font-size: 1.5vmax;
+        line-height: 1.5vmax;
         color: black;
         text-decoration: none;
         opacity: 0.5;
         text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
       }
-      #panfps {
-        display: inline-block;
-        text-align: center;
-        font-size: 1.4vmax;
-        width: 2.5vmax;
-        height: 2.5vmax;
-        border: 1px solid #fff;
-        border-radius: 50%;
-        margin-left: 0.25vmax;
-        vertical-align: middle;
-        position: relative;
-        text-shadow: none;
-      }
-      #panfps::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border: 0.2vmax solid #000;
-        border-radius: 50%;
-      }
     </style>
   </head>
   <body>
     <canvas></canvas>
-    <a id="panlogo" href="https://pan0.com" target="_blank">
-      pan<span id="panfps"></span>
-    </a>
+    <span id="panfps">♾️</span>
     <script src="// SCRIPT_SRC"></script>
     <script>
       pan().global()
-      // SCENE
+      window._scene = // SCENE
       // POSITION
       // ROTATION
     </script>

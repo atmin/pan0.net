@@ -124,6 +124,7 @@ function pan(
 
   const globals = {
     scene,
+    snapshot,
     environment: statement(environment),
     lights: statement(lights),
     ...operators,
@@ -228,7 +229,11 @@ function pan(
       engine.resize();
     });
 
-    (window as any)._scene = _scene;
+    return _scene;
+  }
+
+  function snapshot() {
+    const { _scene } = window as any;
 
     // Instrument so scene can be serialized
     (_scene as any).isPhysicsEnabled = () => false;
@@ -240,35 +245,56 @@ function pan(
       }
       return hash;
     };
-    (window as any).snapshot = (hashLongData = true) => {
-      let result = SceneSerializer.Serialize(_scene);
-      if (hashLongData) {
-        const walk = (root: Iterable<any>) => {
-          Object.entries(root).forEach(([key, value]) => {
-            if (
-              Array.isArray(value) &&
-              value.length > 4 &&
-              !["meshes", "materials"].includes(key)
-            ) {
-              root[key] = hashCode(JSON.stringify(value));
-              return;
-            }
-            if (typeof value === "string" && value.length > 42) {
-              root[key] = hashCode(value);
-              return;
-            }
-            if (Array.isArray(value)) {
-              value.forEach(item => typeof item === "object" && walk(item));
-            }
-            if (!Array.isArray(value) && typeof value === "object" && value) {
-              walk(value);
-            }
-          });
-        };
-        walk(result);
+
+    let result = SceneSerializer.Serialize(_scene);
+
+    const isArray = a =>
+      Array.isArray(a) ||
+      a instanceof Float32Array ||
+      a instanceof Float64Array;
+
+    const reUuid = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
+
+    const walk = (root: Iterable<any>) => {
+      const iterator = ([key, value]) => {
+        if (["renderOverlay"].includes(key)) {
+          delete root[key];
+          return;
+        }
+        if (
+          isArray(value) &&
+          value.length > 4 &&
+          !["meshes", "materials"].includes(key)
+        ) {
+          root[key] = hashCode(JSON.stringify(value));
+          return;
+        }
+        if (typeof value === "string" && value.match(reUuid)) {
+          root[key] = "<uuid>";
+          return;
+        }
+        if (typeof value === "string" && value.length > 42) {
+          root[key] = hashCode(value);
+          return;
+        }
+        if (isArray(value)) {
+          value.forEach(item => typeof item === "object" && walk(item));
+        }
+        if (!isArray(value) && typeof value === "object" && value) {
+          walk(value);
+        }
+      };
+
+      if (Array.isArray(root)) {
+        root.forEach((value, key) => iterator([key, value]));
+      } else {
+        Object.entries(root).forEach(iterator);
       }
-      return result;
     };
+
+    walk(result);
+
+    return result;
   }
 
   return { global, ...globals };
