@@ -1,4 +1,8 @@
+import "@babylonjs/loaders/glTF";
+
 import { MultiMaterial } from "@babylonjs/core/Materials/multiMaterial";
+import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
+import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 import { Vector3 } from "@babylonjs/core/Maths/math";
 import { CSG } from "@babylonjs/core/Meshes/csg";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
@@ -9,10 +13,8 @@ import {
   PanObject,
   PanObjects,
   PanScene,
-  PanStatement,
+  PanStatement
 } from "./types";
-import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
-import { Texture } from "@babylonjs/core/Materials/Textures/texture";
 
 export function box(size: number | [number, number, number] = 1): PanObject {
   return (_scene: PanScene) => {
@@ -23,8 +25,8 @@ export function box(size: number | [number, number, number] = 1): PanObject {
         ...(Array.isArray(size) && {
           width: size[0],
           height: size[1],
-          depth: size[2],
-        }),
+          depth: size[2]
+        })
       },
       _scene
     );
@@ -42,7 +44,7 @@ export function sphere(diameter: number | { diameter: number } = 1): PanObject {
       `sphere(${diameter})`,
       typeof diameter === "number"
         ? {
-            diameter,
+            diameter
           }
         : diameter,
       _scene
@@ -74,7 +76,7 @@ function csg(meshes: PanObjects, method: string, name: string) {
   return (_scene: PanScene) => {
     if (!meshes.length) return;
     const [first, ...rest] = [
-      ...(meshes.length == 1 && Array.isArray(meshes[0]) ? meshes[0] : meshes),
+      ...(meshes.length == 1 && Array.isArray(meshes[0]) ? meshes[0] : meshes)
     ] as FlatPanObjects;
     const firstMesh = first(_scene);
     const nameArgs = [firstMesh.id];
@@ -133,6 +135,18 @@ export function image(url: string): PanObject {
     const mesh = MeshBuilder.CreatePlane("image", {}, _scene);
     const material = new PBRMaterial("image", _scene);
     material.albedoTexture = new Texture(url, _scene);
+    material.metallic = 0;
+    material.roughness = 1;
+    mesh.material = material;
+    return mesh;
+  };
+}
+
+export function gltf(src: string | object): PanObject {
+  return (_scene: PanScene) => {
+    const mesh = MeshBuilder.CreatePlane("image", {}, _scene);
+    const material = new PBRMaterial("image", _scene);
+    // material.albedoTexture = new Texture(url, _scene);
     material.metallic = 0.3;
     material.roughness = 0.8;
     mesh.material = material;
