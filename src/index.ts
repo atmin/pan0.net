@@ -125,3 +125,12 @@ SceneLoader.Append("", "data:" + JSON.stringify(gltf), scene, () => {
   console.log("gltf loaded");
   console.log(scene);
 });
+
+if (
+  typeof document === "object" &&
+  typeof window === "object" &&
+  typeof document.querySelector === "function" &&
+  document.querySelector("canvas#panjs")
+) {
+  console.log("installing globals");
+}
