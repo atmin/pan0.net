@@ -1,303 +1,127 @@
-import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
-import "@babylonjs/core/Collisions/collisionCoordinator";
-import "@babylonjs/core/Rendering/edgesRenderer";
-import "pepjs";
+import "@babylonjs/loaders/glTF/2.0";
 
-import { UniversalCamera } from "@babylonjs/core/Cameras/universalCamera";
-import { Engine } from "@babylonjs/core/Engines/engine";
-import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
-import { RenderTargetTexture } from "@babylonjs/core/Materials/Textures/renderTargetTexture";
-import { Color3, Vector3 } from "@babylonjs/core/Maths/math";
-import { Mesh } from "@babylonjs/core/Meshes/mesh";
-import { SceneSerializer } from "@babylonjs/core/Misc/sceneSerializer";
-import { ReflectionProbe } from "@babylonjs/core/Probes/reflectionProbe";
+import { NullEngine } from "@babylonjs/core/Engines/nullEngine";
 import { Scene } from "@babylonjs/core/scene";
+import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 
-import {
-  box,
-  difference,
-  group,
-  ico_sphere,
-  image,
-  intersection,
-  sphere,
-  union
-} from "./objects";
-import {
-  color,
-  edges,
-  material,
-  metallic,
-  microsurface,
-  opacity,
-  reflection,
-  rotation,
-  roughness,
-  translate,
-  wireframe
-} from "./operators";
-import { environment, ground, lights } from "./statements";
-import { PanOperator, PanScene, PanStatement } from "./types";
-
-export default pan;
-
-function pan(
-  options: { canvasSelector: string; fpsSelector: string } = {
-    canvasSelector: "canvas",
-    fpsSelector: "#panfps"
-  }
-) {
-  const canvas = document.querySelector(
-    options.canvasSelector
-  ) as HTMLCanvasElement;
-  const fps = document.querySelector(options.fpsSelector) as HTMLElement;
-
-  const statement = (func: (...args: any) => PanStatement) =>
-    function(...args: []) {
-      const context = this._operators
-        ? this
-        : { _operators: [], ...operators, ...objects };
-      return func.apply(context, args);
-    };
-
-  const operator = (func: (...args: any) => PanOperator) =>
-    function(...args: []) {
-      const context = this._operators
-        ? this
-        : { _operators: [], ...operators, ...objects };
-      const op = func.apply(context, args);
-      context._operators.unshift(op);
-      return context;
-    };
-
-  const transform = (
-    mesh: Mesh,
-    operators: PanOperator[],
-    _scene: PanScene
-  ): Mesh => {
-    if (!mesh.material) {
-      mesh.material = _scene.defaultMaterial;
+const gltf = {
+  asset: {
+    generator: "pan.js",
+    version: "2.0"
+  },
+  scene: 0,
+  scenes: [
+    {
+      nodes: [0]
     }
-    mesh.receiveShadows = true;
-    mesh.checkCollisions = true;
-    return (operators || []).reduce(
-      (result, operator) => operator(_scene, result),
-      mesh
-    );
-  };
-
-  const object_creator = (func: (...args: any) => PanStatement) =>
-    function(...args: []) {
-      const context = this._operators
-        ? this
-        : { _operators: [], ...operators, ...objects };
-      const createMesh = func.apply(context, args);
-      return (_scene: PanScene) =>
-        transform(createMesh(_scene), context._operators, _scene);
-    };
-
-  const operators = {
-    translate: operator(translate),
-    rotation: operator(rotation),
-    edges: operator(edges),
-    color: operator(color),
-    wireframe: operator(wireframe),
-    material: operator(material),
-    metallic: operator(metallic),
-    roughness: operator(roughness),
-    microsurface: operator(microsurface),
-    reflection: operator(reflection),
-    opacity: operator(opacity)
-  };
-
-  const objects = {
-    ground: object_creator(ground),
-    box: object_creator(box),
-    sphere: object_creator(sphere),
-    ico_sphere: object_creator(ico_sphere),
-    group: object_creator(group),
-    union: object_creator(union),
-    difference: object_creator(difference),
-    intersection: object_creator(intersection),
-    image: object_creator(image)
-  };
-
-  const globals = {
-    scene,
-    snapshot,
-    environment: statement(environment),
-    lights: statement(lights),
-    ...operators,
-    ...objects
-  };
-
-  function global() {
-    for (const [key, value] of Object.entries(globals)) {
-      (window as any)[key] = value;
+  ],
+  nodes: [
+    {
+      children: [1],
+      matrix: [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      mesh: 0
     }
-  }
-
-  function camera({
-    fov = 1,
-    speed = 0.1,
-    ellipsoid = [0.8, 0.9, 0.8],
-    applyGravity = true,
-    checkCollisions = true
-  } = {}) {
-    return (_scene: PanScene) => {
-      const camera = new UniversalCamera(
-        "camera",
-        new Vector3(0, 1.8, -10),
-        _scene
-      );
-      camera.applyGravity = applyGravity;
-      camera.ellipsoid = new Vector3(...ellipsoid);
-      camera.setTarget(Vector3.Zero());
-      camera.speed = speed;
-      camera.fov = fov;
-      camera.attachControl(canvas, true);
-      camera.checkCollisions = checkCollisions;
-    };
-  }
-
-  function scene(...statements: PanStatement[]) {
-    const engine = new Engine(canvas);
-    const _scene = new Scene(engine) as PanScene;
-
-    _scene.initializers = [];
-
-    // TODO: make configurable
-    _scene.defaultMaterial = new PBRMaterial("defaultPanMaterial", _scene);
-    (_scene.defaultMaterial as PBRMaterial).albedoColor = new Color3(
-      0.7,
-      0.7,
-      0.7
-    );
-    (_scene.defaultMaterial as PBRMaterial).metallic = 0;
-    (_scene.defaultMaterial as PBRMaterial).roughness = 0.5;
-
-    if (!_scene.environmentApplied) {
-      environment()(_scene);
-    }
-
-    statements.flat().forEach(statement => statement(_scene));
-
-    if (!_scene.lightsApplied) {
-      lights([
+  ],
+  meshes: [
+    {
+      primitives: [
         {
-          type: "hemispheric",
-          direction: [0, 1, 0]
-        },
-        {
-          type: "directional",
-          direction: [0, -1, 0],
-          position: [0, 10, 0]
+          attributes: {
+            NORMAL: 1,
+            POSITION: 2
+          },
+          indices: 0,
+          mode: 4,
+          material: 0
         }
-      ])(_scene);
+      ],
+      name: "Mesh"
     }
-
-    if (!_scene.getCameraByName("camera")) {
-      camera()(_scene);
+  ],
+  accessors: [
+    {
+      bufferView: 0,
+      byteOffset: 0,
+      componentType: 5123,
+      count: 36,
+      max: [23],
+      min: [0],
+      type: "SCALAR"
+    },
+    {
+      bufferView: 1,
+      byteOffset: 0,
+      componentType: 5126,
+      count: 24,
+      max: [1.0, 1.0, 1.0],
+      min: [-1.0, -1.0, -1.0],
+      type: "VEC3"
+    },
+    {
+      bufferView: 1,
+      byteOffset: 288,
+      componentType: 5126,
+      count: 24,
+      max: [0.5, 0.5, 0.5],
+      min: [-0.5, -0.5, -0.5],
+      type: "VEC3"
     }
-
-    if (!_scene.getMeshByName("ground")) {
-      ground()(_scene);
+  ],
+  materials: [
+    {
+      pbrMetallicRoughness: {
+        baseColorFactor: [0.800000011920929, 0.0, 0.0, 1.0],
+        metallicFactor: 0.0
+      },
+      name: "Red"
     }
-    // larger size is slow
-    const probe = new ReflectionProbe(name, 256, _scene);
-    probe.refreshRate = RenderTargetTexture.REFRESHRATE_RENDER_ONCE;
-    probe.position = new Vector3(0, 1, 0);
-    probe.renderList.push(
-      _scene.getMeshByName("sky"),
-      _scene.getMeshByName("ground")
-    );
-    _scene.blurredReflectionTexture = probe.cubeTexture;
-    (_scene.defaultMaterial as PBRMaterial).reflectionTexture =
-      _scene.blurredReflectionTexture;
+  ],
+  bufferViews: [
+    {
+      buffer: 0,
+      byteOffset: 576,
+      byteLength: 72,
+      target: 34963
+    },
+    {
+      buffer: 0,
+      byteOffset: 0,
+      byteLength: 576,
+      byteStride: 12,
+      target: 34962
+    }
+  ],
+  buffers: [
+    {
+      byteLength: 648,
+      uri:
+        "data:application/octet-stream;base64,AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAvwAAAL8AAAA/AAAAPwAAAL8AAAA/AAAAvwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAPwAAAL8AAAA/AAAAvwAAAL8AAAA/AAAAPwAAAL8AAAC/AAAAvwAAAL8AAAC/AAAAPwAAAD8AAAA/AAAAPwAAAL8AAAA/AAAAPwAAAD8AAAC/AAAAPwAAAL8AAAC/AAAAvwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAvwAAAD8AAAC/AAAAPwAAAD8AAAC/AAAAvwAAAL8AAAA/AAAAvwAAAD8AAAA/AAAAvwAAAL8AAAC/AAAAvwAAAD8AAAC/AAAAvwAAAL8AAAC/AAAAvwAAAD8AAAC/AAAAPwAAAL8AAAC/AAAAPwAAAD8AAAC/AAABAAIAAwACAAEABAAFAAYABwAGAAUACAAJAAoACwAKAAkADAANAA4ADwAOAA0AEAARABIAEwASABEAFAAVABYAFwAWABUA"
+    }
+  ]
+};
 
-    _scene.initializers.forEach(initializer => initializer(_scene));
+const scene = new Scene(new NullEngine());
 
-    engine.runRenderLoop(() => {
-      _scene.render();
-      if (fps) {
-        const val = parseInt(engine.getFps().toFixed(), 10);
-        if (isFinite(val)) fps.innerText = val.toString();
-      }
-    });
-
-    window.addEventListener("resize", () => {
-      engine.resize();
-    });
-
-    return _scene;
-  }
-
-  function snapshot() {
-    const { _scene } = window as any;
-
-    // Instrument so scene can be serialized
-    (_scene as any).isPhysicsEnabled = () => false;
-    const hashCode = (s: string) => {
-      let hash = 0;
-      for (let i = 0; i < s.length; i++) {
-        hash = (hash << 5) - hash + s.charCodeAt(i);
-        hash |= 0; // Convert to 32bit integer
-      }
-      return hash;
-    };
-
-    let result = SceneSerializer.Serialize(_scene);
-
-    const isArray = a =>
-      Array.isArray(a) ||
-      a instanceof Float32Array ||
-      a instanceof Float64Array;
-
-    const reUuid = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
-
-    const walk = (root: Iterable<any>) => {
-      const iterator = ([key, value]) => {
-        if (["renderOverlay"].includes(key)) {
-          delete root[key];
-          return;
-        }
-        if (
-          isArray(value) &&
-          value.length > 4 &&
-          !["meshes", "materials"].includes(key)
-        ) {
-          root[key] = hashCode(JSON.stringify(value));
-          return;
-        }
-        if (typeof value === "string" && value.match(reUuid)) {
-          root[key] = "<uuid>";
-          return;
-        }
-        if (typeof value === "string" && value.length > 42) {
-          root[key] = hashCode(value);
-          return;
-        }
-        if (isArray(value)) {
-          value.forEach(item => typeof item === "object" && walk(item));
-        }
-        if (!isArray(value) && typeof value === "object" && value) {
-          walk(value);
-        }
-      };
-
-      if (Array.isArray(root)) {
-        root.forEach((value, key) => iterator([key, value]));
-      } else {
-        Object.entries(root).forEach(iterator);
-      }
-    };
-
-    walk(result);
-
-    return result;
-  }
-
-  return { global, ...globals };
-}
-
-(window as any).pan = pan;
+SceneLoader.Append("", "data:" + JSON.stringify(gltf), scene, () => {
+  console.log("gltf loaded");
+  console.log(scene);
+});
