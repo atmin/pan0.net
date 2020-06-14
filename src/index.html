@@ -1,5 +1,21 @@
-<canvas id="panjs"></canvas>
+<style>
+  html,
+  body {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+  }
+</style>
+<canvas></canvas>
 <script src="index.ts"></script>
 <script>
-  scene(box());
+  Object.keys(pan).forEach(key => (window[key] = pan[key]));
+  scene(box()).then(glb => render(document.querySelector("canvas"))(glb));
 </script>
