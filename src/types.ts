@@ -1,8 +1,8 @@
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
-import { Scene } from "@babylonjs/core/scene";
+import { Scene as BabylonScene } from "@babylonjs/core/scene";
 import { BaseTexture } from "@babylonjs/core/Materials/Textures/baseTexture";
 
-export type PanScene = Scene & {
+export type PanScene = BabylonScene & {
   initializers: Array<(scene: PanScene) => void>;
   environmentApplied: boolean;
   lightsApplied: boolean;
@@ -19,35 +19,3 @@ export type FlatPanObjects = Array<PanObject>;
 export type PanObjects = FlatPanObjects | Array<FlatPanObjects>;
 
 export type PanVector3 = [number, number, number];
-
-//
-//
-//
-
-export type ObjectEventListener = (
-  event:
-    | "tick"
-    | "click"
-    | "enter"
-    | "leave"
-    | "hover"
-    | "keyup"
-    | "keydown"
-    | "keypress",
-  handler: (event: Event) => ObjectChain | null | undefined | false
-) => ObjectChain;
-
-export type ObjectOperator = (
-  arg?: number | object | [number, number, number]
-) => ObjectChain;
-
-/**
- * Object with transformations and event handlers.
- */
-export interface ObjectChain extends Function {
-  /**
-   * Attach an event handler.
-   */
-  on: ObjectEventListener;
-  env_snapshot: ObjectOperator;
-}
