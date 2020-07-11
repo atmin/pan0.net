@@ -7,6 +7,63 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { ReflectionProbe } from "@babylonjs/core/Probes/reflectionProbe";
 import { Scene as BabylonScene } from "@babylonjs/core/scene";
 
+/**
+ * ## Main functions
+ */
+
+/**
+ * Render scene to canvas.
+ * @param canvas The canvas to render to
+ * @param createScene Scene created by {@linkcode scene}
+ *
+ * @example
+ * ```
+ * render(
+ *   document.querySelector('canvas'),
+ *   scene(box().translate([0, 0.5, 0]))
+ * )
+ * ```
+ */
+export const render = (
+  canvas: HTMLCanvasElement,
+  createScene: SceneCreator
+) => {};
+
+/**
+ * Create a scene.
+ * @param objects Scene objects
+ * @returns A function that can be passed to {@linkcode render}
+ *
+ * @example
+ * ```
+ * // Reflective red sphere on a light gray box
+ * scene(
+ *   box([3, 1, 3]),
+ *   sphere(1.5)
+ *     .translate([0, 1, 0])
+ *     .albedo_color(COLOR_RED)
+ *     .metallic(1)
+ *     .roughness(0)
+ *     .env_snapshot(0)
+ * )
+ * ```
+ */
+export const scene = (
+  ...objects: Array<SceneObject>
+): SceneCreator => scene => {};
+
+/**
+ * ## Scene object creators
+ */
+
+/**
+ * Create a box.
+ * @param size
+ *   nothing: 1 meter cube
+ *   integer: cube of `size` meters
+ *   [x, y, z]: box of specified sizes
+ *
+ */
 export const box = (size: number | [number, number, number] = 1) =>
   new SceneObject(scene => {
     const mesh = MeshBuilder.CreateBox(
@@ -47,6 +104,8 @@ interface Scene extends BabylonScene {
   lightsApplied: boolean;
   blurredReflectionTexture: BaseTexture;
 }
+
+type SceneCreator = (scene: Scene) => void;
 
 type LazyMesh = (scene: Scene) => Mesh;
 
@@ -96,24 +155,3 @@ class SceneObject {
     return this;
   }
 }
-
-type SceneCreator = (scene: Scene) => void;
-
-/**
- * Make a scene
- * @param objects Scene objects
- * @returns A function that can be passed to {@linkcode render}
- */
-export const scene = (
-  ...objects: Array<SceneObject>
-): SceneCreator => scene => {};
-
-/**
- * Render scene to canvas
- * @param canvas The canvas to render to, e.g. `document.querySelector('canvas')`
- * @param createScene Scene created by {@linkcode scene}
- */
-export const render = (
-  canvas: HTMLCanvasElement,
-  createScene: SceneCreator
-) => {};
