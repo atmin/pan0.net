@@ -24,7 +24,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "",
+    "build": "parcel build src/pan.bundle.ts --out-file static/pan.bundle.js",
     "test": "echo `npm start` and type `tests()` in the browser console"
   },
   "dependencies": {
