@@ -74,7 +74,7 @@ export const scene = (...objects: Array<SceneObject>): SceneCreator => (
   scene: Scene
 ) => {
   objects
-    .filter(Boolean)
+    .filter((o) => o instanceof SceneObject)
     .flat()
     .forEach((obj) => obj.appendTo(scene));
 
@@ -310,7 +310,36 @@ class SceneObject {
     return this;
   }
 
-  env_snapshot(): SceneObject {
+  translate(v: Vec3): this {
+    this.operations.push((scene, mesh) => {
+      mesh.position = new Vector3(...v).addInPlace(mesh.position);
+      return mesh;
+    });
+    return this;
+  }
+
+  color(c: Vec3): this {
+    this.operations.push((scene, mesh) => {
+      const $color = JSON.stringify(c);
+      const $position = JSON.stringify(mesh.position.asArray());
+      const name = `material(${$color},${$position}).${mesh.name}`;
+      const material =
+        (scene.getMaterialByName(name) as PBRMaterial) ||
+        new PBRMaterial(name, scene);
+      material.albedoColor = new Color3(...c);
+      material.metallic = 0;
+      material.roughness = 1;
+      scene.initializers.push(() => {
+        material.reflectionTexture = scene.blurredReflectionTexture;
+      });
+      mesh.material = material;
+      mesh.name = name;
+      return mesh;
+    });
+    return this;
+  }
+
+  env_snapshot(): this {
     this.operations.push((scene, mesh) => {
       scene.initializers.push(() => {
         const name = `reflection([${mesh.position.toString}]).${mesh.name}`;
