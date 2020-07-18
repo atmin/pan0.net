@@ -35,8 +35,11 @@ export const REFLECT_TEMPLATE = `
     <span id="panfps">♾️</span>
     <script src="// SCRIPT_SRC"></script>
     <script>
-      pan().global()
-      window._scene = // SCENE
+      const sceneCreator = // SCENE
+      render(document.querySelector("canvas"), scene => {
+        window._scene = scene;
+        sceneCreator(scene);
+      })
       // POSITION
       // ROTATION
     </script>
