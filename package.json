@@ -28,8 +28,8 @@
     "test": "echo `npm start` and type `tests()` in the browser console"
   },
   "dependencies": {
-    "@babylonjs/core": "^4.1.0",
-    "@babylonjs/loaders": "^4.1.0",
+    "@babylonjs/core": "^4.2.0-alpha.26",
+    "@babylonjs/loaders": "^4.2.0-alpha.26",
     "pepjs": "^0.5.2"
   },
   "devDependencies": {

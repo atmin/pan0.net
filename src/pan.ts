@@ -21,6 +21,7 @@ import { PBRMaterial } from "@babylonjs/core/Materials/PBR/pbrMaterial";
 import { ReflectionProbe } from "@babylonjs/core/Probes/reflectionProbe";
 import { RenderTargetTexture } from "@babylonjs/core/Materials/Textures/renderTargetTexture";
 import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { UniversalCamera } from "@babylonjs/core/Cameras/universalCamera";
 
 /**
@@ -46,8 +47,12 @@ export const render = (
 ) => {
   const engine = new Engine(canvas);
   const scene = new BabylonScene(engine) as Scene;
+  const defaultMaterial = new StandardMaterial("defaultMaterial", scene);
+  defaultMaterial.diffuseColor = new Color3(0.5, 0.7, 0.5);
+  scene.defaultMaterial = defaultMaterial;
   scene.initializers = [];
   createScene(scene);
+  scene.initializers.forEach((initializer) => initializer());
   engine.runRenderLoop(() => scene.render());
 };
 
@@ -74,15 +79,21 @@ export const scene = (...objects: Array<SceneObject>): SceneCreator => (
   scene: Scene
 ) => {
   objects
-    .filter((o) => o instanceof SceneObject)
+    .filter((o) => o instanceof SceneObject || typeof o === "function")
     .flat()
-    .forEach((obj) => obj.appendTo(scene));
+    .forEach((obj) => {
+      if (obj instanceof SceneObject) {
+        obj.appendTo(scene);
+      } else if (typeof obj === "function") {
+        (obj as SceneCreator)(scene);
+      }
+    });
 
   if (!scene.lightsApplied) {
     lights([
       {
         type: "hemispheric",
-        direction: [0, 1, 0],
+        direction: [0.5, 1, 0.5],
       },
       {
         type: "directional",
@@ -118,9 +129,9 @@ export const camera = ({
   camera.checkCollisions = checkCollisions;
 };
 
-type Vec3 = [number, number, number];
+export type Vec3 = [number, number, number];
 
-interface LightDefinition {
+export interface LightDefinition {
   type: "hemispheric" | "directional";
   position?: Vec3;
   direction?: Vec3;
@@ -142,8 +153,8 @@ export const lights = (
             new Vector3(...(def.direction || [0, -1, 0])),
             scene
           );
-          light.position = new Vector3(...(def.position || [0, 10, 0]));
-          light.intensity = def.intensity || 1;
+          light.position = new Vector3(...(def.position || [0, 4, 0]));
+          light.intensity = def.intensity || 0.1;
           light.lightmapMode = Light.LIGHTMAP_SHADOWSONLY;
           return light;
         }
@@ -246,9 +257,9 @@ export const box = (size: number | [number, number, number] = 1) =>
     return mesh;
   });
 
-type EventHandler = (event: Event) => SceneObject | void;
+export type EventHandler = (event: Event) => SceneObject | void;
 
-interface EventMap {
+export interface EventMap {
   tick: Array<EventHandler>;
   click: Array<EventHandler>;
   pointerenter: Array<EventHandler>;
@@ -259,7 +270,7 @@ interface EventMap {
   keypress: Array<EventHandler>;
 }
 
-interface Scene extends BabylonScene {
+export interface Scene extends BabylonScene {
   initializers: Array<() => void>;
   environmentApplied: boolean;
   lightsApplied: boolean;
@@ -273,7 +284,7 @@ type LazyMesh = (scene: Scene) => Mesh;
 /**
  * Scene object with transformations and event handlers.
  */
-class SceneObject {
+export class SceneObject {
   lazyMesh: LazyMesh;
   operations: Array<(scene: Scene, mesh: Mesh) => Mesh>;
   eventMap: EventMap;
