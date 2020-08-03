@@ -30,4 +30,7 @@ export default (canvas: HTMLCanvasElement, createScene: SceneCreator) => {
   createScene(scene);
   scene.initializers.forEach((initializer) => initializer());
   engine.runRenderLoop(() => scene.render());
+  window.addEventListener('resize', () => {
+    engine.resize();
+  });
 };
