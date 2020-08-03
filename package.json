@@ -1,7 +1,7 @@
 {
   "name": "@atmin/pan",
   "version": "0.0.1",
-  "description": "Scene format / scripting engine for BabylonJS",
+  "description": "Scene format and scripting engine for the 3D web",
   "keywords": [
     "3d",
     "scene",
@@ -25,7 +25,7 @@
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
-    "test": "echo `npm start` and type `tests()` in the browser console"
+    "test": "echo TODO: jest/snapshots/NullEngine"
   },
   "dependencies": {
     "@babylonjs/core": "^4.2.0-alpha.26",

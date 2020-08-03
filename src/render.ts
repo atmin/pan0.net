@@ -33,4 +33,6 @@ export default (canvas: HTMLCanvasElement, createScene: SceneCreator) => {
   window.addEventListener('resize', () => {
     engine.resize();
   });
+
+  (window as any)._scene = scene;
 };

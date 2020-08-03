@@ -24,9 +24,9 @@ import { Scene, SceneCreator } from './types';
  * )
  * ```
  */
-export default (...objects: Array<SceneObject>): SceneCreator => (
-  scene: Scene,
-) => {
+export default (
+  ...objects: Array<SceneObject | SceneCreator>
+): SceneCreator => (scene: Scene) => {
   objects
     .filter((o) => o instanceof SceneObject || typeof o === 'function')
     .flat()
