@@ -23,8 +23,8 @@
   "author": "Atanas Minev",
   "main": "src/index.ts",
   "scripts": {
-    "start": "parcel src/index.html",
-    "build": "parcel build src/pan.bundle.ts --out-file static/pan.bundle.js",
+    "start": "snowpack dev",
+    "build": "snowpack build",
     "test": "echo `npm start` and type `tests()` in the browser console"
   },
   "dependencies": {
@@ -34,16 +34,21 @@
   },
   "devDependencies": {
     "jiff": "^0.7.3",
-    "parcel-bundler": "^1.12.4",
-    "parcel-plugin-static-files-copy": "^2.3.1",
-    "typescript": "^3.9.3"
+    "@snowpack/plugin-run-script": "^2.0.2",
+    "prettier": "^2.0.5",
+    "snowpack": "^2.7.5",
+    "typescript": "^3.9.7"
   },
   "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
     "overrides": [
       {
-        "files": "src/example_scenes.js",
+        "files": "src/index.ts",
         "options": {
           "printWidth": 40,
+          "singleQuote": true,
+          "trailingComma": "all",
           "semi": false
         }
       }
