@@ -1,4 +1,5 @@
 import camera from './camera';
+import environment from './environment';
 import ground from './ground';
 import lights from './lights';
 import SceneObject from './SceneObject';
@@ -36,6 +37,10 @@ export default (...objects: Array<SceneObject>): SceneCreator => (
         (obj as SceneCreator)(scene);
       }
     });
+
+  if (!scene.environmentApplied) {
+    environment()(scene);
+  }
 
   if (!scene.lightsApplied) {
     lights([
