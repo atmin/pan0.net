@@ -66,7 +66,7 @@ export default class SceneObject implements ISceneObject {
     this.operations.push((scene, mesh) => {
       const $color = JSON.stringify(c);
       const $position = JSON.stringify(mesh.position.asArray());
-      const name = `material(${$color},${$position}).${mesh.name}`;
+      const name = `${mesh.name}.color(${$color},${$position})`;
       const material =
         (scene.getMaterialByName(name) as PBRMaterial) ||
         new PBRMaterial(name, scene);
@@ -77,6 +77,26 @@ export default class SceneObject implements ISceneObject {
         material.reflectionTexture = scene.blurredReflectionTexture;
       });
       mesh.material = material;
+      mesh.name = name;
+      return mesh;
+    });
+    return this;
+  }
+
+  metallic(value = 1): this {
+    this.operations.push((scene, mesh) => {
+      const name = `${mesh.name}.metallic(${value})`;
+      (mesh.material as PBRMaterial).metallic = value;
+      mesh.name = name;
+      return mesh;
+    });
+    return this;
+  }
+
+  roughness(value = 1): this {
+    this.operations.push((scene, mesh) => {
+      const name = `${mesh.name}.roughness(${value})`;
+      (mesh.material as PBRMaterial).metallic = value;
       mesh.name = name;
       return mesh;
     });
