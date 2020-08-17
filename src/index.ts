@@ -3,6 +3,7 @@ import ground from './ground'
 import lights from './lights'
 import render from './render'
 import scene from './scene'
+import sphere from './sphere'
 
 render(
   document.querySelector(
@@ -17,12 +18,18 @@ render(
 
     ground(),
 
-    box(3)
-      .translate([-1, 0.1, 2])
-      .color([0.5, 1, 0.5])
-      .metallic(0)
-      .env_snapshot()
-      .roughness(1),
+    sphere(2)
+      .translate([0, 0, 2])
+      .color([1.5, 1, 0.7])
+      .metallic(1)
+      .roughness(0)
+      .env_snapshot(),
+
+    box(0.5)
+      .translate([-1, 0.1, -2])
+      .color([0.5, 1, 0.5]),
+    // .metallic(0)
+    // .roughness(1),
 
     box()
       .translate([0, 0.1, 0])

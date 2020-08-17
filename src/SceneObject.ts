@@ -106,7 +106,7 @@ export default class SceneObject implements ISceneObject {
   env_snapshot(): this {
     this.operations.push((scene, mesh) => {
       scene.initializers.push(() => {
-        const name = `reflection([${mesh.position.toString}]).${mesh.name}`;
+        const name = `reflection_probe([${mesh.position.toString}])`;
         const probe = new ReflectionProbe(name, 256, scene);
         probe.refreshRate = RenderTargetTexture.REFRESHRATE_RENDER_ONCE;
         probe.position = mesh.position;
