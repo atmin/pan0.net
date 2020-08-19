@@ -1,10 +1,6 @@
 name: Build, test and deploy on https://pan0.com
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
   workflow_dispatch:
 
 jobs:
