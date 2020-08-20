@@ -1,4 +1,4 @@
-import { BackgroundMaterial } from '@babylonjs/core/materials/Background';
+import { BackgroundMaterial } from '@babylonjs/core/Materials/Background';
 import { Color3 } from '@babylonjs/core/Maths/math';
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
 
