@@ -1,0 +1,7 @@
+name = "pan0net"
+type = "webpack"
+route = "pan0.net/*"
+
+[site]
+bucket = "./public"
+entry-point = "workers-site"

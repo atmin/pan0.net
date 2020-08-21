@@ -1,4 +1,4 @@
-name: Build, test and deploy on https://pan0.com
+name: Build, test, deploy
 
 on:
   workflow_dispatch:
@@ -6,17 +6,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
-      - name: Build
+
+      - name: npm install
         run: |
           npm install
-          npm run build
-      - name: Test
+
+      - name: npm run build
         run: |
-          echo Testing build/
+          npm run build
+
+      - name: npm run test
+        run: |
           npm run test
-      - name: Publish
+
+      - name: cp -r build/* public/
+        run: |
+          cp -r build/* public
+
+      - name: Publish to https://pan0.net
         uses: cloudflare/wrangler-action@1.2.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
