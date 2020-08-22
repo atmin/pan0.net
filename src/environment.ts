@@ -12,7 +12,7 @@ import { Scene } from './types';
 export default () => (scene: Scene) => {
   scene.gravity = new Vector3(...[0, -9.81, 0]);
   scene.collisionsEnabled = true;
-  scene.environmentTexture = new CubeTexture('/pan.env', scene);
+  scene.environmentTexture = new CubeTexture('/assets/env/default.env', scene);
 
   const skyMaterial = new PBRMaterial('sky_material', scene);
   skyMaterial.backFaceCulling = false;

@@ -38,12 +38,17 @@ async function handleEvent(event) {
   // options.mapRequestToAsset = handlePrefix(/^\/docs/)
 
   try {
+    options.cacheControl = {
+      browserTTL: 3600,
+    };
+
     if (DEBUG) {
       // customize caching
       options.cacheControl = {
         bypassCache: true,
       };
     }
+
     const response = await getAssetFromKV(event, options);
     const headers = new Headers(response.headers);
     headers.set('Access-Control-Allow-Origin', '*');

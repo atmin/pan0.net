@@ -3,5 +3,5 @@ type = "webpack"
 route = "pan0.net/*"
 
 [site]
-bucket = "./public"
+bucket = "./build"
 entry-point = "workers-site"
