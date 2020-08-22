@@ -54,7 +54,7 @@ scene(
     </form>
     <iframe allowfullscreen="" name="iframe" src=""></iframe>
 
-    <script id="pan_script" src="index.ts"></script>
+    <script id="pan_script" src="pan.bundle.ts"></script>
 
     <script>
       const scene_source = localStorage.getItem(location.pathname);
@@ -84,7 +84,7 @@ scene(
 
       submit();
 
-      document.querySelector("textarea").addEventListener("keydown", e => {
+      document.querySelector("textarea").addEventListener("keydown", (e) => {
         // Cmd-S (s)aves { urlPath: sceneSource } pair to localStorage
         if ((e.metaKey || e.ctrlKey) && e.key === "s") {
           submit();
@@ -115,7 +115,7 @@ scene(
         window.addEventListener("load", () => {
           navigator.serviceWorker
             .register("./sw.ts")
-            .catch(err => console.log("failed to register service worker!"));
+            .catch((err) => console.log("failed to register service worker!"));
         });
       }
     </script>

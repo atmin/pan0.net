@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="icon"
+      href="/favicon.ico"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <title>pan</title>
+    <style>
+      html,
+      body {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <noscript
+      >JavaScript is required to run
+      this 3D scene.</noscript
+    >
+    <script type="module">
+      import box from '/box.js'
+      import ground from '/ground.js'
+      import lights from '/lights.js'
+      import render from '/render.js'
+      import scene from '/scene.js'
+      import sphere from '/sphere.js'
+
+      render(
+        document.querySelector(
+          'canvas',
+        ),
+
+        scene(
+          lights([
+            { type: 'directional' },
+            { type: 'hemispheric' },
+          ]),
+
+          ground(),
+
+          sphere(2)
+            .translate([0, 0, 2])
+            .color([1.5, 1, 0.7])
+            .metallic(1)
+            .roughness(0)
+            .env_snapshot(),
+
+          box(0.5)
+            .translate([-1, 0.1, -2])
+            .color([0.5, 1, 0.5]),
+          // .metallic(0)
+          // .roughness(1),
+
+          box()
+            .translate([0, 0.1, 0])
+            .color([1, 0.5, 1]),
+
+          ...[
+            1,
+            1.5,
+            2,
+            2.5,
+            3,
+            3.5,
+          ].map((a, i) =>
+            box(a)
+              .translate([
+                a *
+                  4 *
+                  (i % 2 ? -1 : 1),
+                i % 2 ? 0 : 0.1,
+                0,
+              ])
+              .color([a / 4, i / 5, 0]),
+          ),
+        ),
+      )
+    </script>
+  </body>
+</html>

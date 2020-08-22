@@ -5,7 +5,7 @@ import {
   Color3,
   Color4,
   Quaternion,
-  Vector3,
+  Vector3
 } from "@babylonjs/core/Maths/math";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import { ReflectionProbe } from "@babylonjs/core/Probes/reflectionProbe";
@@ -24,7 +24,7 @@ export function rotation(
 ): PanOperator {
   return (_scene: PanScene, mesh: Mesh) => {
     if (angles.length === 3) {
-      mesh.rotation = new Vector3(...angles.map((a) => (a * Math.PI) / 180));
+      mesh.rotation = new Vector3(...angles.map(a => (a * Math.PI) / 180));
     } else if (angles.length === 4) {
       mesh.rotationQuaternion = new Quaternion(...angles);
     }
@@ -35,7 +35,7 @@ export function rotation(
 export function edges({
   epsilon = 0.999,
   width = 1,
-  color = [0.2, 0.2, 0.2, 1],
+  color = [0.2, 0.2, 0.2, 1]
 } = {}): PanOperator {
   return (_scene: PanScene, mesh: Mesh) => {
     mesh.enableEdgesRendering(epsilon);
@@ -77,7 +77,7 @@ export function reflection(): PanOperator {
       probe.refreshRate = RenderTargetTexture.REFRESHRATE_RENDER_ONCE;
       probe.position = mesh.position;
       _scene.meshes.forEach(
-        (sceneMesh) => sceneMesh !== mesh && probe.renderList.push(sceneMesh)
+        sceneMesh => sceneMesh !== mesh && probe.renderList.push(sceneMesh)
       );
       // TODO: do not overwrite all instances of this material
       (mesh.material as PBRMaterial).reflectionTexture = probe.cubeTexture;
