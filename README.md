@@ -1,5 +1,7 @@
 # pan0.net
 
+## Warning! Right now, it's just an experiment
+
 ## What
 
 `pan0.net` is a CDN and a MIT-licensed library for rapid creation of interlinked, interactive 3D scenes.
