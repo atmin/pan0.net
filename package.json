@@ -1,5 +1,5 @@
 {
-  "name": "@atmin/pan",
+  "name": "pan0.net",
   "version": "0.0.1",
   "description": "Scene format and scripting engine for the 3D web",
   "keywords": [
@@ -11,13 +11,13 @@
     "engine",
     "babylonjs"
   ],
-  "homepage": "https://github.com/atmin/pan#readme",
+  "homepage": "https://github.com/atmin/pan0.net",
   "bugs": {
-    "url": "https://github.com/atmin/pan/issues"
+    "url": "https://github.com/atmin/pan0.net/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/atmin/pan.git"
+    "url": "git+https://github.com/atmin/pan0.net.git"
   },
   "license": "MIT",
   "author": "Atanas Minev",
