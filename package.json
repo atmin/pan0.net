@@ -44,7 +44,7 @@
     "trailingComma": "all",
     "overrides": [
       {
-        "files": "public/index.html",
+        "files": "public/examples/*",
         "options": {
           "printWidth": 40,
           "singleQuote": true,
