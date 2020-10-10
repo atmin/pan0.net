@@ -48,8 +48,7 @@
         "options": {
           "printWidth": 40,
           "singleQuote": true,
-          "trailingComma": "all",
-          "semi": false
+          "trailingComma": "all"
         }
       }
     ]

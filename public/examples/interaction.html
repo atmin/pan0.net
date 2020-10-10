@@ -9,30 +9,54 @@
 ></canvas>
 
 <script type="module">
-  import render from 'https://pan0.net/render.js'
-  import scene from 'https://pan0.net/scene.js'
-  import box from 'https://pan0.net/box.js'
-  import query from 'https://pan0.net/query.js'
+  import render from 'https://pan0.net/render.js';
+  import scene from 'https://pan0.net/scene.js';
+  import box from 'https://pan0.net/box.js';
+  import equals from 'https://pan0.net/equals.js';
+  import onFrame from 'https://pan0.net/onFrame.js';
   import {
     RED,
     GREEN,
-  } from 'https://pan0.net/colors.js'
+    BLUE,
+  } from 'https://pan0.net/colors.js';
 
   render(
     scene(
-      box().color(RED).name('red'),
+      box()
+        .color(RED)
+        .name('rotationTarget'),
 
       box()
-        .name('green')
         .color(GREEN)
         .position([2, 0, 0])
-        .onClick(() =>
-          query('red').rotateZ(0.05),
+        .onClick(
+          ({ self, objectByName }) => {
+            // Cycle red-green-blue colors on this object
+            self.color(
+              equals(self.color(), RED)
+                ? GREEN
+                : equals(
+                    self.color(),
+                    GREEN,
+                  )
+                ? BLUE
+                : RED,
+            );
+            // Rotate another scene object
+            objectByName(
+              'rotationTarget',
+            ).rotateZ(0.05);
+          },
         ),
 
-      onFrame((milliseconds) => {
-        //
-      }),
+      onFrame(
+        ({
+          milliseconds,
+          objectByName,
+        }) => {
+          //
+        },
+      ),
     ),
-  )
+  );
 </script>
