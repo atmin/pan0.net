@@ -24,13 +24,13 @@
     scene(
       box()
         .color(RED)
-        .name('rotationTarget'),
+        .id('rotationTarget'),
 
       box()
         .color(GREEN)
         .position([2, 0, 0])
         .onClick(
-          ({ self, objectByName }) => {
+          self => {
             // Cycle red-green-blue colors on this object
             self.color(
               equals(self.color(), RED)
@@ -43,17 +43,14 @@
                 : RED,
             );
             // Rotate another scene object
-            objectByName(
+            scene.objects.get(
               'rotationTarget',
             ).rotateZ(0.05);
           },
         ),
 
       onFrame(
-        ({
-          milliseconds,
-          objectByName,
-        }) => {
+        () => {
           //
         },
       ),

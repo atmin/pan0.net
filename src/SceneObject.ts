@@ -54,6 +54,14 @@ export default class SceneObject implements ISceneObject {
     return this;
   }
 
+  position(v: Vec3): this {
+    this.operations.push((scene, mesh) => {
+      mesh.position = new Vector3(...v);
+      return mesh;
+    });
+    return this;
+  }
+
   translate(v: Vec3): this {
     this.operations.push((scene, mesh) => {
       mesh.position = new Vector3(...v).addInPlace(mesh.position);
@@ -62,7 +70,31 @@ export default class SceneObject implements ISceneObject {
     return this;
   }
 
-  color(c: Vec3): this {
+  rotateX(radians: number): this {
+    this.operations.push((scene, mesh) => {
+      // TODO: implement
+      return mesh;
+    });
+    return this;
+  }
+
+  rotateY(radians: number): this {
+    this.operations.push((scene, mesh) => {
+      // TODO: implement
+      return mesh;
+    });
+    return this;
+  }
+
+  rotateZ(radians: number): this {
+    this.operations.push((scene, mesh) => {
+      // TODO: implement
+      return mesh;
+    });
+    return this;
+  }
+
+  color(c: Vec3): SceneObject {
     this.operations.push((scene, mesh) => {
       const $color = JSON.stringify(c);
       const $position = JSON.stringify(mesh.position.asArray());
@@ -103,6 +135,7 @@ export default class SceneObject implements ISceneObject {
     return this;
   }
 
+  // TODO: extract outside SceneObject, remove ReflectionProbe dependency
   env_snapshot(): this {
     this.operations.push((scene, mesh) => {
       scene.initializers.push(() => {

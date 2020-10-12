@@ -3,7 +3,7 @@ import environment from './environment';
 import ground from './ground';
 import lights from './lights';
 import SceneObject from './SceneObject';
-import { Scene, SceneCreator } from './types';
+import { Scene, SceneCreator, MutableSceneObject } from './types';
 
 /**
  * Create a scene from list of objects
@@ -24,9 +24,9 @@ import { Scene, SceneCreator } from './types';
  * )
  * ```
  */
-export default (
-  ...objects: Array<SceneObject | SceneCreator>
-): SceneCreator => (scene: Scene) => {
+const scene = (...objects: Array<SceneObject | SceneCreator>): SceneCreator => (
+  scene: Scene,
+) => {
   objects
     .filter((o) => o instanceof SceneObject || typeof o === 'function')
     .flat()
@@ -64,3 +64,39 @@ export default (
     ground()(scene);
   }
 };
+
+scene.objects = {
+  get: (id: string): MutableSceneObject => {
+    return {
+      replace() {},
+      remove() {},
+
+      translate() {
+        return this;
+      },
+      position() {
+        return this;
+      },
+      rotateX() {
+        return this;
+      },
+      rotateY() {
+        return this;
+      },
+      rotateZ() {
+        return this;
+      },
+      color() {
+        return this;
+      },
+      metallic() {
+        return this;
+      },
+      roughness() {
+        return this;
+      },
+    };
+  },
+};
+
+export default scene;

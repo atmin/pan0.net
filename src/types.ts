@@ -13,12 +13,25 @@ export type SceneCreator = (scene: Scene) => void;
 
 export type LazyMesh = (scene: Scene) => Mesh;
 
-export interface SceneObject {
-  on(event: keyof EventMap, handler: EventHandler): SceneObject;
-  translate(v: Vec3): SceneObject;
-  color(c: Vec3): SceneObject;
-  env_snapshot(): SceneObject;
+interface ISceneObject<T> {
+  position(v: Vec3): T;
+  translate(v: Vec3): T;
+  rotateX(radians: number): T;
+  rotateY(radians: number): T;
+  rotateZ(radians: number): T;
+  color(c: Vec3): T;
+  metallic(value: number): T;
+  roughness(value: number): T;
 }
+
+export type SceneObject = {
+  on(event: keyof EventMap, handler: EventHandler): SceneObject;
+} & ISceneObject<SceneObject>;
+
+export type MutableSceneObject = {
+  replace: (...objects: SceneObject[]) => void;
+  remove: () => void;
+} & ISceneObject<MutableSceneObject>;
 
 export type EventHandler = (event: Event) => SceneObject | void;
 
