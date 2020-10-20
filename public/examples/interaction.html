@@ -1,59 +1,36 @@
 <canvas
-  style="
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  "
+  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
 ></canvas>
 
 <script type="module">
   import render from 'https://pan0.net/render.js';
   import scene from 'https://pan0.net/scene.js';
   import box from 'https://pan0.net/box.js';
-  import equals from 'https://pan0.net/equals.js';
-  import onFrame from 'https://pan0.net/onFrame.js';
-  import {
-    RED,
-    GREEN,
-    BLUE,
-  } from 'https://pan0.net/colors.js';
+  import { RED, GREEN, BLUE, PINK } from 'https://pan0.net/colors.js';
 
   render(
     scene(
-      box()
-        .color(RED)
-        .id('rotationTarget'),
+      box().id('rotationTarget').color(PINK),
+      box().id('triggerObject').color(GREEN).position([2, 0, 0]),
+    )
+      .data({
+        colorIndex: 1,
+        colors: [RED, GREEN, BLUE],
+      })
 
-      box()
-        .color(GREEN)
-        .position([2, 0, 0])
-        .onClick(
-          self => {
-            // Cycle red-green-blue colors on this object
-            self.color(
-              equals(self.color(), RED)
-                ? GREEN
-                : equals(
-                    self.color(),
-                    GREEN,
-                  )
-                ? BLUE
-                : RED,
-            );
-            // Rotate another scene object
-            scene.objects.get(
-              'rotationTarget',
-            ).rotateZ(0.05);
-          },
-        ),
+      .on('frame', () => {
+        //
+      })
 
-      onFrame(
-        () => {
-          //
-        },
-      ),
-    ),
+      .on('click', 'triggerObject', (scene) => {
+        // Update scene state
+        scene.data.colorIndex = (scene.data.colorIndex + 1) % 3;
+
+        // Cycle red-green-blue colors on 'triggerObject'
+        scene.object.color(scene.data.colors[scene.data.colorIndex]);
+
+        // Rotate another scene object
+        scene.objects.get('rotationTarget').rotateZ(0.05);
+      }),
   );
 </script>

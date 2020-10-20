@@ -41,16 +41,6 @@
   },
   "prettier": {
     "singleQuote": true,
-    "trailingComma": "all",
-    "overrides": [
-      {
-        "files": "public/examples/*",
-        "options": {
-          "printWidth": 40,
-          "singleQuote": true,
-          "trailingComma": "all"
-        }
-      }
-    ]
+    "trailingComma": "all"
   }
 }
