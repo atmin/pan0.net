@@ -1,0 +1,11 @@
+<script src="https://pan0.net/main.js"></script>
+<script>
+  scene(
+    pointCloud(
+      // Returns { coordinates: Array<[number, number, number]>, clusters: string[] }
+      fetch('point-cloud-data.json'),
+    ),
+  )
+    .arcRotateCamera()
+    .render();
+</script>
