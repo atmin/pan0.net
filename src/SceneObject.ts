@@ -1,12 +1,11 @@
 import { PBRMaterial } from '@babylonjs/core/Materials/PBR/pbrMaterial';
 import { RenderTargetTexture } from '@babylonjs/core/Materials/Textures/renderTargetTexture';
 import { Color3, Vector3 } from '@babylonjs/core/Maths/math';
-import { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
-import { Mesh } from '@babylonjs/core/Meshes/mesh';
+import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
+import type { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { ReflectionProbe } from '@babylonjs/core/Probes/reflectionProbe';
 
 import {
-  EventHandler,
   EventMap,
   SceneObject as ISceneObject,
   LazyMesh,
@@ -25,12 +24,13 @@ export default class SceneObject implements ISceneObject {
   constructor(lazyMesh: LazyMesh) {
     this.lazyMesh = lazyMesh;
     this.operations = [];
+
+    // TODO: move to scene
     this.eventMap = {
-      tick: [],
+      frame: [],
       click: [],
       pointerenter: [],
       pointerleave: [],
-      pointerover: [],
       keyup: [],
       keydown: [],
       keypress: [],
@@ -48,10 +48,6 @@ export default class SceneObject implements ISceneObject {
     }
     mesh.receiveShadows = true;
     mesh.checkCollisions = true;
-  }
-
-  on(event: keyof EventMap, handler: EventHandler): SceneObject {
-    return this;
   }
 
   position(v: Vec3): this {
@@ -135,7 +131,7 @@ export default class SceneObject implements ISceneObject {
     return this;
   }
 
-  // TODO: extract outside SceneObject, remove ReflectionProbe dependency
+  // TODO: extract outside SceneObject, remove ReflectionProbe dependency, make lazy
   env_snapshot(): this {
     this.operations.push((scene, mesh) => {
       scene.initializers.push(() => {

@@ -1,21 +1,4 @@
-<canvas
-  style="
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  "
-></canvas>
-
-<script type="module">
-  import render from 'https://pan0.net/render.js'
-  import scene from 'https://pan0.net/scene.js'
-  import sphere from 'https://pan0.net/sphere.js'
-
-  render(
-    scene(
-      sphere().href('https://pan0.net'),
-    ),
-  )
+<script src="https://pan0.net/latest"></script>
+<script>
+  scene(sphere().href('https://pan0.net')).render();
 </script>

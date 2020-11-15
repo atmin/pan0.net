@@ -1,4 +1,4 @@
-<script src="https://pan0.net/main.js"></script>
+<script src="https://pan0.net/latest"></script>
 <script>
   scene(
     babyplots.pointCloud(
@@ -6,6 +6,6 @@
       fetch('point-cloud-data.json'),
     ),
   )
-    .arcRotateCamera()
+    .camera(CAMERA_TURNTABLE)
     .render();
 </script>

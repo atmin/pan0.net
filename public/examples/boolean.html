@@ -1,36 +1,12 @@
-<canvas
-  style="
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  "
-></canvas>
-
-<script type="module">
-  import render from 'https://pan0.net/render.js'
-  import scene from 'https://pan0.net/scene.js'
-  import box from 'https://pan0.net/box.js'
-  import sphere from 'https://pan0.net/sphere.js'
-  import difference from 'https://pan0.net/difference.js'
-  import union from 'https://pan0.net/union.js'
-  import intersect from 'https://pan0.net/intersect.js'
-
-  render(
-    scene(
-      union(
-        difference(
-          box(2).color([1, 0.5, 0.5]),
-          sphere()
-            .position([1, 1, 1])
-            .color([0.5, 1, 0.5]),
-        ),
-        intersect(
-          box(),
-          sphere(),
-        ).position([-1, 0.5, 0]),
+<script src="https://pan0.net/latest"></script>
+<script>
+  scene(
+    union(
+      difference(
+        box(2).color([1, 0.5, 0.5]),
+        sphere().position([1, 1, 1]).color([0.5, 1, 0.5]),
       ),
+      intersect(box(), sphere()).position([-1, 0.5, 0]),
     ),
-  )
+  ).render();
 </script>

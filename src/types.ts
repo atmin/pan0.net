@@ -24,9 +24,7 @@ interface ISceneObject<T> {
   roughness(value: number): T;
 }
 
-export type SceneObject = {
-  on(event: keyof EventMap, handler: EventHandler): SceneObject;
-} & ISceneObject<SceneObject>;
+export type SceneObject = ISceneObject<SceneObject>;
 
 export type MutableSceneObject = {
   replace: (...objects: SceneObject[]) => void;
@@ -36,11 +34,10 @@ export type MutableSceneObject = {
 export type EventHandler = (event: Event) => SceneObject | void;
 
 export interface EventMap {
-  tick: Array<EventHandler>;
+  frame: Array<EventHandler>;
   click: Array<EventHandler>;
   pointerenter: Array<EventHandler>;
   pointerleave: Array<EventHandler>;
-  pointerover: Array<EventHandler>;
   keyup: Array<EventHandler>;
   keydown: Array<EventHandler>;
   keypress: Array<EventHandler>;
