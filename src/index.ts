@@ -1,21 +1,8 @@
-import box from './box';
-import camera from './camera';
-import environment from './environment';
-import ground from './ground';
-import lights from './lights';
-import render from './render';
 import scene from './scene';
-import SceneObject from './SceneObject';
-import sphere from './sphere';
+export * as box from './box';
+export * as sphere from './sphere';
 
-export default {
-  box,
-  camera,
-  environment,
-  ground,
-  lights,
-  render,
-  scene,
-  SceneObject,
-  sphere,
-};
+interface Global extends Window {
+  scene: any;
+}
+((globalThis as unknown) as Global).scene = scene;

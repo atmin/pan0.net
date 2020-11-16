@@ -9,7 +9,8 @@
 Each scene is an HTML file consisting of two `script` tags:
 
 ```html
-<!-- Bootstrap the library from the CDN, use `latest` version or pin one -->
+<!--Bootstrap the library from the CDN, use `latest` version or pin one.
+    Each global function or chain method triggers necessary imports-->
 <script src="https://pan0.net/latest"></script>
 
 <!-- The scene is a single function call -->
@@ -35,12 +36,36 @@ Each scene is an HTML file consisting of two `script` tags:
 </script>
 ```
 
+Or just one script tag on modern browsers, minimal example:
+
+```html
+<script type="module">
+  import 'https://pan0.net/latest';
+  scene(box()).render();
+</script>
+```
+
+Or as an NPM module:
+
+```shell
+npm install --save pan0.net
+```
+
+```js
+import box from 'pan0.net/box.js';
+import scene from 'pan0.net/scene.js';
+
+scene(box()).render();
+```
+
 ## Features
 
 - available on global CDN (Cloudflare) or as an NPM package
 - download only what you use
 - high-level, compact, declarative scene code
+- fully typed, get editor hints and inline documentation
 - powered by BabylonJS
+- namespaced third party integrations
 
 ## Examples
 

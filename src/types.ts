@@ -2,6 +2,11 @@ import { BaseTexture } from '@babylonjs/core/Materials/Textures/baseTexture';
 import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 
+export interface Globals {
+  scene: (...objects: Array<SceneObject | SceneCreator>) => SceneCreator;
+  box: (size: number | [xsize: number, ysize: number, zsize: number]) => SceneObject;
+}
+
 export interface Scene extends BabylonScene {
   initializers: Array<() => void>;
   environmentApplied: boolean;
