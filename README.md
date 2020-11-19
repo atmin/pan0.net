@@ -10,24 +10,24 @@ Each scene is an HTML file consisting of two `script` tags:
 
 ```html
 <!--Bootstrap the library from the CDN, use `latest` version or pin one.
-    Each global function or chain method triggers necessary imports-->
+    Each global function or chain method dynamically imports capabilities-->
 <script src="https://pan0.net/latest"></script>
 
 <!-- The scene is a single function call -->
 <script>
   scene(
     // A box, that triggers color change of another object
-    box().position([5, 5, 0.5]).id('box'),
+    box('cube').size(1.5).position([5, 5, 0.5]),
 
     // GLTF loaded from URL
-    gltf(fetch('https://pan0.net/assets/stanford-bunny.gltf'))
-      .id('bunny')
-      .href('https://pan0.net'),
+    gltf('bunny')
+      .fetch('https://pan0.net/assets/stanford-bunny.gltf')
+      .href('https://pan0.net')
   )
     // An event handler
     .onClick(() => {
-      if (scene.object.id === 'box') {
-        scene.objects.get('bunny').color(COLOR_RED);
+      if (scene.object.id === 'cube') {
+        scene.objects.get('bunny').color('red');
       }
     })
 
@@ -35,6 +35,8 @@ Each scene is an HTML file consisting of two `script` tags:
     .render();
 </script>
 ```
+
+[image of scene](https://pan0.net/examples/readme.html)
 
 Or just one script tag on modern browsers, minimal example:
 
