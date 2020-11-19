@@ -30,6 +30,7 @@
   "dependencies": {
     "@babylonjs/core": "^4.2.0-alpha.26",
     "@babylonjs/loaders": "^4.2.0-alpha.26",
+    "fabric": "^4.2.0",
     "pepjs": "^0.5.2"
   },
   "devDependencies": {
