@@ -1,12 +1,15 @@
 <script src="https://pan0.net/latest"></script>
 <script>
   scene(
-    box().id('rotationTarget').color(COLOR_PINK),
-    box().id('triggerObject').color(COLOR_GREEN).position([2, 0, 0]),
+    box('rotationTarget').color('pink'),
+
+    box('triggerObject')
+      .color('green')
+      .position([2, 0, 0])
   )
     .data({
       colorIndex: 1,
-      colors: [COLOR_RED, COLOR_GREEN, COLOR_BLUE],
+      colors: ['red', 'green', 'blue'],
     })
 
     .onFrame(() => {})
@@ -16,15 +19,26 @@
     .onPointerLeave(() => {})
 
     .onClick(() => {
-      if (scene.object.id === 'triggerObject') {
+      if (
+        scene.object.id ===
+        'triggerObject'
+      ) {
         // Update scene state
-        scene.data.colorIndex = (scene.data.colorIndex + 1) % 3;
+        scene.data.colorIndex =
+          (scene.data.colorIndex + 1) %
+          3;
 
         // Cycle red-green-blue colors on 'triggerObject'
-        scene.object.color(scene.data.colors[scene.data.colorIndex]);
+        scene.object.color(
+          scene.data.colors[
+            scene.data.colorIndex
+          ]
+        );
 
         // Rotate another scene object
-        scene.objects.get('rotationTarget').rotateZ(0.05);
+        scene.objects
+          .get('rotationTarget')
+          .rotateZ(0.05);
       }
     })
 

@@ -3,10 +3,19 @@
   scene(
     union(
       difference(
-        box(2).color([1, 0.5, 0.5]),
-        sphere().position([1, 1, 1]).color([0.5, 1, 0.5]),
+        box()
+          .size(2)
+          .color([1, 0.5, 0.5]),
+
+        sphere()
+          .position([1, 1, 1])
+          .color([0.5, 1, 0.5])
       ),
-      intersect(box(), sphere()).position([-1, 0.5, 0]),
-    ),
+
+      intersect(
+        box(),
+        sphere()
+      ).position([-1, 0.5, 0])
+    )
   ).render();
 </script>

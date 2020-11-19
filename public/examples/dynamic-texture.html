@@ -1,0 +1,29 @@
+<script src="https://pan0.net/latest"></script>
+<script>
+  scene(
+    box()
+      .front(
+        canvas(
+          rect()
+            .top(100)
+            .left(100)
+            .width(60)
+            .height(70)
+            .fill('red')
+        )
+          .width(200)
+          .height(200)
+      )
+      .left(
+        canvas(
+          circle()
+            .top(50)
+            .left(50)
+            .radius(40)
+            .fill('rgb(0,255,0)')
+        )
+          .width(100)
+          .height(100)
+      )
+  ).render();
+</script>

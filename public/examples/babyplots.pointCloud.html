@@ -1,11 +1,11 @@
 <script src="https://pan0.net/latest"></script>
 <script>
   scene(
-    babyplots.pointCloud(
+    babyplots
+      .pointCloud()
       // Returns { points: Array<[number, number, number]>, clusters: string[] }
-      fetch('point-cloud-data.json'),
-    ),
+      .fetch('point-cloud-data.json')
   )
-    .camera(CAMERA_TURNTABLE)
+    .camera('turntable')
     .render();
 </script>

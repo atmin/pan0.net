@@ -4,9 +4,21 @@
   scene(
     sphere()
       .position([-5, 0.5, 0])
-      .color(COLOR_RED)
-      .texture(fetch('url_of_albedo_texture'))
+      .color('red')
+      .texture(
+        fetch('url_of_albedo_texture')
+      )
       .metallicTexture(
+        canvas(
+          circle()
+            .top(128)
+            .left(128)
+            .radius(120)
+            .fill('green')
+        ).size(256)
+      )
+      .reflectionTexture('url')
+      .bumpTexture(
         noiseTexture({
           // https://doc.babylonjs.com/typedoc/classes/babylon.noiseproceduraltexture
           size: 256,
@@ -14,21 +26,25 @@
           octaves: 3,
           persistence: 0.8,
           animationSpeedFactor: 1,
-        }),
+        })
       )
-      .reflectionTexture('url')
-      .bumpTexture('url')
       .ambientTexture('url')
       .ambientTextureStrength(),
 
-    sphere().position([-3, 0.5, 0]).color(COLOR_GREEN).subSurface({
-      isRefractionEnabled: true,
-      indexOfRefraction: 1.5,
-    }),
+    sphere()
+      .position([-3, 0.5, 0])
+      .color('green')
+      .subSurface({
+        isRefractionEnabled: true,
+        indexOfRefraction: 1.5,
+      }),
 
-    sphere().position([-1, 0.5, 0]).color(COLOR_BLUE).subSurface({
-      isTranslucencyEnabled: true,
-      tintColor: COLOR_TEAL,
-    }),
+    sphere()
+      .position([-1, 0.5, 0])
+      .color('blue')
+      .subSurface({
+        isTranslucencyEnabled: true,
+        tintColor: 'teal',
+      })
   ).render();
 </script>

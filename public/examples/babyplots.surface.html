@@ -2,8 +2,10 @@
 <script>
   scene(
     // Fetch all plot data from single JSON. Type TBD
-    babyplots.surface(fetch('surface-plot.json')),
+    babyplots
+      .surface()
+      .fetch('surface-plot.json')
   )
-    .camera(CAMERA_TURNTABLE)
+    .camera('turntable')
     .render();
 </script>
