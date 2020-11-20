@@ -23,22 +23,20 @@
   "author": "Atanas Minev",
   "main": "src/index.ts",
   "scripts": {
-    "start": "snowpack dev",
+    "start": "parcel serve index.html",
     "build": "snowpack build",
     "test": "echo TODO: jest/snapshots/NullEngine"
   },
   "dependencies": {
-    "@babylonjs/core": "^4.2.0-alpha.26",
-    "@babylonjs/loaders": "^4.2.0-alpha.26",
+    "@babylonjs/core": "^4.2.0",
+    "@babylonjs/loaders": "^4.2.0",
     "fabric": "^4.2.0",
     "pepjs": "^0.5.2"
   },
   "devDependencies": {
-    "jiff": "^0.7.3",
-    "@snowpack/plugin-run-script": "^2.0.2",
-    "prettier": "^2.0.5",
-    "snowpack": "^2.7.5",
-    "typescript": "^3.9.7"
+    "parcel": "^2.0.0-beta.1",
+    "prettier": "^2.2.0",
+    "typescript": "^4.1.2"
   },
   "prettier": {
     "singleQuote": true,
