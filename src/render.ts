@@ -8,31 +8,30 @@ import 'pepjs';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-import { Scene, SceneCreator } from './types';
+import { Scene } from './types';
 
-/**
- * Render scene to canvas.
- * @param canvas The canvas to render to
- * @param createScene Scene created by {@linkcode scene}
- *
- * @example
- * ```
- * render(
- *   document.querySelector('canvas'),
- *   scene(box().translate([0, 0.5, 0]))
- * )
- * ```
- */
-export default (canvas: HTMLCanvasElement, createScene: SceneCreator) => {
+export async function render() {
+  const canvas = document.createElement('canvas');
+  canvas.style.position = 'absolute';
+  canvas.style.top = '0';
+  canvas.style.left = '0';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  document.body.append(canvas);
+
   const engine = new Engine(canvas);
-  const scene = new BabylonScene(engine) as Scene;
-  scene.initializers = [];
-  createScene(scene);
-  scene.initializers.forEach((initializer) => initializer());
+  const scene = new BabylonScene(engine);
+
+  const self = this as Scene;
+
+  self._createSceneObjects(scene);
+  if (!self._createCamera) {
+    self.camera();
+  }
+  await this._createCamera(scene);
+
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => {
     engine.resize();
   });
-
-  (window as any)._scene = scene;
-};
+}

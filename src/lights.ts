@@ -18,7 +18,7 @@ export default (arg: null | LightDefinition | Array<LightDefinition>) => {
           const light = new DirectionalLight(
             `dir${i}`,
             new Vector3(...(def.direction || [0, -1, 0])),
-            scene,
+            scene
           );
           light.position = new Vector3(...(def.position || [0, 4, 0]));
           light.intensity = def.intensity || 0.1;
@@ -29,7 +29,7 @@ export default (arg: null | LightDefinition | Array<LightDefinition>) => {
           const light = new HemisphericLight(
             `hemi${i}`,
             new Vector3(...(def.direction || [0, 1, 0])),
-            scene,
+            scene
           );
           return light;
         }
@@ -58,8 +58,8 @@ export default (arg: null | LightDefinition | Array<LightDefinition>) => {
         .filter((mesh) => !(mesh instanceof GroundMesh || mesh.name === 'sky'))
         .forEach((mesh) =>
           shadowGenerators.forEach((sg) =>
-            (sg as ShadowGenerator).addShadowCaster(mesh),
-          ),
+            (sg as ShadowGenerator).addShadowCaster(mesh)
+          )
         );
     });
 
