@@ -92,21 +92,12 @@ npm install --save pan0.net
 Then:
 
 ```js
-import box from 'pan0.net/box.js';
-import scene from 'pan0.net/scene.js';
+import { box, scene } from 'pan0.net';
 
 scene(box()).render();
 ```
 
-Alternatively:
-
-```js
-import 'pan0.net'; // Will introduce a bunch of globals
-
-scene(box()).render();
-```
-
-And your bundler of choice. It must be capable of code-splitting. [`import` function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports) is used liberally.
+Your bundler of choice must be capable of code-splitting. [`import` function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports) is used liberally. `pan0.net` uses [Parcel](https://v2.parceljs.org/) for the CDN build.
 
 ### More examples
 

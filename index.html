@@ -1,0 +1,15 @@
+<script src="src/bootstrap.ts"></script>
+<script>
+  scene(
+    Promise.resolve({
+      appendTo() {
+        console.log('appended1');
+      },
+    }),
+    Promise.resolve({
+      appendTo() {
+        console.log('appended2');
+      },
+    })
+  ).render();
+</script>
