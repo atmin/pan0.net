@@ -40,7 +40,9 @@ export function scene(
     },
 
     async render() {
-      const { render } = await import('./render');
+      const { render } = await import(
+        /* webpackChunkName: "render" */ './render'
+      );
       render.call(this);
     },
   };

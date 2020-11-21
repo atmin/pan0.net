@@ -1,13 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  entry: { latest: './src/global.ts', module: './src/index.ts' },
-  //   devtool: 'inline-source-map',
+  entry: { main: './src/index.ts' },
+  devtool: 'source-map',
   devServer: {
-    // contentBase: [path.join(__dirname, 'dist'), path.join(__dirname, 'public')],
-    // contentBasePublicPath: ['/latest', '/'],
-    // publicPath: '/dist',
-    index: 'index.html',
+    contentBase: './public',
+    contentBasePublicPath: '/',
   },
   module: {
     rules: [
@@ -22,7 +20,8 @@ module.exports = {
     extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: '[name]',
+    filename: 'latest/[name].js',
     path: path.resolve(__dirname, 'dist'),
+    chunkFilename: 'latest/[name].js',
   },
 };

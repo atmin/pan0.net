@@ -1,1 +1,3 @@
-export { scene } from './scene';
+import { scene } from './scene';
+
+(globalThis as any).scene = scene;
