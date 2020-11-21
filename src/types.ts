@@ -8,6 +8,9 @@ export interface Scene {
   _createLights: SceneDecorator;
   _createGround: SceneDecorator;
   _createSceneObjects: SceneDecorator;
+  _eventHandlers: {
+    init: Array<Function>;
+  };
 
   camera(options?: {
     type?: 'fps';

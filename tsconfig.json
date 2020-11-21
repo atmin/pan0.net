@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "outDir": "./dist/",
+    "noImplicitAny": false,
+    "module": "esnext",
+    "target": "es5"
+  },
+  "exclude": ["./src_old"]
+}

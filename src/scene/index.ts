@@ -15,6 +15,10 @@ export function scene(
     _createGround: null,
     _createLights: null,
 
+    _eventHandlers: {
+      init: [],
+    },
+
     async _createSceneObjects(scene) {
       const objects = await Promise.all(objectPromises);
       return objects
