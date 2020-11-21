@@ -1,5 +1,7 @@
 import { camera } from './camera';
 import { environment } from './environment';
+import { lights } from './lights';
+import { ground } from './ground';
 import { Scene, SceneDecorator } from '../types';
 
 export function scene(
@@ -28,14 +30,11 @@ export function scene(
 
     camera,
     environment,
-    lights() {
-      // TODO
-      this._createLights = () => {};
-      return this;
-    },
-    ground() {
-      // TODO
-      this._createGround = () => {};
+    lights,
+    ground,
+
+    onInit(handler) {
+      this._eventHandlers.init.push(handler);
       return this;
     },
 
@@ -47,6 +46,12 @@ export function scene(
     },
   };
 }
+
+scene.objects = {
+  get(id) {
+    console.log('scene.objects.get ' + id);
+  },
+};
 
 // import camera from './camera';
 // import environment from './environment';

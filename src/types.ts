@@ -24,9 +24,11 @@ export interface Scene {
 
   environment(): Scene;
 
-  lights(): Scene;
+  lights(definitions: null | LightDefinition | Array<LightDefinition>): Scene;
 
   ground(): Scene;
+
+  onInit(handler: () => any): Scene;
 
   render(): void;
 }

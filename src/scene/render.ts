@@ -31,20 +31,17 @@ export async function render() {
     self.environment();
   }
   if (self._createLights === null) {
-    self
-      .lights
-      //   [
-      //   {
-      //     type: 'hemispheric',
-      //     direction: [0.5, 1, 0.5],
-      //   },
-      //   {
-      //     type: 'directional',
-      //     direction: [0, -1, 0],
-      //     position: [0, 10, 0],
-      //   },
-      // ]
-      ();
+    self.lights([
+      {
+        type: 'hemispheric',
+        direction: [0.5, 1, 0.5],
+      },
+      {
+        type: 'directional',
+        direction: [0, -1, 0],
+        position: [0, 10, 0],
+      },
+    ]);
   }
   if (self._createGround === null) {
     self.ground();
@@ -57,6 +54,8 @@ export async function render() {
     self._createLights(scene),
     self._createGround(scene),
   ]);
+
+  this._eventHandlers.init.forEach((handler) => handler());
 
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => {
