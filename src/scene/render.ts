@@ -8,7 +8,7 @@ import 'pepjs';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-import { Scene } from './types';
+import { Scene } from '../types';
 
 export async function render() {
   const canvas = document.createElement('canvas');
@@ -24,11 +24,36 @@ export async function render() {
 
   const self = this as Scene;
 
-  self._createSceneObjects(scene);
-  if (!self._createCamera) {
+  if (self._createCamera === null) {
     self.camera();
   }
-  await this._createCamera(scene);
+  if (self._createEnvironment === null) {
+    self.environment();
+  }
+  if (self._createLights === null) {
+    self.lights([
+      {
+        type: 'hemispheric',
+        direction: [0.5, 1, 0.5],
+      },
+      {
+        type: 'directional',
+        direction: [0, -1, 0],
+        position: [0, 10, 0],
+      },
+    ]);
+  }
+  if (self._createGround === null) {
+    self.ground();
+  }
+
+  await Promise.all([
+    self._createSceneObjects(scene),
+    self._createCamera(scene),
+    self._createEnvironment(scene),
+    self._createLights(scene),
+    self._createGround(scene),
+  ]);
 
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => {

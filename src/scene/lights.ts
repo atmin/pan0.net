@@ -5,7 +5,7 @@ import { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator'
 import { Vector3 } from '@babylonjs/core/Maths/math';
 import { GroundMesh } from '@babylonjs/core/Meshes/groundMesh';
 
-import { LightDefinition, Scene } from './types';
+import { LightDefinition, Scene } from '../types';
 
 export default (arg: null | LightDefinition | Array<LightDefinition>) => {
   const definitions =

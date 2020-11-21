@@ -23,7 +23,7 @@ export default (size: number | [number, number, number] = 1) =>
           depth: size[2],
         }),
       },
-      scene,
+      scene
     );
     mesh.position =
       typeof size === 'number'

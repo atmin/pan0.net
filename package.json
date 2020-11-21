@@ -24,7 +24,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "parcel serve index.html",
-    "build": "parcel build src/bootstrap.html",
+    "build": "parcel build src/global.ts",
     "test": "echo TODO: jest/snapshots/NullEngine"
   },
   "dependencies": {
