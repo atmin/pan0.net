@@ -25,7 +25,10 @@ export function scene(
       const objects = await Promise.all(objectPromises);
       return objects
         .filter((obj) => typeof obj.appendTo === 'function')
-        .forEach((obj) => obj.appendTo(scene));
+        .forEach((obj) => {
+          console.log(obj);
+          obj.appendTo(scene);
+        });
     },
 
     camera,

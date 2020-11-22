@@ -2,6 +2,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "outDir": "./dist/",
+    "sourceMap": true,
     "noImplicitAny": false,
     "module": "esnext",
     "target": "es5"

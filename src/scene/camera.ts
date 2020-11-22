@@ -1,6 +1,5 @@
-import { Vector3 } from '@babylonjs/core/Maths/math';
-
-import { Scene } from '../types';
+import { Vector3 } from '../common';
+import type { Scene } from '../types';
 
 export function camera({
   type = 'fps',

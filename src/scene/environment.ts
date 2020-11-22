@@ -1,11 +1,12 @@
-import { PBRMaterial } from '@babylonjs/core/Materials/PBR/pbrMaterial';
-import { CubeTexture } from '@babylonjs/core/Materials/Textures/cubeTexture';
-import { Texture } from '@babylonjs/core/Materials/Textures/texture';
-import { Vector3 } from '@babylonjs/core/Maths/math';
-import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
-import type { Scene as BabylonScene } from '@babylonjs/core/scene';
+import {
+  PBRMaterial,
+  CubeTexture,
+  Texture,
+  Vector3,
+  MeshBuilder,
+} from '../common';
 
-import { Scene } from '../types';
+import type { BabylonScene, Scene } from '../types';
 
 /**
  * Create environment. TODO: Make configurable.

@@ -1,5 +1,7 @@
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 
+export { BabylonScene };
+
 export type SceneDecorator = (scene: BabylonScene) => void;
 
 export interface Scene {

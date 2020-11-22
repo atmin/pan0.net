@@ -35,7 +35,7 @@ export function box(size: number | [number, number, number] = 1) {
     },
   }));
   (promise as any).position = function (...args) {
-    this.then((r) => r.position(...args));
+    this.then((obj) => obj.position.apply(obj, args));
     return this;
   };
   return promise;
