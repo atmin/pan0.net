@@ -2,7 +2,8 @@ import { camera } from './camera';
 import { environment } from './environment';
 import { lights } from './lights';
 import { ground } from './ground';
-import { Scene, SceneDecorator } from '../types';
+
+import type { Scene, SceneDecorator } from '../types';
 
 export function scene(
   ...objectPromises: Array<

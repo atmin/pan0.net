@@ -1,11 +1,3 @@
-import {
-  PBRMaterial,
-  CubeTexture,
-  Texture,
-  Vector3,
-  MeshBuilder,
-} from '../common';
-
 import type { BabylonScene, Scene } from '../types';
 
 /**
@@ -13,21 +5,25 @@ import type { BabylonScene, Scene } from '../types';
  */
 export function environment(): Scene {
   (this as Scene)._createEnvironment = (scene: BabylonScene) => {
-    scene.gravity = new Vector3(...[0, -9.81, 0]);
-    scene.collisionsEnabled = true;
-    scene.environmentTexture = new CubeTexture(
-      '/assets/env/default.env',
-      scene
-    );
+    import('../common').then(
+      ({ PBRMaterial, CubeTexture, Texture, Vector3, MeshBuilder }) => {
+        scene.gravity = new Vector3(...[0, -9.81, 0]);
+        scene.collisionsEnabled = true;
+        scene.environmentTexture = new CubeTexture(
+          '/assets/env/default.env',
+          scene
+        );
 
-    const skyMaterial = new PBRMaterial('sky_material', scene);
-    skyMaterial.backFaceCulling = false;
-    skyMaterial.reflectionTexture = scene.environmentTexture;
-    skyMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
-    skyMaterial.disableLighting = true;
-    skyMaterial.microSurface = 0.7;
-    const sky = MeshBuilder.CreateBox('sky', { size: 1000 }, scene);
-    sky.material = skyMaterial;
+        const skyMaterial = new PBRMaterial('sky_material', scene);
+        skyMaterial.backFaceCulling = false;
+        skyMaterial.reflectionTexture = scene.environmentTexture;
+        skyMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
+        skyMaterial.disableLighting = true;
+        skyMaterial.microSurface = 0.7;
+        const sky = MeshBuilder.CreateBox('sky', { size: 1000 }, scene);
+        sky.material = skyMaterial;
+      }
+    );
   };
   return this;
 }

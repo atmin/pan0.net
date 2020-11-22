@@ -21,7 +21,9 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
-  plugins: [new BundleAnalyzerPlugin({ analyzerMode: 'static' })],
+  plugins: [
+    new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
+  ],
   output: {
     filename: 'latest/[name].js',
     path: path.resolve(__dirname, 'dist'),
