@@ -1,5 +1,6 @@
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 import '@babylonjs/core/Collisions/collisionCoordinator';
+import '@babylonjs/core/Materials/standardMaterial';
 // import '@babylonjs/core/Rendering/edgesRenderer';
 import '@babylonjs/core/Materials/Textures/Loaders/envTextureLoader';
 // import '@babylonjs/core/Helpers/sceneHelpers';

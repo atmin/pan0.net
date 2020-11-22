@@ -7,26 +7,27 @@ export function ground({
   color?: [number, number, number];
   checkCollisions?: boolean;
 } = {}): Scene {
-  (this as Scene)._createGround = (scene: BabylonScene) => {
-    import('../common').then(({ MeshBuilder, BackgroundMaterial, Color3 }) => {
-      const ground = MeshBuilder.CreateGround(
-        'ground',
-        {
-          width: 100,
-          height: 100,
-          subdivisions: 10,
-        },
-        scene
-      );
-      const groundMaterial = new BackgroundMaterial('groundmat', scene);
-      groundMaterial.shadowLevel = 0.4;
-      groundMaterial.useRGBColor = false;
-      groundMaterial.primaryColor = new Color3(...color);
-      ground.material = groundMaterial;
-      ground.checkCollisions = checkCollisions;
-      ground.receiveShadows = true;
-      return ground;
-    });
+  (this as Scene)._createGround = async (scene: BabylonScene) => {
+    const { MeshBuilder, BackgroundMaterial, Color3 } = await import(
+      '../common'
+    );
+    const ground = MeshBuilder.CreateGround(
+      'ground',
+      {
+        width: 100,
+        height: 100,
+        subdivisions: 10,
+      },
+      scene
+    );
+    const groundMaterial = new BackgroundMaterial('groundmat', scene);
+    groundMaterial.shadowLevel = 0.4;
+    groundMaterial.useRGBColor = false;
+    groundMaterial.primaryColor = new Color3(...color);
+    ground.material = groundMaterial;
+    ground.checkCollisions = checkCollisions;
+    ground.receiveShadows = true;
+    return ground;
   };
   return this;
 }

@@ -11,27 +11,26 @@ export function camera({
 } = {}): Scene {
   switch (type) {
     case 'fps': {
-      (this as Scene)._createCamera = (scene) => {
-        Promise.all([
+      (this as Scene)._createCamera = async (scene) => {
+        const [{ UniversalCamera }, { Vector3 }] = await Promise.all([
           import('@babylonjs/core/Cameras/universalCamera'),
           import('../common'),
-        ]).then(([{ UniversalCamera }, { Vector3 }]) => {
-          const camera = new UniversalCamera(
-            'camera',
-            new Vector3(...position),
-            scene
-          );
-          camera.applyGravity = applyGravity;
-          camera.ellipsoid = new Vector3(...ellipsoid);
-          camera.setTarget(Vector3.Zero());
-          camera.speed = speed;
-          camera.fov = fov;
-          camera.attachControl(
-            scene.getEngine().getRenderingCanvas() as HTMLElement,
-            true
-          );
-          camera.checkCollisions = checkCollisions;
-        });
+        ]);
+        const camera = new UniversalCamera(
+          'camera',
+          new Vector3(...position),
+          scene
+        );
+        camera.applyGravity = applyGravity;
+        camera.ellipsoid = new Vector3(...ellipsoid);
+        camera.setTarget(Vector3.Zero());
+        camera.speed = speed;
+        camera.fov = fov;
+        camera.attachControl(
+          scene.getEngine().getRenderingCanvas() as HTMLElement,
+          true
+        );
+        camera.checkCollisions = checkCollisions;
       };
 
       break;
