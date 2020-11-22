@@ -22,7 +22,7 @@
   "license": "MIT",
   "author": "Atanas Minev",
   "scripts": {
-    "start": "webpack serve",
+    "start": "NODE_ENV=development webpack serve",
     "build": "webpack",
     "test": "echo TODO: jest/snapshots/NullEngine",
     "_postbuild": "cp -r public/* dist/"

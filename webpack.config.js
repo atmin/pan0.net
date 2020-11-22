@@ -13,7 +13,15 @@ module.exports = {
       { test: /\.js$/, loader: 'source-map-loader', enforce: 'pre' },
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          ...(process.env.NODE_ENV === 'development' && {
+            options: {
+              // Faster build
+              transpileOnly: true,
+            },
+          }),
+        },
         exclude: /node_modules/,
       },
     ],
