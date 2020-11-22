@@ -1,4 +1,49 @@
-export default {};
+import { Vector3 } from '@babylonjs/core/Maths/math';
+import type { Mesh as BabylonMesh } from '@babylonjs/core/Meshes/mesh';
+import type { Scene as BabylonScene } from '@babylonjs/core/scene';
+
+export { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
+
+export { Vector3 };
+
+type Operations = Array<(mesh: BabylonMesh) => BabylonMesh>;
+
+export const sceneObject = {
+  operations: [],
+
+  meshCreator() {
+    console.error('Overwrite this method. See src/objects/box for example.');
+  },
+
+  appendTo(scene: BabylonScene) {
+    const mesh = this.operations.reduce(
+      (result, operation) => operation(result),
+      this.meshCreator(scene)
+    );
+    if (!mesh.material) {
+      mesh.material = scene.defaultMaterial;
+    }
+    mesh.receiveShadows = true;
+    mesh.checkCollisions = true;
+  },
+
+  position(v: [number, number, number]) {
+    (this.operations as Operations).push((mesh) => {
+      mesh.position = new Vector3(...v);
+      return mesh;
+    });
+    return this;
+  },
+
+  translate(v: [number, number, number]) {
+    (this.operations as Operations).push((mesh) => {
+      mesh.position = new Vector3(...v).addInPlace(mesh.position);
+      return mesh;
+    });
+    return this;
+  },
+};
+
 // import { PBRMaterial } from '@babylonjs/core/Materials/PBR/pbrMaterial';
 // import { RenderTargetTexture } from '@babylonjs/core/Materials/Textures/renderTargetTexture';
 // import { Color3, Vector3 } from '@babylonjs/core/Maths/math';

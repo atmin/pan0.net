@@ -1,16 +1,5 @@
 <script src="/latest/main.js"></script>
 <script>
-  scene(
-    Promise.resolve({
-      appendTo() {
-        console.log('appended1');
-      },
-    }),
-    Promise.resolve({
-      appendTo() {
-        console.log('appended2');
-      },
-    })
-  ).render();
+  scene(box().position([0, 0.5, 0]), box().position([0.5, 2, 0.5])).render();
   scene.objects.get('zzzz');
 </script>
