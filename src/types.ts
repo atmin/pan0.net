@@ -1,3 +1,5 @@
+import type { Mesh } from '@babylonjs/core/Meshes/mesh';
+import type { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 
 export { BabylonScene };
@@ -33,6 +35,25 @@ export interface Scene {
   onInit(handler: () => any): Scene;
 
   render(): void;
+}
+
+export type CreateMesh = (scene: BabylonScene) => Promise<Mesh>;
+
+export interface SceneObjectOperatorDependencies {
+  Mesh: typeof Mesh;
+  Vector3: typeof Vector3;
+}
+
+export type SceneObjectOperations = Array<
+  (mesh: Mesh, dependencies: SceneObjectOperatorDependencies) => Mesh
+>;
+
+export interface SceneObject {
+  operations: SceneObjectOperations;
+  createMesh: CreateMesh;
+  appendTo(scene: BabylonScene): void;
+  name: (newName: string) => SceneObject;
+  position: (v: [number, number, number]) => SceneObject;
 }
 
 // import { BaseTexture } from '@babylonjs/core/Materials/Textures/baseTexture';

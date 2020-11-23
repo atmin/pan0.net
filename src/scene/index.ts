@@ -3,15 +3,9 @@ import { environment } from './environment';
 import { lights } from './lights';
 import { ground } from './ground';
 
-import type { Scene, SceneDecorator } from '../types';
+import type { Scene, SceneObject } from '../types';
 
-export function scene(
-  ...objectPromises: Array<
-    Promise<{
-      appendTo: SceneDecorator;
-    }>
-  >
-): Scene {
+export function scene(...objects: Array<SceneObject>): Scene {
   return {
     _createCamera: null,
     _createEnvironment: null,
@@ -23,13 +17,18 @@ export function scene(
     },
 
     async _createSceneObjects(scene) {
-      const objects = await Promise.all(objectPromises);
-      return objects
-        .filter((obj) => typeof obj.appendTo === 'function')
-        .forEach((obj) => {
-          console.log(obj);
-          obj.appendTo(scene);
-        });
+      await Promise.all(
+        objects
+          .filter((obj) => typeof obj.appendTo === 'function')
+          .map((obj) => obj.appendTo(scene))
+      );
+      // const createdObjects = await Promise.all(objects);
+      // return objects
+      //   .filter((obj) => typeof obj.appendTo === 'function')
+      //   .forEach((obj) => {
+      //     console.log(obj);
+      //     obj.appendTo(scene);
+      //   });
     },
 
     camera,
@@ -52,8 +51,8 @@ export function scene(
 }
 
 scene.objects = {
-  get(id) {
-    console.log('scene.objects.get ' + id);
+  get(name: string | number) {
+    console.log('scene.objects.get ' + name);
   },
 };
 

@@ -1,66 +1,39 @@
-import type { Scene as BabylonScene } from '@babylonjs/core/scene';
+import type { Color4, Vector4 } from '@babylonjs/core/Maths/math';
+
+import { createObject } from './createObject';
+import type { BabylonScene } from '../types';
 
 /**
  * Create a box.
- * @param size
- *   nothing: 1 meter cube
- *   integer: cube of `size` meters
- *   [x, y, z]: box of specified sizes
  *
+ * @param options (Optional) https://doc.babylonjs.com/divingDeeper/mesh/creation/set/box
+ *
+ * TODO: remap
+ * - options.[faceUV, frontUVs, backUVs] to arrays of arrays of fixed elements
+ * - options.faceColors using chroma.js
  */
-export function box(size: number | [number, number, number] = 1) {
-  const promise = import('./sceneObject').then(
-    ({ sceneObject, Vector3, MeshBuilder }) => ({
-      ...sceneObject,
-
-      meshCreator(scene: BabylonScene) {
-        const mesh = MeshBuilder.CreateBox(
-          `box(${JSON.stringify(size)})`,
-          {
-            ...(typeof size === 'number' && { size }),
-            ...(Array.isArray(size) && {
-              width: size[0],
-              height: size[1],
-              depth: size[2],
-            }),
-          },
-          scene
-        );
-        mesh.position =
-          typeof size === 'number'
-            ? new Vector3(size / 2, size / 2, size / 2)
-            : new Vector3(size[0] / 2, size[1] / 2, size[2] / 2);
-        return mesh;
-      },
-    })
+export function box(
+  options: {
+    size?: number;
+    width?: number;
+    height?: number;
+    depth?: number;
+    faceUV?: Vector4[];
+    faceColors?: Color4[];
+    sideOrientation?: number;
+    frontUVs?: Vector4;
+    backUVs?: Vector4;
+    wrap?: boolean;
+    topBaseAt?: number;
+    bottomBaseAt?: number;
+    // updatable?: boolean;
+  } = {}
+) {
+  return createObject((scene: BabylonScene) =>
+    import('../common').then(({ MeshBuilder }) =>
+      MeshBuilder.CreateBox(`box(${counter++})`, options, scene)
+    )
   );
-  (promise as any).position = function (...args) {
-    this.then((obj) => obj.position.apply(obj, args));
-    return this;
-  };
-  return promise;
-  // const { sceneObject, Vector3, MeshBuilder } = await promise;
-  // return {
-  //   ...sceneObject,
-
-  //   meshCreator(scene: BabylonScene) {
-  //     const mesh = MeshBuilder.CreateBox(
-  //       `box(${JSON.stringify(size)})`,
-  //       {
-  //         ...(typeof size === 'number' && { size }),
-  //         ...(Array.isArray(size) && {
-  //           width: size[0],
-  //           height: size[1],
-  //           depth: size[2],
-  //         }),
-  //       },
-  //       scene
-  //     );
-  //     mesh.position =
-  //       typeof size === 'number'
-  //         ? new Vector3(size / 2, size / 2, size / 2)
-  //         : new Vector3(size[0] / 2, size[1] / 2, size[2] / 2);
-  //     return mesh;
-  //   },
-  // };
 }
+
+let counter = 1;
