@@ -25,6 +25,9 @@ export function createObject(
     },
 
     name(newName) {
+      if (String(newName).startsWith('$')) {
+        throw 'object names cannot start with $';
+      }
       (this.operations as SceneObjectOperations).push((mesh) => {
         mesh.name = newName;
         return mesh;

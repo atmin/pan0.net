@@ -1,4 +1,9 @@
-import type { BabylonScene, LightDefinition, Scene } from '../types';
+import type {
+  BabylonScene,
+  LightDefinition,
+  Scene,
+  ShadowGenerator,
+} from '../types';
 
 export function lights(
   arg: null | LightDefinition | Array<LightDefinition>
@@ -55,18 +60,13 @@ export function lights(
     );
 
     this.onInit(() => {
-      Promise.all([
-        import('@babylonjs/core/Meshes/groundMesh'),
-        Promise.all(shadowGeneratorPromises),
-      ]).then(([{ GroundMesh }, shadowGenerators]) =>
+      Promise.all(shadowGeneratorPromises).then((shadowGenerators) =>
         scene.meshes
-          .filter(
-            (mesh) => !(mesh instanceof GroundMesh || mesh.name === 'sky')
-          )
+          .filter((mesh) => !['$ground', '$sky'].includes(mesh.name))
           .forEach((mesh) =>
             shadowGenerators
               .filter(Boolean)
-              .forEach((sg: any) => sg.addShadowCaster(mesh))
+              .forEach((sg: ShadowGenerator) => sg.addShadowCaster(mesh))
           )
       );
     });

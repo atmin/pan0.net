@@ -1,8 +1,9 @@
 import type { Mesh } from '@babylonjs/core/Meshes/mesh';
 import type { Vector3 } from '@babylonjs/core/Maths/math.vector';
+import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-export { BabylonScene };
+export { BabylonScene, ShadowGenerator };
 
 export type SceneDecorator = (scene: BabylonScene) => void;
 

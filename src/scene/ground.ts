@@ -12,7 +12,7 @@ export function ground({
       '../common'
     );
     const ground = MeshBuilder.CreateGround(
-      'ground',
+      '$ground',
       {
         width: 100,
         height: 100,
