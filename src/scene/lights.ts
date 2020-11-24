@@ -23,7 +23,7 @@ export function lights(
             ]).then(
               ([{ Vector3 }, { DirectionalLight }, { ShadowGenerator }]) => {
                 const light = new DirectionalLight(
-                  `dir${i}`,
+                  `$directionalLight(${i + 1})`,
                   new Vector3(...(def.direction || [0, -1, 0])),
                   scene
                 );
@@ -49,7 +49,7 @@ export function lights(
               import('@babylonjs/core/Lights/hemisphericLight'),
             ]).then(([{ Vector3 }, { HemisphericLight }]) => {
               new HemisphericLight(
-                `hemi${i}`,
+                `$hemisphericLight(${i + 1})`,
                 new Vector3(...(def.direction || [0, 1, 0])),
                 scene
               );
@@ -60,15 +60,17 @@ export function lights(
     );
 
     this.onInit(() => {
-      Promise.all(shadowGeneratorPromises).then((shadowGenerators) =>
-        scene.meshes
-          .filter((mesh) => !['$ground', '$sky'].includes(mesh.name))
-          .forEach((mesh) =>
-            shadowGenerators
-              .filter(Boolean)
-              .forEach((sg: ShadowGenerator) => sg.addShadowCaster(mesh))
+      Promise.all(shadowGeneratorPromises).then((shadowGeneratorsRaw) => {
+        const shadowCasters = scene.meshes.filter(
+          (mesh) => !['$ground', '$sky'].includes(mesh.name)
+        );
+        const shadowGenerators = shadowGeneratorsRaw.filter(Boolean);
+        shadowCasters.forEach((mesh) =>
+          shadowGenerators.forEach((sg: ShadowGenerator) =>
+            sg.addShadowCaster(mesh)
           )
-      );
+        );
+      });
     });
   };
 
