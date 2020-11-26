@@ -1,3 +1,4 @@
+// TODO: remove
 import { Vector3 } from '@babylonjs/core/Maths/math';
 import type { Mesh as BabylonMesh } from '@babylonjs/core/Meshes/mesh';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';

@@ -38,7 +38,10 @@ export interface Scene {
   render(): void;
 }
 
-export type CreateMesh = (scene: BabylonScene) => Promise<Mesh>;
+export type CreateMesh = (
+  options: object,
+  scene: BabylonScene
+) => Promise<Mesh>;
 
 export interface SceneObjectOperatorDependencies {
   Mesh: typeof Mesh;
@@ -50,10 +53,10 @@ export type SceneObjectOperations = Array<
 >;
 
 export interface SceneObject {
+  options: { name: string };
   operations: SceneObjectOperations;
   createMesh: CreateMesh;
   appendTo(scene: BabylonScene): void;
-  name: (newName: string) => SceneObject;
   position: (v: [number, number, number]) => SceneObject;
 }
 

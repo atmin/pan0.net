@@ -1,10 +1,14 @@
 import type { CreateMesh, SceneObject, SceneObjectOperations } from '../types';
 
-export function createObject(
-  createMesh: CreateMesh,
-  operators: {} = {}
-): SceneObject {
+export function createObject<
+  TOperators = {
+    [operator: string]: (
+      arg?: string | boolean | number | [number, number, number]
+    ) => SceneObject;
+  }
+>(createMesh: CreateMesh, operators?: TOperators): SceneObject & TOperators {
   return {
+    options: { name: '' },
     operations: [],
     createMesh,
 
@@ -13,26 +17,16 @@ export function createObject(
         import('@babylonjs/core/Meshes/mesh'),
         import('@babylonjs/core/Maths/math.vector'),
       ]);
-      const mesh = (this.operations as SceneObjectOperations).reduce(
+      const self = this as SceneObject;
+      const mesh = self.operations.reduce(
         (result, operation) => operation(result, { Mesh, Vector3 }),
-        await (this as SceneObject).createMesh(scene)
+        await (this as SceneObject).createMesh(self.options, scene)
       );
       if (!mesh.material) {
         mesh.material = scene.defaultMaterial;
       }
       mesh.receiveShadows = true;
       mesh.checkCollisions = true;
-    },
-
-    name(newName) {
-      if (String(newName).startsWith('$')) {
-        throw 'object names cannot start with $';
-      }
-      (this.operations as SceneObjectOperations).push((mesh) => {
-        mesh.name = newName;
-        return mesh;
-      });
-      return this;
     },
 
     position(v) {
