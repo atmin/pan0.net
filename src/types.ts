@@ -1,9 +1,10 @@
+import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 import type { Mesh } from '@babylonjs/core/Meshes/mesh';
-import type { Vector3 } from '@babylonjs/core/Maths/math.vector';
+import type { Color4, Vector3, Vector4 } from '@babylonjs/core/Maths/math';
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-export { BabylonScene, ShadowGenerator };
+export { Color4, Vector3, Vector4, BabylonScene, ShadowGenerator };
 
 export type SceneDecorator = (scene: BabylonScene) => void;
 
@@ -52,12 +53,20 @@ export type SceneObjectOperations = Array<
   (mesh: Mesh, dependencies: SceneObjectOperatorDependencies) => Mesh
 >;
 
-export interface SceneObject {
+interface SceneObjectBase<T> {
+  position: (v: [number, number, number]) => T;
+}
+export interface SceneObject extends SceneObjectBase<SceneObject> {
   options: { name: string };
   operations: SceneObjectOperations;
   createMesh: CreateMesh;
   appendTo(scene: BabylonScene): void;
-  position: (v: [number, number, number]) => SceneObject;
+}
+
+export interface MutableSceneObject extends SceneObjectBase<SceneObject> {
+  mesh: AbstractMesh;
+  replace: (...objects: SceneObject[]) => void;
+  remove: () => void;
 }
 
 // import { BaseTexture } from '@babylonjs/core/Materials/Textures/baseTexture';

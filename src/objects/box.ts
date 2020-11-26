@@ -1,7 +1,5 @@
-import type { Color4, Vector4 } from '@babylonjs/core/Maths/math';
-
 import { createObject } from './createObject';
-import type { BabylonScene, SceneObject } from '../types';
+import type { Color4, Vector4, BabylonScene, SceneObject } from '../types';
 
 interface BoxOptions {
   size?: number;
@@ -42,6 +40,7 @@ export const box = (name?: string) =>
         );
         return mesh;
       }),
+
     {
       size(s) {
         (this.options as BoxOptions).size = s;
