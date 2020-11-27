@@ -65,6 +65,9 @@ scene.objects = {
       mesh,
 
       position(v) {
+        import('../common').then(({ Vector3 }) => {
+          mesh.position = new Vector3(...v);
+        });
         return this;
       },
       replace(...objects) {},
