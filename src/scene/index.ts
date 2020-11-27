@@ -19,6 +19,7 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
   _eventHandlers: {
     init: [],
   },
+  _data: {},
 
   async _createSceneObjects(scene) {
     await Promise.all(
@@ -32,6 +33,11 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
   environment,
   lights,
   ground,
+
+  data(initialData) {
+    this._data = initialData;
+    return this;
+  },
 
   onInit(handler) {
     this._eventHandlers.init.push(handler);
@@ -64,5 +70,16 @@ scene.objects = {
       replace(...objects) {},
       remove() {},
     };
+  },
+};
+
+scene.data = {
+  get(key: string): any {
+    const data = (window as any)._sceneData;
+    return data[key];
+  },
+  set(key: string, value: any): void {
+    const data = (window as any)._sceneData;
+    data[key] = value;
   },
 };

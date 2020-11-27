@@ -4,5 +4,7 @@
     box().size(2),
     box('something').position([3.5, 2, 0.5]),
     box().position([0, 3, 0])
-  ).render();
+  )
+    .data({ test: 42 })
+    .render();
 </script>

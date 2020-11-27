@@ -24,14 +24,19 @@
         'triggerObject'
       ) {
         // Update scene state
-        scene.data.colorIndex =
-          (scene.data.colorIndex + 1) %
-          3;
+        scene.data.set(
+          'colorIndex',
+          (scene.data.get(
+            'colorIndex'
+          ) +
+            1) %
+            3
+        );
 
         // Cycle red-green-blue colors on 'triggerObject'
         scene.object.color(
-          scene.data.colors[
-            scene.data.colorIndex
+          scene.data.get('colors')[
+            scene.data.get('colorIndex')
           ]
         );
 

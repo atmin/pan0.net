@@ -18,6 +18,8 @@ export interface Scene {
     init: Array<Function>;
   };
 
+  _data: { [key: string]: any };
+
   camera(options?: {
     type?: 'fps';
     position?: [number, number, number];
@@ -33,6 +35,8 @@ export interface Scene {
   lights(definitions: null | LightDefinition | Array<LightDefinition>): Scene;
 
   ground(): Scene;
+
+  data(initialData: { [key: string]: any }): Scene;
 
   onInit(handler: () => any): Scene;
 

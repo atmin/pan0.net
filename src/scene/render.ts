@@ -59,6 +59,7 @@ export async function render() {
   this._eventHandlers.init.forEach((handler) => handler());
 
   (window as any)._scene = scene;
+  (window as any)._sceneData = self._data;
 
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => {
