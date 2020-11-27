@@ -15,7 +15,7 @@ export interface Scene {
   _createGround: SceneDecorator;
   _createSceneObjects: SceneDecorator;
   _eventHandlers: {
-    init: Array<Function>;
+    init: Array<() => void>;
   };
 
   _data: { [key: string]: any };
@@ -71,6 +71,10 @@ export interface MutableSceneObject extends SceneObjectBase<SceneObject> {
   mesh: AbstractMesh;
   replace: (...objects: SceneObject[]) => void;
   remove: () => void;
+}
+
+export interface Canvas {
+  size(s: number): Canvas;
 }
 
 interface CanvasObjectBase<T> {

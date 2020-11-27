@@ -1,4 +1,4 @@
-import { createObject } from './createObject';
+import { createSceneObject } from './createSceneObject';
 import type { Color4, Vector4, BabylonScene, SceneObject } from '../types';
 
 interface BoxOptions {
@@ -20,7 +20,7 @@ interface BoxOptions {
  * Create a box.
  */
 export const box = (name?: string) =>
-  createObject<{
+  createSceneObject<{
     size: (s: number) => SceneObject;
     width: (w: number) => SceneObject;
     height: (h: number) => SceneObject;

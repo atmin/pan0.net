@@ -1,6 +1,6 @@
 import type { CreateMesh, SceneObject, SceneObjectOperations } from '../types';
 
-export function createObject<
+export function createSceneObject<
   TOperators = {
     [operator: string]: (
       arg?: string | boolean | number | [number, number, number]
