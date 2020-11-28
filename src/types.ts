@@ -1,10 +1,15 @@
 import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 import type { Mesh } from '@babylonjs/core/Meshes/mesh';
-import type { Color4, Vector3, Vector4 } from '@babylonjs/core/Maths/math';
+import type {
+  Color4,
+  Plane,
+  Vector3,
+  Vector4,
+} from '@babylonjs/core/Maths/math';
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-export { Color4, Vector3, Vector4, BabylonScene, ShadowGenerator };
+export { Color4, Plane, Vector3, Vector4, BabylonScene, ShadowGenerator };
 
 export type SceneDecorator = (scene: BabylonScene) => void;
 
@@ -57,11 +62,55 @@ export type SceneObjectOperations = Array<
   (mesh: Mesh, dependencies: SceneObjectOperatorDependencies) => Mesh
 >;
 
+export enum SideOrientation {
+  FRONTSIDE = 0,
+  BACKSIDE = 1,
+  DOUBLESIDE = 2,
+}
+
+type MaterialTexture = Promise<Blob | HTMLCanvasElement>;
+type MaterialColor = [number, number, number];
+
+interface StandardMaterialOptions {
+  type: 'standard';
+
+  diffuseTexture?: MaterialTexture;
+  ambientTexture?: MaterialTexture;
+  opacityTexture?: MaterialTexture;
+  reflectionTexture?: MaterialTexture;
+  emissiveTexture?: MaterialTexture;
+  specularTexture?: MaterialTexture;
+  bumpTexture?: MaterialTexture;
+  lightmapTexture?: MaterialTexture;
+  refractionTexture?: MaterialTexture;
+
+  diffuseColor?: MaterialColor;
+  ambientColor?: MaterialColor;
+  specularColor?: MaterialColor;
+  emissiveColor?: MaterialColor;
+
+  specularPower?: number;
+  useAlphaFromDiffuseTexture?: boolean;
+  useEmissiveAsIllumination?: boolean;
+  linkEmissiveWithDiffuse?: boolean;
+  // TODO: rest of StandardMaterial props
+}
+
+interface PBRMaterialOptions {
+  type: 'pbr';
+  // TODO: rest PBRMaterial props
+}
+
+type MaterialOptions = StandardMaterialOptions | PBRMaterialOptions;
+
 interface SceneObjectBase<T> {
   position: (v: [number, number, number]) => T;
+  material: (opts: MaterialOptions) => T;
 }
 export interface SceneObject extends SceneObjectBase<SceneObject> {
-  options: { name: string };
+  meshOptions: object;
+  materialOptions: MaterialOptions;
+  textures: Array<MaterialTexture>;
   operations: SceneObjectOperations;
   createMesh: CreateMesh;
   appendTo(scene: BabylonScene): void;

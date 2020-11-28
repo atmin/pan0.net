@@ -1,4 +1,4 @@
-import type { CreateMesh, SceneObject, SceneObjectOperations } from '../types';
+import type { CreateMesh, SceneObject } from '../types';
 
 export function createSceneObject<
   TOperators = {
@@ -8,7 +8,9 @@ export function createSceneObject<
   }
 >(createMesh: CreateMesh, operators?: TOperators): SceneObject & TOperators {
   return {
-    options: { name: '' },
+    meshOptions: {},
+    materialOptions: { type: 'standard' },
+    textures: [],
     operations: [],
     createMesh,
 
@@ -20,7 +22,7 @@ export function createSceneObject<
       const self = this as SceneObject;
       const mesh = self.operations.reduce(
         (result, operation) => operation(result, { Mesh, Vector3 }),
-        await (this as SceneObject).createMesh(self.options, scene)
+        await (this as SceneObject).createMesh(self.meshOptions, scene)
       );
       if (!mesh.material) {
         mesh.material = scene.defaultMaterial;
@@ -30,11 +32,18 @@ export function createSceneObject<
     },
 
     position(v) {
-      (this.operations as SceneObjectOperations).push((mesh, { Vector3 }) => {
+      const self = this as SceneObject;
+      self.operations.push((mesh, { Vector3 }) => {
         mesh.position = new Vector3(...v);
         return mesh;
       });
-      return this;
+      return self;
+    },
+
+    material(options = { type: 'standard' }) {
+      const self = this as SceneObject;
+      self.materialOptions = options;
+      return self;
     },
 
     ...operators,

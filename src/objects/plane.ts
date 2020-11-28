@@ -1,41 +1,35 @@
 import { createSceneObject } from './createSceneObject';
 import type {
-  Color4,
+  Plane,
   Vector4,
-  BabylonScene,
   SceneObject,
   SideOrientation,
+  BabylonScene,
 } from '../types';
 
-interface BoxOptions {
+interface PlaneOptions {
   size?: number;
   width?: number;
   height?: number;
-  depth?: number;
-  faceUV?: Vector4[];
-  faceColors?: Color4[];
   sideOrientation?: SideOrientation;
+  sourcePlane?: Plane;
   frontUVs?: Vector4;
   backUVs?: Vector4;
-  wrap?: boolean;
-  topBaseAt?: number;
-  bottomBaseAt?: number;
 }
 
 /**
- * Create a box.
+ * Create a plane.
  */
-export const box = (name?: string) =>
+export const plane = (name?: string) =>
   createSceneObject<{
     size: (s: number) => SceneObject;
     width: (w: number) => SceneObject;
     height: (h: number) => SceneObject;
-    depth: (d: number) => SceneObject;
   }>(
-    (options: BoxOptions, scene: BabylonScene) =>
+    (options: PlaneOptions, scene: BabylonScene) =>
       import('../common').then(({ MeshBuilder, Vector3 }) => {
-        const mesh = MeshBuilder.CreateBox(
-          name || `box(${counter++})`,
+        const mesh = MeshBuilder.CreatePlane(
+          name || `plane(${counter++})`,
           options,
           scene
         );
@@ -50,26 +44,20 @@ export const box = (name?: string) =>
     {
       size(s) {
         const self = this as SceneObject;
-        const options = self.meshOptions as BoxOptions;
+        const options = self.meshOptions as PlaneOptions;
         options.size = s;
         return self;
       },
       width(w) {
         const self = this as SceneObject;
-        const options = self.meshOptions as BoxOptions;
+        const options = self.meshOptions as PlaneOptions;
         options.width = w;
         return self;
       },
       height(h) {
         const self = this as SceneObject;
-        const options = self.meshOptions as BoxOptions;
+        const options = self.meshOptions as PlaneOptions;
         options.height = h;
-        return self;
-      },
-      depth(d) {
-        const self = this as SceneObject;
-        const options = self.meshOptions as BoxOptions;
-        options.depth = d;
         return self;
       },
     }
