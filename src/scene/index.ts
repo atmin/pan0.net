@@ -70,6 +70,11 @@ scene.objects = {
         });
         return this;
       },
+
+      material() {
+        return this;
+      },
+
       replace(...objects) {},
       remove() {},
     };
