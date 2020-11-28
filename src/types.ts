@@ -9,7 +9,15 @@ import type {
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-export { Color4, Plane, Vector3, Vector4, BabylonScene, ShadowGenerator };
+export type {
+  Mesh,
+  Color4,
+  Plane,
+  Vector3,
+  Vector4,
+  BabylonScene,
+  ShadowGenerator,
+};
 
 export type SceneDecorator = (scene: BabylonScene) => void;
 

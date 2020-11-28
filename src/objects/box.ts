@@ -7,21 +7,6 @@ import type {
   SideOrientation,
 } from '../types';
 
-interface BoxOptions {
-  size?: number;
-  width?: number;
-  height?: number;
-  depth?: number;
-  faceUV?: Vector4[];
-  faceColors?: Color4[];
-  sideOrientation?: SideOrientation;
-  frontUVs?: Vector4;
-  backUVs?: Vector4;
-  wrap?: boolean;
-  topBaseAt?: number;
-  bottomBaseAt?: number;
-}
-
 /**
  * Create a box.
  */
@@ -53,18 +38,21 @@ export const box = (name?: string) =>
       options.size = s;
       return self;
     },
+
     width(w) {
       const self = this as SceneObject;
       const options = self.meshOptions as BoxOptions;
       options.width = w;
       return self;
     },
+
     height(h) {
       const self = this as SceneObject;
       const options = self.meshOptions as BoxOptions;
       options.height = h;
       return self;
     },
+
     depth(d) {
       const self = this as SceneObject;
       const options = self.meshOptions as BoxOptions;
@@ -74,3 +62,18 @@ export const box = (name?: string) =>
   });
 
 let counter = 1;
+
+interface BoxOptions {
+  size?: number;
+  width?: number;
+  height?: number;
+  depth?: number;
+  faceUV?: Vector4[];
+  faceColors?: Color4[];
+  sideOrientation?: SideOrientation;
+  frontUVs?: Vector4;
+  backUVs?: Vector4;
+  wrap?: boolean;
+  topBaseAt?: number;
+  bottomBaseAt?: number;
+}

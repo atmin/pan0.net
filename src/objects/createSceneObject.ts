@@ -1,4 +1,4 @@
-import type { CreateMesh, SceneObject } from '../types';
+import type { CreateMesh, SceneObject, Mesh } from '../types';
 
 export function createSceneObject<
   TOperators = {
@@ -8,8 +8,12 @@ export function createSceneObject<
   }
 >({
   createMesh,
+  createMaterial,
   ...operators
-}: { createMesh: CreateMesh } & TOperators): SceneObject & TOperators {
+}: {
+  createMesh: CreateMesh;
+  createMaterial?: (mesh: Mesh) => void;
+} & TOperators): SceneObject & TOperators {
   return {
     meshOptions: {},
     materialOptions: { type: 'standard' },
@@ -27,9 +31,10 @@ export function createSceneObject<
         (result, operation) => operation(result, { Mesh, Vector3 }),
         await (this as SceneObject).createMesh(self.meshOptions, scene)
       );
-      if (!mesh.material) {
-        mesh.material = scene.defaultMaterial;
+      if (createMaterial) {
+        createMaterial(mesh);
       }
+      // TODO: extract as mesh operators
       mesh.receiveShadows = true;
       mesh.checkCollisions = true;
     },

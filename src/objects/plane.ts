@@ -1,21 +1,6 @@
 import { createSceneObject } from './createSceneObject';
-import type {
-  Plane,
-  Vector4,
-  SceneObject,
-  SideOrientation,
-  BabylonScene,
-} from '../types';
-
-interface PlaneOptions {
-  size?: number;
-  width?: number;
-  height?: number;
-  sideOrientation?: SideOrientation;
-  sourcePlane?: Plane;
-  frontUVs?: Vector4;
-  backUVs?: Vector4;
-}
+import { SideOrientation } from '../types';
+import type { Plane, Vector4, SceneObject, BabylonScene } from '../types';
 
 /**
  * Create a plane.
@@ -25,6 +10,7 @@ export const plane = (name?: string) =>
     size: (s: number) => SceneObject;
     width: (w: number) => SceneObject;
     height: (h: number) => SceneObject;
+    doublesided: () => SceneObject;
   }>({
     async createMesh(options: PlaneOptions, scene: BabylonScene) {
       const { MeshBuilder, Vector3 } = await import('../common');
@@ -41,24 +27,47 @@ export const plane = (name?: string) =>
       return mesh;
     },
 
+    createMaterial() {
+      console.log('plane.createMaterial');
+    },
+
     size(s) {
       const self = this as SceneObject;
       const options = self.meshOptions as PlaneOptions;
       options.size = s;
       return self;
     },
+
     width(w) {
       const self = this as SceneObject;
       const options = self.meshOptions as PlaneOptions;
       options.width = w;
       return self;
     },
+
     height(h) {
       const self = this as SceneObject;
       const options = self.meshOptions as PlaneOptions;
       options.height = h;
       return self;
     },
+
+    doublesided() {
+      const self = this as SceneObject;
+      const options = self.meshOptions as PlaneOptions;
+      options.sideOrientation = SideOrientation.DOUBLESIDE;
+      return self;
+    },
   });
 
 let counter = 1;
+
+interface PlaneOptions {
+  size?: number;
+  width?: number;
+  height?: number;
+  sideOrientation?: SideOrientation;
+  sourcePlane?: Plane;
+  frontUVs?: Vector4;
+  backUVs?: Vector4;
+}

@@ -3,7 +3,8 @@
   scene(
     box().size(2),
     box('something').position([3.5, 2, 0.5]),
-    box().position([0, 3, 0])
+    box().position([0, 3, 0]),
+    plane().position([0, 4, 0]).doublesided()
   )
     .data({ test: 42 })
     .render();
