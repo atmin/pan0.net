@@ -6,7 +6,10 @@ export function createSceneObject<
       arg?: string | boolean | number | [number, number, number]
     ) => SceneObject;
   }
->(createMesh: CreateMesh, operators?: TOperators): SceneObject & TOperators {
+>({
+  createMesh,
+  ...operators
+}: { createMesh: CreateMesh } & TOperators): SceneObject & TOperators {
   return {
     meshOptions: {},
     materialOptions: { type: 'standard' },
@@ -46,6 +49,6 @@ export function createSceneObject<
       return self;
     },
 
-    ...operators,
+    ...((operators as unknown) as TOperators),
   };
 }
