@@ -8,6 +8,7 @@ import type {
   Scene,
   SceneObject,
   MutableSceneObject,
+  AbstractMesh,
 } from '../types';
 
 export const scene = (...objects: Array<SceneObject>): Scene => ({
@@ -56,28 +57,12 @@ scene.objects = {
   get(name: string): MutableSceneObject | null {
     const scene = (window as any)._scene as BabylonScene;
     const mesh = scene.getMeshByName(name);
+    return mesh === null ? null : createMutableSceneObject(mesh);
+  },
 
-    if (mesh === null) {
-      return null;
-    }
-
-    return {
-      mesh,
-
-      position(v) {
-        import('../common').then(({ Vector3 }) => {
-          mesh.position = new Vector3(...v);
-        });
-        return this;
-      },
-
-      material() {
-        return this;
-      },
-
-      replace(...objects) {},
-      remove() {},
-    };
+  all(): Array<MutableSceneObject> {
+    const scene = (window as any)._scene as BabylonScene;
+    return scene.meshes.map(createMutableSceneObject);
   },
 };
 
@@ -91,3 +76,28 @@ scene.data = {
     data[key] = value;
   },
 };
+
+const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
+  name: mesh.name,
+
+  position(v) {
+    if (!v) {
+      const { x, y, z } = mesh.position;
+      return [x, y, z];
+    }
+
+    import('../common').then(({ Vector3 }) => {
+      mesh.position = new Vector3(...v);
+    });
+    return this;
+  },
+
+  // TODO: implement rest
+
+  material() {
+    return this;
+  },
+
+  replace(...objects) {},
+  remove() {},
+});

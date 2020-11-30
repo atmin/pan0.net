@@ -10,6 +10,7 @@ import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGener
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 
 export type {
+  AbstractMesh,
   Mesh,
   Color4,
   Plane,
@@ -112,20 +113,22 @@ interface PBRMaterialOptions {
 type MaterialOptions = StandardMaterialOptions | PBRMaterialOptions;
 
 interface SceneObjectBase<T> {
-  position: (v: [number, number, number]) => T;
+  position: (
+    v?: [number, number, number]
+  ) => typeof v extends undefined ? [number, number, number] : T;
   material: (opts: MaterialOptions) => T;
 }
 export interface SceneObject extends SceneObjectBase<SceneObject> {
   meshOptions: object;
   materialOptions: MaterialOptions;
-  textures: Array<MaterialTexture>;
+  textures: { [key: string]: MaterialTexture };
   operations: SceneObjectOperations;
   createMesh: CreateMesh;
   appendTo(scene: BabylonScene): void;
 }
 
 export interface MutableSceneObject extends SceneObjectBase<SceneObject> {
-  mesh: AbstractMesh;
+  readonly name: string;
   replace: (...objects: SceneObject[]) => void;
   remove: () => void;
 }

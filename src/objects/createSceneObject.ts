@@ -17,7 +17,7 @@ export function createSceneObject<
   return {
     meshOptions: {},
     materialOptions: { type: 'standard' },
-    textures: [],
+    textures: {},
     operations: [],
     createMesh,
 
