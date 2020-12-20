@@ -5,13 +5,13 @@ import type { BabylonScene, Scene } from '../types';
  */
 export function environment(): Scene {
   (this as Scene)._createEnvironment = async (scene: BabylonScene) => {
-    const {
-      PBRMaterial,
-      CubeTexture,
-      Texture,
-      Vector3,
-      MeshBuilder,
-    } = await import('../common');
+    const [
+      { BoxBuilder },
+      { PBRMaterial, CubeTexture, Texture, Vector3 },
+    ] = await Promise.all([
+      import('@babylonjs/core/Meshes/Builders/boxBuilder'),
+      import('../common'),
+    ]);
     scene.gravity = new Vector3(...[0, -9.81, 0]);
     scene.collisionsEnabled = true;
     scene.environmentTexture = new CubeTexture(
@@ -25,7 +25,7 @@ export function environment(): Scene {
     skyMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
     skyMaterial.disableLighting = true;
     skyMaterial.microSurface = 0.7;
-    const sky = MeshBuilder.CreateBox('$sky', { size: 1000 }, scene);
+    const sky = BoxBuilder.CreateBox('$sky', { size: 1000 }, scene);
     sky.material = skyMaterial;
   };
   return this;

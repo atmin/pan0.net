@@ -18,8 +18,11 @@ export const box = (name?: string) =>
     depth: (d: number) => SceneObject;
   }>({
     async createMesh(options: BoxOptions, scene: BabylonScene) {
-      const { MeshBuilder, Vector3 } = await import('../common');
-      const mesh = MeshBuilder.CreateBox(
+      const [{ BoxBuilder }, { Vector3 }] = await Promise.all([
+        import('@babylonjs/core/Meshes/Builders/boxBuilder'),
+        import('../common'),
+      ]);
+      const mesh = BoxBuilder.CreateBox(
         name || `box(${counter++})`,
         options,
         scene

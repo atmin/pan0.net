@@ -8,10 +8,10 @@ export function ground({
   checkCollisions?: boolean;
 } = {}): Scene {
   (this as Scene)._createGround = async (scene: BabylonScene) => {
-    const { MeshBuilder, BackgroundMaterial, Color3 } = await import(
+    const { GroundBuilder, BackgroundMaterial, Color3 } = await import(
       '../common'
     );
-    const ground = MeshBuilder.CreateGround(
+    const ground = GroundBuilder.CreateGround(
       '$ground',
       {
         width: 100,

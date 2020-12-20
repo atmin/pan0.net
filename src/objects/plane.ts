@@ -13,8 +13,11 @@ export const plane = (name?: string) =>
     doublesided: () => SceneObject;
   }>({
     async createMesh(options: PlaneOptions, scene: BabylonScene) {
-      const { MeshBuilder, Vector3 } = await import('../common');
-      const mesh = MeshBuilder.CreatePlane(
+      const [{ PlaneBuilder }, { Vector3 }] = await Promise.all([
+        import('@babylonjs/core/Meshes/Builders/planeBuilder'),
+        import('../common'),
+      ]);
+      const mesh = PlaneBuilder.CreatePlane(
         name || `plane(${counter++})`,
         options,
         scene
