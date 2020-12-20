@@ -24,7 +24,7 @@ export function environment(): Scene {
     skyMaterial.reflectionTexture = scene.environmentTexture;
     skyMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
     skyMaterial.disableLighting = true;
-    skyMaterial.microSurface = 0.7;
+    skyMaterial.microSurface = 0.8;
     const sky = BoxBuilder.CreateBox('$sky', { size: 1000 }, scene);
     sky.material = skyMaterial;
   };

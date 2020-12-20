@@ -1,4 +1,47 @@
-import type { CreateMesh, SceneObject, Mesh } from '../types';
+import { StandardMaterial, PBRMaterial, Texture } from '../common';
+import type {
+  CreateMesh,
+  SceneObject,
+  Material,
+  MaterialOptions,
+  BabylonScene,
+} from '../types';
+
+async function createMaterial(
+  options: MaterialOptions,
+  scene: BabylonScene
+): Promise<Material> {
+  if (options.type === 'standard') {
+    const material = new StandardMaterial('TODO', scene);
+    const props = [
+      'diffuseTexture',
+      'ambientTexture',
+      'opacityTexture',
+      'reflectionTexture',
+      'emissiveTexture',
+      'specularTexture',
+      'bumpTexture',
+      'lightmapTexture',
+      'refractionTexture',
+    ];
+    const textures = await Promise.all(props.map((prop) => options[prop]));
+    textures.forEach((texture, i) => {
+      if (typeof texture === 'string') {
+        console.log(texture);
+        options[props[i]] = new Texture(texture, scene);
+      }
+    });
+    Object.keys(options).forEach((option) => {
+      material[option] = options[option];
+    });
+    return material;
+  }
+
+  if (options.type === 'pbr') {
+    const material = new PBRMaterial('todo', scene);
+    return material;
+  }
+}
 
 export function createSceneObject<
   TOperators = {
@@ -8,11 +51,9 @@ export function createSceneObject<
   }
 >({
   createMesh,
-  createMaterial,
   ...operators
 }: {
   createMesh: CreateMesh;
-  createMaterial?: (mesh: Mesh) => void;
 } & TOperators): SceneObject & TOperators {
   return {
     meshOptions: {},
@@ -31,9 +72,7 @@ export function createSceneObject<
         (result, operation) => operation(result, { Mesh, Vector3 }),
         await (this as SceneObject).createMesh(self.meshOptions, scene)
       );
-      if (createMaterial) {
-        createMaterial(mesh);
-      }
+      mesh.material = await createMaterial(self.materialOptions, scene);
       // TODO: extract as mesh operators
       mesh.receiveShadows = true;
       mesh.checkCollisions = true;

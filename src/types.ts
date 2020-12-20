@@ -6,12 +6,14 @@ import type {
   Vector3,
   Vector4,
 } from '@babylonjs/core/Maths/math';
+import type { Material } from '@babylonjs/core/Materials/material';
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 
 export type {
   AbstractMesh,
   Mesh,
+  Material,
   Color4,
   Plane,
   Vector3,
@@ -77,7 +79,7 @@ export enum SideOrientation {
   DOUBLESIDE = 2,
 }
 
-type MaterialTexture = Promise<Blob | HTMLCanvasElement>;
+type MaterialTexture = string | Promise<HTMLCanvasElement>;
 type MaterialColor = [number, number, number];
 
 interface StandardMaterialOptions {
@@ -110,7 +112,7 @@ interface PBRMaterialOptions {
   // TODO: rest PBRMaterial props
 }
 
-type MaterialOptions = StandardMaterialOptions | PBRMaterialOptions;
+export type MaterialOptions = StandardMaterialOptions | PBRMaterialOptions;
 
 interface SceneObjectBase<T> {
   position: (

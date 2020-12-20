@@ -1,11 +1,21 @@
 <script src="/latest/main.js"></script>
 <script>
   scene(
-    box().size(2),
+    box().size(2).material({
+      type: 'standard',
+      ambientTexture: 'https://loremflickr.com/320/240/dog',
+    }),
     box('something').position([3.5, 2, 0.5]),
     box().position([0, 3, 0]),
-    plane().position([0, 4, 0]).doublesided()
+    plane()
+      .position([0, 4, 0])
+      .doublesided()
+      .material({
+        type: 'standard',
+        ambientTexture: 'https://loremflickr.com/320/240/cat',
+      })
   )
     .data({ test: 42 })
+    // .lights(null)
     .render();
 </script>
