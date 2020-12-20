@@ -139,12 +139,19 @@ export interface Canvas {
 
 interface CanvasObjectBase<T> {
   position: (v: [number, number]) => T;
+  rotation: (angle: number) => T;
+  scale: (s: number) => T;
 }
 
 export interface CanvasObject extends CanvasObjectBase<CanvasObject> {
   createCanvasObject(): void;
 }
 
+export interface MutableCanvasObject
+  extends CanvasObjectBase<MutableCanvasObject> {
+  replace: (...objects: CanvasObject[]) => void;
+  remove: () => void;
+}
 export interface LightDefinition {
   type: 'hemispheric' | 'directional';
   position?: [number, number, number];
