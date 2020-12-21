@@ -12,7 +12,7 @@ async function createMaterial(
   options: MaterialOptions,
   scene: BabylonScene
 ): Promise<Material> {
-  const { type, ...opts } = JSON.parse(JSON.stringify(options));
+  const { type, ...opts } = options;
   const { material, colorProps, textureProps, otherProps } = ((): {
     material: Material;
     colorProps: string[];
@@ -47,11 +47,32 @@ async function createMaterial(
       ...standardMaterialTextureProps,
       ...standardMaterialOtherProps,
     ];
+
+    const pbrMaterialColorProps = ['albedoColor', 'reflectivityColor'];
+    const pbrMaterialTextureProps = [
+      'albedoTexture',
+      'metallicTexture',
+      'reflectionTexture',
+      'bumpTexture',
+      'ambientTexture',
+      'microSurfaceTexture',
+    ];
+    const pbrMaterialOtherProps = [
+      'ambientTextureStrength',
+      'metallic',
+      'roughness',
+      'microSurface',
+      'useAlphaFromAlbedoTexture',
+      'useMicroSurfaceFromReflectivityMapAlpha',
+      'useAmbientInGrayScale',
+    ];
+    // TODO: other props + subSurface, clearCoat, anisotropy, sheen, brdf
+
     const materialType: 'standard' | 'pbr' =
       type ||
-      Object.keys(opts).some((key) => !standardMaterialProps.includes(key))
+      (Object.keys(opts).some((key) => !standardMaterialProps.includes(key))
         ? 'pbr'
-        : 'standard';
+        : 'standard');
 
     if (materialType === 'standard') {
       return {
@@ -64,26 +85,26 @@ async function createMaterial(
 
     return {
       material: new PBRMaterial('TODO', scene),
-      colorProps: [],
-      textureProps: [],
-      otherProps: [],
+      colorProps: pbrMaterialColorProps,
+      textureProps: pbrMaterialTextureProps,
+      otherProps: pbrMaterialOtherProps,
     };
   })();
+
+  colorProps.forEach((prop) => {
+    if (Array.isArray(opts[prop]) && opts[prop].length === 3) {
+      material[prop] = new Color3(...opts[prop]);
+    }
+  });
 
   const textures = await Promise.all(textureProps.map((prop) => opts[prop]));
   textures.forEach((texture, i) => {
     if (typeof texture === 'string') {
-      opts[textureProps[i]] = new Texture(texture, scene);
+      material[textureProps[i]] = new Texture(texture, scene);
     }
   });
 
-  colorProps.forEach((prop) => {
-    if (Array.isArray(opts[prop]) && opts[prop].length === 3) {
-      opts[prop] = new Color3(...opts[prop]);
-    }
-  });
-
-  Object.keys(otherProps).forEach((option) => {
+  otherProps.forEach((option) => {
     material[option] = opts[option];
   });
 

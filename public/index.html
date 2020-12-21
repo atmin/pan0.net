@@ -1,24 +1,34 @@
 <script src="/latest/main.js"></script>
 <script>
   scene(
-    box().size(2).material({
-      type: 'standard',
-      ambientTexture: 'https://loremflickr.com/320/240/dog?lock=42',
-    }),
-
-    box('pbr').position([3.5, 2, 0.5]).material({
-      type: 'pbr',
-      albedoTexture: 'https://loremflickr.com/320/240/cat?lock=42',
-    }),
-
-    box('blue')
-      .position([0, 3, 0])
-      .material({ type: 'standard', diffuseColor: color.BLUE }),
-
-    plane().position([0, 4, 0]).doublesided().material({
-      type: 'standard',
-      diffuseTexture: 'https://loremflickr.com/320/240/cat?lock=42',
+    box().size(2.4).width(3.2).position([0, 2, 0]).material({
+      // albedoColor: color.GREEN,
+      albedoTexture: 'https://loremflickr.com/320/240/frog?lock=1',
+      metallic: 0.5,
+      roughness: 1,
+      // reflectionTexture: '/assets/env/default.env',
     })
+
+    // box().size(2).material({
+    //   type: 'standard',
+    //   ambientTexture: 'https://loremflickr.com/320/240/dog?lock=42',
+    // }),
+
+    // box('pbr').position([3.5, 2, 0.5]).material({
+    //   albedoColor: color.GREEN,
+    //   metallic: 1,
+    //   roughness: 0,
+    //   reflectionTexture: 'https://loremflickr.com/320/240/cat?lock=42',
+    // }),
+
+    // box('blue')
+    //   .position([0, 3, 0])
+    //   .material({ type: 'standard', diffuseColor: color.BLUE }),
+
+    // plane().position([0, 4, 0]).width(3.4).height(2).doublesided().material({
+    //   type: 'standard',
+    //   diffuseTexture: 'https://loremflickr.com/320/240/cat?lock=42',
+    // })
   )
     .data({ test: 42 })
     // .lights(null)
