@@ -13,6 +13,7 @@ import { Scene } from '../types';
 
 export async function render() {
   const canvas = document.createElement('canvas');
+  canvas.setAttribute('touch-action', 'none');
   canvas.style.position = 'absolute';
   canvas.style.top = '0';
   canvas.style.left = '0';

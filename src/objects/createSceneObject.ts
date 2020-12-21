@@ -1,5 +1,4 @@
 import { Color3 } from '@babylonjs/core/Maths/math';
-import { StandardMaterial, PBRMaterial, Texture } from '../common';
 import type {
   CreateMesh,
   SceneObject,
@@ -8,10 +7,19 @@ import type {
   BabylonScene,
 } from '../types';
 
-function createMaterial(
+async function createMaterial(
   options: MaterialOptions,
   scene: BabylonScene
-): Material {
+): Promise<Material> {
+  const [
+    { StandardMaterial },
+    { PBRMaterial },
+    { Texture },
+  ] = await Promise.all([
+    import('@babylonjs/core/Materials/standardMaterial'),
+    import('@babylonjs/core/Materials/PBR/pbrMaterial'),
+    import('@babylonjs/core/Materials/Textures/texture'),
+  ]);
   const { type, ...opts } = options;
   const { material, colorProps, textureProps, otherProps } = ((): {
     material: Material;
@@ -98,14 +106,18 @@ function createMaterial(
   });
 
   const textures = textureProps.map((prop) => opts[prop]);
-  textures.forEach((texture, i) => {
+  for (let i = 0; i < textureProps.length; i++) {
+    const texture = textures[i];
+
     if (typeof texture === 'string') {
-      material[textureProps[i]] = new Texture(texture, scene);
+      material[textureProps[i]] = await Promise.resolve(
+        new Texture(texture, scene)
+      );
     }
     if (typeof texture === 'function') {
-      material[textureProps[i]] = texture(scene);
+      material[textureProps[i]] = await texture(scene);
     }
-  });
+  }
 
   otherProps.forEach((option) => {
     material[option] = opts[option];
@@ -128,7 +140,7 @@ export function createSceneObject<
 } & TOperators): SceneObject & TOperators {
   return {
     meshOptions: {},
-    materialOptions: { type: 'standard' },
+    materialOptions: { type: 'pbr' },
     textures: {},
     operations: [],
     createMesh,
@@ -143,7 +155,8 @@ export function createSceneObject<
         (result, operation) => operation(result, { Mesh, Vector3 }),
         await (this as SceneObject).createMesh(self.meshOptions, scene)
       );
-      mesh.material = createMaterial(self.materialOptions, scene);
+      mesh.material = await createMaterial(self.materialOptions, scene);
+
       // TODO: extract as mesh operators
       mesh.receiveShadows = true;
       mesh.checkCollisions = true;

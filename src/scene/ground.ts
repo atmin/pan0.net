@@ -8,9 +8,15 @@ export function ground({
   checkCollisions?: boolean;
 } = {}): Scene {
   (this as Scene)._createGround = async (scene: BabylonScene) => {
-    const { GroundBuilder, BackgroundMaterial, Color3 } = await import(
-      '../common'
-    );
+    const [
+      { GroundBuilder },
+      { BackgroundMaterial },
+      { Color3 },
+    ] = await Promise.all([
+      import('@babylonjs/core/Meshes/Builders/groundBuilder'),
+      import('@babylonjs/core/Materials/Background/backgroundMaterial'),
+      import('@babylonjs/core/Maths/math.color'),
+    ]);
     const ground = GroundBuilder.CreateGround(
       '$ground',
       {

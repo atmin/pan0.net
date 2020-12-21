@@ -86,7 +86,7 @@ const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
       return [x, y, z];
     }
 
-    import('../common').then(({ Vector3 }) => {
+    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
       mesh.position = new Vector3(...v);
     });
     return this;

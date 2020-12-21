@@ -7,10 +7,16 @@ export function environment(): Scene {
   (this as Scene)._createEnvironment = async (scene: BabylonScene) => {
     const [
       { BoxBuilder },
-      { PBRMaterial, CubeTexture, Texture, Vector3 },
+      { PBRMaterial },
+      { CubeTexture },
+      { Texture },
+      { Vector3 },
     ] = await Promise.all([
       import('@babylonjs/core/Meshes/Builders/boxBuilder'),
-      import('../common'),
+      import('@babylonjs/core/Materials/PBR/pbrMaterial'),
+      import('@babylonjs/core/Materials/Textures/cubeTexture'),
+      import('@babylonjs/core/Materials/Textures/texture'),
+      import('@babylonjs/core/Maths/math.vector'),
     ]);
     scene.gravity = new Vector3(...[0, -9.81, 0]);
     scene.collisionsEnabled = true;

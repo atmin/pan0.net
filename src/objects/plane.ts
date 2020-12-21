@@ -1,6 +1,11 @@
 import { createSceneObject } from './createSceneObject';
-import { SideOrientation } from '../types';
-import type { Plane, Vector4, SceneObject, BabylonScene } from '../types';
+import {
+  Plane,
+  Vector4,
+  SceneObject,
+  BabylonScene,
+  SideOrientation,
+} from '../types';
 
 /**
  * Create a plane.
@@ -15,7 +20,7 @@ export const plane = (name?: string) =>
     async createMesh(options: PlaneOptions, scene: BabylonScene) {
       const [{ PlaneBuilder }, { Vector3 }] = await Promise.all([
         import('@babylonjs/core/Meshes/Builders/planeBuilder'),
-        import('../common'),
+        import('@babylonjs/core/Maths/math.vector'),
       ]);
       const mesh = PlaneBuilder.CreatePlane(
         name || `plane(${counter++})`,
@@ -28,10 +33,6 @@ export const plane = (name?: string) =>
         0
       );
       return mesh;
-    },
-
-    createMaterial() {
-      console.log('plane.createMaterial');
     },
 
     size(s) {

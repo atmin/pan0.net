@@ -20,7 +20,7 @@ export const box = (name?: string) =>
     async createMesh(options: BoxOptions, scene: BabylonScene) {
       const [{ BoxBuilder }, { Vector3 }] = await Promise.all([
         import('@babylonjs/core/Meshes/Builders/boxBuilder'),
-        import('../common'),
+        import('@babylonjs/core/Maths/math'),
       ]);
       const mesh = BoxBuilder.CreateBox(
         name || `box(${counter++})`,

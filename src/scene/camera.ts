@@ -4,7 +4,9 @@ export function camera({
   type = 'fps',
   position = [0, 1.8, -10],
   fov = 1,
-  speed = 0.1,
+  speed = 0.25,
+  angularSensibility = 2000,
+  touchAngularSensibility = 2500,
   ellipsoid = [0.8, 0.9, 0.8],
   applyGravity = true,
   checkCollisions = true,
@@ -14,7 +16,7 @@ export function camera({
       (this as Scene)._createCamera = async (scene) => {
         const [{ UniversalCamera }, { Vector3 }] = await Promise.all([
           import('@babylonjs/core/Cameras/universalCamera'),
-          import('../common'),
+          import('@babylonjs/core/Maths/math.vector'),
         ]);
         const camera = new UniversalCamera(
           'camera',
@@ -25,6 +27,8 @@ export function camera({
         camera.ellipsoid = new Vector3(...ellipsoid);
         camera.setTarget(Vector3.Zero());
         camera.speed = speed;
+        camera.angularSensibility = angularSensibility;
+        camera.touchAngularSensibility = touchAngularSensibility;
         camera.fov = fov;
         camera.attachControl(
           scene.getEngine().getRenderingCanvas() as HTMLElement,

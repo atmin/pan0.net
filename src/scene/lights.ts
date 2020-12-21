@@ -21,16 +21,16 @@ export function lights(
               { DirectionalLight },
               { ShadowGenerator },
             ] = await Promise.all([
-              import('../common'),
+              import('@babylonjs/core/Maths/math.vector'),
               import('@babylonjs/core/Lights/directionalLight'),
               import('@babylonjs/core/Lights/Shadows/shadowGenerator'),
             ]);
             const light = new DirectionalLight(
               `$directionalLight(${i + 1})`,
-              new Vector3(...(def.direction || [0, -1, 0])),
+              new Vector3(...(def.direction || [0, 1, 0])),
               scene
             );
-            light.position = new Vector3(...(def.position || [0, 4, 0]));
+            light.position = new Vector3(...(def.position || [0, -4, 0]));
             light.intensity = def.intensity || 0.1;
             light.lightmapMode = 2; // @babylonjs/core/Lights/light::Light.LIGHTMAP_SHADOWSONLY
             const shadowGenerator = def.shadowless
@@ -47,7 +47,7 @@ export function lights(
 
           case 'hemispheric': {
             const [{ Vector3 }, { HemisphericLight }] = await Promise.all([
-              import('../common'),
+              import('@babylonjs/core/Maths/math.vector'),
               import('@babylonjs/core/Lights/hemisphericLight'),
             ]);
             new HemisphericLight(

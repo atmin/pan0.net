@@ -21,6 +21,7 @@ export type {
   Vector4,
   BabylonScene,
   ShadowGenerator,
+  Texture,
 };
 
 export type SceneDecorator = (scene: BabylonScene) => void;
