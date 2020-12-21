@@ -3,17 +3,19 @@
   scene(
     box().size(2).material({
       type: 'standard',
-      ambientTexture: 'https://loremflickr.com/320/240/dog',
+      ambientTexture: 'https://loremflickr.com/320/240/dog?lock=42',
     }),
-    box('something').position([3.5, 2, 0.5]),
-    box().position([0, 3, 0]),
-    plane()
-      .position([0, 4, 0])
-      .doublesided()
-      .material({
-        type: 'standard',
-        ambientTexture: 'https://loremflickr.com/320/240/cat',
-      })
+    box('something').position([3.5, 2, 0.5]).material({
+      type: 'standard',
+      ambientTexture: 'https://loremflickr.com/320/240/cat?lock=42',
+    }),
+    box('blue')
+      .position([0, 3, 0])
+      .material({ type: 'standard', diffuseColor: color.BLUE }),
+    plane().position([0, 4, 0]).doublesided().material({
+      type: 'standard',
+      diffuseTexture: 'https://loremflickr.com/320/240/cat?lock=42',
+    })
   )
     .data({ test: 42 })
     // .lights(null)

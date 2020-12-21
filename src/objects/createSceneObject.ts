@@ -1,3 +1,4 @@
+import { Color3 } from '@babylonjs/core/Maths/math';
 import { StandardMaterial, PBRMaterial, Texture } from '../common';
 import type {
   CreateMesh,
@@ -13,7 +14,8 @@ async function createMaterial(
 ): Promise<Material> {
   if (options.type === 'standard') {
     const material = new StandardMaterial('TODO', scene);
-    const props = [
+
+    const textureProps = [
       'diffuseTexture',
       'ambientTexture',
       'opacityTexture',
@@ -24,13 +26,27 @@ async function createMaterial(
       'lightmapTexture',
       'refractionTexture',
     ];
-    const textures = await Promise.all(props.map((prop) => options[prop]));
+    const textures = await Promise.all(
+      textureProps.map((prop) => options[prop])
+    );
     textures.forEach((texture, i) => {
       if (typeof texture === 'string') {
-        console.log(texture);
-        options[props[i]] = new Texture(texture, scene);
+        options[textureProps[i]] = new Texture(texture, scene);
       }
     });
+
+    const colorProps = [
+      'diffuseColor',
+      'ambientColor',
+      'specularColor',
+      'emissiveColor',
+    ];
+    colorProps.forEach((prop) => {
+      if (Array.isArray(options[prop]) && options[prop].length === 3) {
+        options[prop] = new Color3(...options[prop]);
+      }
+    });
+
     Object.keys(options).forEach((option) => {
       material[option] = options[option];
     });
@@ -38,6 +54,7 @@ async function createMaterial(
   }
 
   if (options.type === 'pbr') {
+    delete options.type;
     const material = new PBRMaterial('todo', scene);
     return material;
   }
