@@ -12,10 +12,20 @@ async function createMaterial(
   options: MaterialOptions,
   scene: BabylonScene
 ): Promise<Material> {
-  if (options.type === 'standard') {
-    const material = new StandardMaterial('TODO', scene);
-
-    const textureProps = [
+  const { type, ...opts } = JSON.parse(JSON.stringify(options));
+  const { material, colorProps, textureProps, otherProps } = ((): {
+    material: Material;
+    colorProps: string[];
+    textureProps: string[];
+    otherProps: string[];
+  } => {
+    const standardMaterialColorProps = [
+      'diffuseColor',
+      'ambientColor',
+      'specularColor',
+      'emissiveColor',
+    ];
+    const standardMaterialTextureProps = [
       'diffuseTexture',
       'ambientTexture',
       'opacityTexture',
@@ -26,38 +36,58 @@ async function createMaterial(
       'lightmapTexture',
       'refractionTexture',
     ];
-    const textures = await Promise.all(
-      textureProps.map((prop) => options[prop])
-    );
-    textures.forEach((texture, i) => {
-      if (typeof texture === 'string') {
-        options[textureProps[i]] = new Texture(texture, scene);
-      }
-    });
-
-    const colorProps = [
-      'diffuseColor',
-      'ambientColor',
-      'specularColor',
-      'emissiveColor',
+    const standardMaterialOtherProps = [
+      'specularPower',
+      'useAlphaFromDiffuseTexture',
+      'useEmissiveAsIllumination',
+      'linkEmissiveWithDiffuse',
     ];
-    colorProps.forEach((prop) => {
-      if (Array.isArray(options[prop]) && options[prop].length === 3) {
-        options[prop] = new Color3(...options[prop]);
-      }
-    });
+    const standardMaterialProps = [
+      ...standardMaterialColorProps,
+      ...standardMaterialTextureProps,
+      ...standardMaterialOtherProps,
+    ];
+    const materialType: 'standard' | 'pbr' =
+      type ||
+      Object.keys(opts).some((key) => !standardMaterialProps.includes(key))
+        ? 'pbr'
+        : 'standard';
 
-    Object.keys(options).forEach((option) => {
-      material[option] = options[option];
-    });
-    return material;
-  }
+    if (materialType === 'standard') {
+      return {
+        material: new StandardMaterial('TODO', scene),
+        colorProps: standardMaterialColorProps,
+        textureProps: standardMaterialTextureProps,
+        otherProps: [],
+      };
+    }
 
-  if (options.type === 'pbr') {
-    delete options.type;
-    const material = new PBRMaterial('todo', scene);
-    return material;
-  }
+    return {
+      material: new PBRMaterial('TODO', scene),
+      colorProps: [],
+      textureProps: [],
+      otherProps: [],
+    };
+  })();
+
+  const textures = await Promise.all(textureProps.map((prop) => opts[prop]));
+  textures.forEach((texture, i) => {
+    if (typeof texture === 'string') {
+      opts[textureProps[i]] = new Texture(texture, scene);
+    }
+  });
+
+  colorProps.forEach((prop) => {
+    if (Array.isArray(opts[prop]) && opts[prop].length === 3) {
+      opts[prop] = new Color3(...opts[prop]);
+    }
+  });
+
+  Object.keys(otherProps).forEach((option) => {
+    material[option] = opts[option];
+  });
+
+  return material;
 }
 
 export function createSceneObject<
