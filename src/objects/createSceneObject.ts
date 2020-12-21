@@ -1,4 +1,3 @@
-import { Color3 } from '@babylonjs/core/Maths/math';
 import type {
   CreateMesh,
   SceneObject,
@@ -15,10 +14,12 @@ async function createMaterial(
     { StandardMaterial },
     { PBRMaterial },
     { Texture },
+    { Color3 },
   ] = await Promise.all([
     import('@babylonjs/core/Materials/standardMaterial'),
     import('@babylonjs/core/Materials/PBR/pbrMaterial'),
     import('@babylonjs/core/Materials/Textures/texture'),
+    import('@babylonjs/core/Maths/math'),
   ]);
   const { type, ...opts } = options;
   const { material, colorProps, textureProps, otherProps } = ((): {
@@ -153,7 +154,7 @@ export function createSceneObject<
       const self = this as SceneObject;
       const mesh = self.operations.reduce(
         (result, operation) => operation(result, { Mesh, Vector3 }),
-        await (this as SceneObject).createMesh(self.meshOptions, scene)
+        await self.createMesh(self.meshOptions, scene)
       );
       mesh.material = await createMaterial(self.materialOptions, scene);
 

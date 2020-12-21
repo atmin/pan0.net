@@ -66,6 +66,11 @@ export type CreateMesh = (
   scene: BabylonScene
 ) => Promise<Mesh>;
 
+export type CreateShape = (
+  options: object,
+  ctx: CanvasRenderingContext2D
+) => void;
+
 export interface SceneObjectOperatorDependencies {
   Mesh: typeof Mesh;
   Vector3: typeof Vector3;
@@ -149,7 +154,10 @@ interface CanvasObjectBase<T> {
 }
 
 export interface CanvasObject extends CanvasObjectBase<CanvasObject> {
-  createCanvasObject(): void;
+  options: object;
+  operations: Array<{ op: string }>;
+  createShape: CreateShape;
+  appendTo(ctx: CanvasRenderingContext2D): void;
 }
 
 export interface MutableCanvasObject
