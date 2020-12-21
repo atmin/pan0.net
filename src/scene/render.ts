@@ -35,7 +35,7 @@ export async function render() {
     self.lights([
       {
         type: 'hemispheric',
-        direction: [0.5, 1, 0.5],
+        direction: [-0.5, 1, -0.5],
       },
       {
         type: 'directional',

@@ -1,13 +1,21 @@
 <script src="/latest/main.js"></script>
+
+<canvas id="canvas"></canvas>
+
 <script>
   scene(
-    box().size(2.4).width(3.2).position([0, 2, 0]).material({
-      // albedoColor: color.GREEN,
-      albedoTexture: 'https://loremflickr.com/320/240/frog?lock=1',
-      metallic: 0.5,
-      roughness: 1,
-      // reflectionTexture: '/assets/env/default.env',
-    })
+    box()
+      //
+      .size(2.4)
+      .width(3.2)
+      .position([0, 2, 2])
+      .material({
+        // albedoColor: color.GREEN,
+        albedoTexture: 'https://loremflickr.com/320/240/frog?lock=1',
+        metallic: 0.5,
+        roughness: 1,
+        // reflectionTexture: '/assets/env/default.env',
+      }),
 
     // box().size(2).material({
     //   type: 'standard',
@@ -25,10 +33,9 @@
     //   .position([0, 3, 0])
     //   .material({ type: 'standard', diffuseColor: color.BLUE }),
 
-    // plane().position([0, 4, 0]).width(3.4).height(2).doublesided().material({
-    //   type: 'standard',
-    //   diffuseTexture: 'https://loremflickr.com/320/240/cat?lock=42',
-    // })
+    plane().position([5, 1.5, 0]).width(2).height(2).doublesided().material({
+      diffuseTexture: canvas(),
+    })
   )
     .data({ test: 42 })
     // .lights(null)

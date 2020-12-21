@@ -9,6 +9,7 @@ import type {
 import type { Material } from '@babylonjs/core/Materials/material';
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
+import { Texture } from '@babylonjs/core/Materials/Textures/texture';
 
 export type {
   AbstractMesh,
@@ -136,6 +137,7 @@ export interface MutableSceneObject extends SceneObjectBase<SceneObject> {
 }
 
 export interface Canvas {
+  createCanvas(texture: Texture): void;
   size(s: number): Canvas;
 }
 

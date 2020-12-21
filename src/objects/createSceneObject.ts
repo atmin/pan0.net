@@ -8,10 +8,10 @@ import type {
   BabylonScene,
 } from '../types';
 
-async function createMaterial(
+function createMaterial(
   options: MaterialOptions,
   scene: BabylonScene
-): Promise<Material> {
+): Material {
   const { type, ...opts } = options;
   const { material, colorProps, textureProps, otherProps } = ((): {
     material: Material;
@@ -97,10 +97,13 @@ async function createMaterial(
     }
   });
 
-  const textures = await Promise.all(textureProps.map((prop) => opts[prop]));
+  const textures = textureProps.map((prop) => opts[prop]);
   textures.forEach((texture, i) => {
     if (typeof texture === 'string') {
       material[textureProps[i]] = new Texture(texture, scene);
+    }
+    if (typeof texture === 'function') {
+      material[textureProps[i]] = texture(scene);
     }
   });
 
@@ -140,7 +143,7 @@ export function createSceneObject<
         (result, operation) => operation(result, { Mesh, Vector3 }),
         await (this as SceneObject).createMesh(self.meshOptions, scene)
       );
-      mesh.material = await createMaterial(self.materialOptions, scene);
+      mesh.material = createMaterial(self.materialOptions, scene);
       // TODO: extract as mesh operators
       mesh.receiveShadows = true;
       mesh.checkCollisions = true;
