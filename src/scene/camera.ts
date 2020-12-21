@@ -31,6 +31,11 @@ export function camera({
           true
         );
         camera.checkCollisions = checkCollisions;
+        // WASD controls
+        camera.keysUp.push(87);
+        camera.keysDown.push(83);
+        camera.keysLeft.push(65);
+        camera.keysRight.push(68);
       };
 
       break;
