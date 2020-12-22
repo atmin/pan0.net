@@ -9,6 +9,7 @@ import type {
 import type { Material } from '@babylonjs/core/Materials/material';
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
+import type { Control } from '@babylonjs/gui/2D/controls/control';
 import { Texture } from '@babylonjs/core/Materials/Textures/texture';
 
 export type {
@@ -22,6 +23,7 @@ export type {
   BabylonScene,
   ShadowGenerator,
   Texture,
+  Control,
 };
 
 export type SceneDecorator = (scene: BabylonScene) => void;

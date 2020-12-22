@@ -1,6 +1,6 @@
-import type { AbstractMesh, Canvas, CanvasObject, Texture } from '../types';
+import type { AbstractMesh, Canvas, Control, Texture } from '../types';
 
-export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
+export const canvas = (...controls: Array<() => Control>): Canvas => ({
   _width: null,
   _height: null,
   _size: 512,
@@ -31,32 +31,15 @@ export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
       this._height || this._size
     );
 
-    for (let obj of objects) {
-      const [x, y] = obj._position
-        ? [obj._position[0] * this._size, obj._position[1] * this._size]
-        : [0, 0];
-
-      switch (obj._op) {
-        case 'text':
-          texture.drawText(
-            obj._text || '',
-            x,
-            y,
-            'bold 60px Arial',
-            'green',
-            'black'
-          );
-          break;
-        default:
-          break;
-      }
+    for (let control of controls) {
+      texture.addControl(await control());
     }
-    texture.addControl(
-      new Image(
-        'image',
-        'https://upload.wikimedia.org/wikipedia/commons/1/13/Calgary_street_map.png'
-      )
-    );
+    // texture.addControl(
+    //   new Image(
+    //     'image',
+    //     'https://upload.wikimedia.org/wikipedia/commons/1/13/Calgary_street_map.png'
+    //   )
+    // );
 
     return texture;
   },
