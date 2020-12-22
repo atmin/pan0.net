@@ -6,3 +6,4 @@ build
 dist
 web_modules
 node_modules
+tmp

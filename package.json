@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@babylonjs/core": "^4.2.0",
+    "@babylonjs/gui": "^4.2.0",
     "@babylonjs/loaders": "^4.2.0",
     "pepjs": "^0.5.2"
   },

@@ -115,8 +115,11 @@ async function createMaterial(
         new Texture(texture, scene)
       );
     }
-    if (typeof texture === 'function') {
-      material[textureProps[i]] = await texture(scene);
+    if (
+      typeof texture === 'object' &&
+      typeof texture.createMaterial === 'function'
+    ) {
+      material[textureProps[i]] = await texture.createMaterial(scene);
     }
   }
 

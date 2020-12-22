@@ -143,21 +143,25 @@ export interface MutableSceneObject extends SceneObjectBase<SceneObject> {
 }
 
 export interface Canvas {
-  createCanvas(texture: Texture): void;
+  _size: number;
   size(s: number): Canvas;
+  createMaterial(scene: BabylonScene): Promise<Texture>;
 }
 
 interface CanvasObjectBase<T> {
-  position: (v: [number, number]) => T;
-  rotation: (angle: number) => T;
-  scale: (s: number) => T;
+  position?: (v: [number, number]) => T;
+  rotation?: (angle: number) => T;
+  scale?: (s: number) => T;
 }
 
 export interface CanvasObject extends CanvasObjectBase<CanvasObject> {
-  options: object;
-  operations: Array<{ op: string }>;
-  createShape: CreateShape;
-  appendTo(ctx: CanvasRenderingContext2D): void;
+  _op: 'text' | 'image' | 'circle' | 'rect';
+  _text?: string;
+  _width?: number;
+  _height?: number;
+  _position?: [number, number];
+  _rotation?: number;
+  _scale?: number;
 }
 
 export interface MutableCanvasObject

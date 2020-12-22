@@ -33,9 +33,25 @@
     //   .position([0, 3, 0])
     //   .material({ type: 'standard', diffuseColor: color.BLUE }),
 
-    plane().position([5, 1.5, 0]).width(2).height(2).doublesided().material({
-      diffuseTexture: canvas(),
-    })
+    plane()
+      .position([5, 1.5, 0])
+      .width(2)
+      .height(2)
+      .doublesided()
+      .material({
+        diffuseTexture: canvas(
+          {
+            _op: 'text',
+            _position: [0.1, 0.1],
+            _text: 'zzzz',
+          },
+          {
+            _op: 'text',
+            _position: [0.2, 0.2],
+            _text: 'aaaaaaaaa',
+          }
+        ).size(1024),
+      })
   )
     .data({ test: 42 })
     // .lights(null)
