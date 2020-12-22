@@ -4,10 +4,12 @@ import type {
   Material,
   MaterialOptions,
   BabylonScene,
+  AbstractMesh,
 } from '../types';
 
 async function createMaterial(
   options: MaterialOptions,
+  mesh: AbstractMesh,
   scene: BabylonScene
 ): Promise<Material> {
   const [
@@ -117,9 +119,9 @@ async function createMaterial(
     }
     if (
       typeof texture === 'object' &&
-      typeof texture.createMaterial === 'function'
+      typeof texture.createTexture === 'function'
     ) {
-      material[textureProps[i]] = await texture.createMaterial(scene);
+      material[textureProps[i]] = await texture.createTexture(mesh);
     }
   }
 
@@ -159,7 +161,7 @@ export function createSceneObject<
         (result, operation) => operation(result, { Mesh, Vector3 }),
         await self.createMesh(self.meshOptions, scene)
       );
-      mesh.material = await createMaterial(self.materialOptions, scene);
+      mesh.material = await createMaterial(self.materialOptions, mesh, scene);
 
       // TODO: extract as mesh operators
       mesh.receiveShadows = true;

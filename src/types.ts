@@ -143,9 +143,13 @@ export interface MutableSceneObject extends SceneObjectBase<SceneObject> {
 }
 
 export interface Canvas {
+  _width: number | null;
+  _height: number | null;
   _size: number;
   size(s: number): Canvas;
-  createMaterial(scene: BabylonScene): Promise<Texture>;
+  width(w: number): Canvas;
+  height(h: number): Canvas;
+  createTexture(mesh: AbstractMesh): Promise<Texture>;
 }
 
 interface CanvasObjectBase<T> {
