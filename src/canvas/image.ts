@@ -1,13 +1,18 @@
-import { Control } from '../types';
+import { CanvasObject } from './CanvasObject';
 
-export function image(name: string) {
-  return async (): Promise<Control> => {
-    const { Image } = await import('@babylonjs/gui/2D/controls/image');
-    return new Image(
-      `image(${counter++})`,
-      'https://upload.wikimedia.org/wikipedia/commons/1/13/Calgary_street_map.png'
-    );
-  };
-}
+export const image = (name: string) =>
+  new CanvasObject(
+    async function () {
+      const { Image } = await import('@babylonjs/gui/2D/controls/image');
+      return new Image(name || `image(${counter++})`, this._url);
+    },
+
+    {
+      src(url) {
+        this._url = url;
+        return this;
+      },
+    }
+  );
 
 let counter = 1;

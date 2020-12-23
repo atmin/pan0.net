@@ -68,10 +68,7 @@ export type CreateMesh = (
   scene: BabylonScene
 ) => Promise<Mesh>;
 
-export type CreateShape = (
-  options: object,
-  ctx: CanvasRenderingContext2D
-) => void;
+export type CreateControl = () => Promise<Control>;
 
 export interface SceneObjectOperatorDependencies {
   Mesh: typeof Mesh;

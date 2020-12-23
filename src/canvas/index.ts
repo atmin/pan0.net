@@ -1,6 +1,7 @@
+import { CanvasObject } from './CanvasObject';
 import type { AbstractMesh, Canvas, Control, Texture } from '../types';
 
-export const canvas = (...controls: Array<() => Control>): Canvas => ({
+export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
   _width: null,
   _height: null,
   _size: 512,
@@ -31,15 +32,9 @@ export const canvas = (...controls: Array<() => Control>): Canvas => ({
       this._height || this._size
     );
 
-    for (let control of controls) {
-      texture.addControl(await control());
+    for (let obj of objects) {
+      texture.addControl(await obj.createControl());
     }
-    // texture.addControl(
-    //   new Image(
-    //     'image',
-    //     'https://upload.wikimedia.org/wikipedia/commons/1/13/Calgary_street_map.png'
-    //   )
-    // );
 
     return texture;
   },
