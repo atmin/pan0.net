@@ -1,70 +1,47 @@
-import { createSceneObject } from './createSceneObject';
-import {
-  Plane,
-  Vector4,
-  SceneObject,
-  BabylonScene,
-  SideOrientation,
-} from '../types';
+import { SceneObject } from './SceneObject';
+import { Plane, Vector4, BabylonScene, SideOrientation } from '../types';
 
 /**
  * Create a plane.
  */
-export const plane = (name?: string) =>
-  createSceneObject<{
-    size: (s: number) => SceneObject;
-    width: (w: number) => SceneObject;
-    height: (h: number) => SceneObject;
-    doublesided: () => SceneObject;
-  }>({
-    async createMesh(options: PlaneOptions, scene: BabylonScene) {
-      const [{ PlaneBuilder }, { Vector3 }] = await Promise.all([
-        import('@babylonjs/core/Meshes/Builders/planeBuilder'),
-        import('@babylonjs/core/Maths/math.vector'),
-      ]);
-      const mesh = PlaneBuilder.CreatePlane(
-        name || `plane(${counter++})`,
-        options,
-        scene
-      );
-      mesh.position = new Vector3(
-        0,
-        (options.height || options.size || 1) / 2,
-        0
-      );
-      return mesh;
-    },
+export const plane = (name?: string) => new PlaneSceneObject('plane', name);
 
-    size(s) {
-      const self = this as SceneObject;
-      const options = self.meshOptions as PlaneOptions;
-      options.size = s;
-      return self;
-    },
+class PlaneSceneObject extends SceneObject {
+  async createMesh(options: PlaneOptions, scene: BabylonScene) {
+    const [{ PlaneBuilder }, { Vector3 }] = await Promise.all([
+      import('@babylonjs/core/Meshes/Builders/planeBuilder'),
+      import('@babylonjs/core/Maths/math.vector'),
+    ]);
+    const mesh = PlaneBuilder.CreatePlane(this._name, options, scene);
+    mesh.position = new Vector3(
+      0,
+      (options.height || options.size || 1) / 2,
+      0
+    );
+    return mesh;
+  }
 
-    width(w) {
-      const self = this as SceneObject;
-      const options = self.meshOptions as PlaneOptions;
-      options.width = w;
-      return self;
-    },
+  size(s: number) {
+    (this._createMeshOptions as PlaneOptions).size = s;
+    return this;
+  }
 
-    height(h) {
-      const self = this as SceneObject;
-      const options = self.meshOptions as PlaneOptions;
-      options.height = h;
-      return self;
-    },
+  width(w: number) {
+    (this._createMeshOptions as PlaneOptions).width = w;
+    return this;
+  }
 
-    doublesided() {
-      const self = this as SceneObject;
-      const options = self.meshOptions as PlaneOptions;
-      options.sideOrientation = SideOrientation.DOUBLESIDE;
-      return self;
-    },
-  });
+  height(h: number) {
+    (this._createMeshOptions as PlaneOptions).height = h;
+    return this;
+  }
 
-let counter = 1;
+  doublesided() {
+    (this._createMeshOptions as PlaneOptions).sideOrientation =
+      SideOrientation.DOUBLESIDE;
+    return this;
+  }
+}
 
 interface PlaneOptions {
   size?: number;

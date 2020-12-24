@@ -1,9 +1,6 @@
 <script src="/latest/main.js"></script>
-
-<canvas id="canvas"></canvas>
-
 <script>
-  scene(
+  const greenBox = (albedoTexture) =>
     box()
       //
       .size(2.4)
@@ -11,11 +8,15 @@
       .position([0, 2, 2])
       .material({
         albedoColor: color.GREEN,
-        // albedoTexture: 'https://loremflickr.com/320/240/frog?lock=3',
+        albedoTexture: albedoTexture,
         // metallic: 0.5,
         roughness: 1,
         // reflectionTexture: '/assets/env/default.env',
-      }),
+      });
+
+  scene(
+    greenBox('https://loremflickr.com/320/240/frog?lock=3'),
+    greenBox('https://loremflickr.com/320/240/frog?lock=4').position([0, 3, 5]),
 
     // box().size(2).material({
     //   type: 'standard',
@@ -39,28 +40,29 @@
       .height(2)
       .doublesided()
       .material({
-        diffuseTexture: canvas(
-          image('img')
-            .src(
-              'https://upload.wikimedia.org/wikipedia/commons/1/13/Calgary_street_map.png'
-            )
-            .top('0px')
-            .left('0px')
+        // albedoColor: color.BLUE,
+        metallic: 0.5,
+        roughness: 1,
+        albedoTexture: canvas(
+          image('img1')
+            .source('https://loremflickr.com/320/240/cat?lock=4')
+            .top(0.5)
+            .left(0.5)
             .width(0.5)
             .height(0.5)
+        ),
+        bumpTexture: canvas(
+          image('img')
+            .source(
+              'https://upload.wikimedia.org/wikipedia/commons/1/13/Calgary_street_map.png'
+            )
+            .top(0)
+            .left(0)
+            .width(1)
+            .height(1)
         )
           .width(768)
           .height(512),
-        // {
-        //   _op: 'text',
-        //   _position: [0.1, 0.1],
-        //   _text: 'zzzz',
-        // }
-        // {
-        //   _op: 'text',
-        //   _position: [0.2, 0.2],
-        //   _text: 'aaaaaaaaa',
-        // }
       })
   )
     .data({ test: 42 })

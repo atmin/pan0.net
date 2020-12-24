@@ -76,7 +76,7 @@ export interface SceneObjectOperatorDependencies {
 }
 
 export type SceneObjectOperations = Array<
-  (mesh: Mesh, dependencies: SceneObjectOperatorDependencies) => Mesh
+  (mesh: Mesh, dependencies: SceneObjectOperatorDependencies) => void
 >;
 
 export enum SideOrientation {

@@ -8,7 +8,7 @@ export const image = (name: string) =>
     },
 
     {
-      src(url) {
+      source(url) {
         this._url = url;
         return this;
       },

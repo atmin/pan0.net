@@ -18,7 +18,7 @@ export class CanvasObject {
 
   constructor(
     createControl: CreateControl,
-    properties?: { [key: string]: (control: Control) => void }
+    properties?: { [key: string]: (...args: any) => void }
   ) {
     this._createControl = createControl;
     this._operations = [];
