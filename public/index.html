@@ -17,10 +17,13 @@
   scene(
     gltf()
       .source('https://playground.babylonjs.com/scenes/BoomBox/BoomBox.gltf')
-      .position([0, 0.09, 0])
-      .scaling([-8, 8, -8]),
-    // greenBox('https://loremflickr.com/320/240/frog?lock=3'),
-    // greenBox('https://loremflickr.com/320/240/frog?lock=4').position([0, 3, 5]),
+      .position([0, 0.08, -0.5])
+      .scaling([8, 8, 8])
+      .rotation([0, Math.PI / 2, 0])
+      .environmentSnapshot(),
+
+    greenBox('https://loremflickr.com/320/240/frog?lock=3'),
+    greenBox('https://loremflickr.com/320/240/frog?lock=4').position([0, 3, 5]),
 
     // box().size(2).material({
     //   type: 'standard',

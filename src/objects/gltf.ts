@@ -1,4 +1,4 @@
-import { BabylonScene } from '../types';
+import { BabylonScene, Mesh } from '../types';
 import { SceneObject } from './SceneObject';
 
 export const gltf = () => new GltfSceneObject('gltf');
@@ -19,7 +19,12 @@ class GltfSceneObject extends SceneObject {
       parsed.origin + pathname + '/',
       filename,
       scene
-    ).then((result) => result.meshes);
+    ).then((result) =>
+      result.meshes.map((mesh) => {
+        (mesh as Mesh).toLeftHanded();
+        return mesh;
+      })
+    );
   }
 
   source(url: string) {

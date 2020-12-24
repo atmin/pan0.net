@@ -70,19 +70,25 @@ export type CreateMesh = (
 
 export type CreateControl = () => Promise<Control>;
 
-export interface SceneObjectOperatorDependencies {
-  Mesh: typeof Mesh;
-  Vector3: typeof Vector3;
-}
-
 export type SceneObjectOperations = Array<
-  (mesh: AbstractMesh, dependencies: SceneObjectOperatorDependencies) => void
+  (context: {
+    mesh: AbstractMesh;
+    scene: BabylonScene;
+    Mesh: typeof Mesh;
+    Vector3: typeof Vector3;
+  }) => void
 >;
 
 export enum SideOrientation {
   FRONTSIDE = 0,
   BACKSIDE = 1,
   DOUBLESIDE = 2,
+}
+
+export enum RefreshRate {
+  RENDER_ONCE = 0,
+  RENDER_ONEVERYFRAME = 1,
+  RENDER_ONEVERYTWOFRAMES = 2,
 }
 
 type MaterialTexture = string | Promise<HTMLCanvasElement>;
@@ -115,6 +121,7 @@ interface StandardMaterialOptions {
 
 interface PBRMaterialOptions {
   type: 'pbr';
+  reflectionTexture?: MaterialTexture;
   // TODO: rest PBRMaterial props
 }
 

@@ -4,10 +4,12 @@ import {
   MaterialOptions,
   AbstractMesh,
   SceneObjectOperations,
+  RefreshRate,
 } from '../types';
+import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
 export class SceneObject {
-  static _counters = {};
+  static _counters = { environmentSnapshot: 1 };
 
   _name: string;
   _createMeshOptions: object;
@@ -48,7 +50,7 @@ export class SceneObject {
       mesh.checkCollisions = true;
 
       for (let operation of this._operations) {
-        operation(mesh, { Mesh, Vector3 });
+        operation({ mesh, scene, Mesh, Vector3 });
       }
       if (this._createMaterialOptions) {
         mesh.material = await createMaterial(
@@ -60,22 +62,56 @@ export class SceneObject {
     }
   }
 
-  position(v: [number, number, number]) {
-    this._operations.push((mesh, { Vector3 }) => {
+  position(v: [number, number, number]): SceneObject {
+    this._operations.push(({ mesh, Vector3 }) => {
       mesh.position = new Vector3(...v);
     });
     return this;
   }
 
-  scaling(v: [number, number, number]) {
-    this._operations.push((mesh, { Vector3 }) => {
+  scaling(v: [number, number, number]): SceneObject {
+    this._operations.push(({ mesh, Vector3 }) => {
       mesh.scaling = new Vector3(...v);
     });
     return this;
   }
 
-  material(options: MaterialOptions) {
+  rotation(v: [number, number, number]): SceneObject {
+    this._operations.push(({ mesh, Vector3 }) => {
+      mesh.rotation = new Vector3(...v);
+    });
+    return this;
+  }
+
+  material(options: MaterialOptions): SceneObject {
     this._createMaterialOptions = options;
+    return this;
+  }
+
+  environmentSnapshot(): SceneObject {
+    this._operations.push(({ mesh, scene, Vector3 }) => {
+      scene.onAfterRenderObservable.addOnce(() => {
+        import('@babylonjs/core/Probes/reflectionProbe').then(
+          ({ ReflectionProbe }) => {
+            const probe = new ReflectionProbe(
+              `environmentSnapshot(${SceneObject._counters
+                .environmentSnapshot++})`,
+              256,
+              scene
+            );
+            probe.refreshRate = RefreshRate.RENDER_ONCE;
+            probe.position = mesh.position;
+            scene.meshes.forEach(
+              (sceneMesh) =>
+                sceneMesh !== mesh && probe.renderList.push(sceneMesh)
+            );
+            (mesh.material as StandardMaterial).reflectionTexture =
+              probe.cubeTexture;
+          }
+        );
+      });
+    });
+
     return this;
   }
 }
