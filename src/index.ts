@@ -4,6 +4,7 @@ import { image } from './canvas/image';
 import { color } from './color';
 import { box } from './objects/box';
 import { plane } from './objects/plane';
+import { sphere } from './objects/sphere';
 import { gltf } from './objects/gltf';
 
 (globalThis as any).scene = scene;
@@ -12,4 +13,5 @@ import { gltf } from './objects/gltf';
 (globalThis as any).color = color;
 (globalThis as any).box = box;
 (globalThis as any).plane = plane;
+(globalThis as any).sphere = sphere;
 (globalThis as any).gltf = gltf;

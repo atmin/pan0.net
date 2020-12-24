@@ -21,22 +21,22 @@ class BoxSceneObject extends SceneObject {
     return mesh;
   }
 
-  size(s: number) {
+  size(s: number): BoxSceneObject {
     (this._createMeshOptions as BoxOptions).size = s;
     return this;
   }
 
-  width(w: number) {
+  width(w: number): BoxSceneObject {
     (this._createMeshOptions as BoxOptions).width = w;
     return this;
   }
 
-  height(h: number) {
+  height(h: number): BoxSceneObject {
     (this._createMeshOptions as BoxOptions).height = h;
     return this;
   }
 
-  depth(d: number) {
+  depth(d: number): BoxSceneObject {
     (this._createMeshOptions as BoxOptions).depth = d;
     return this;
   }

@@ -21,22 +21,22 @@ class PlaneSceneObject extends SceneObject {
     return mesh;
   }
 
-  size(s: number) {
+  size(s: number): PlaneSceneObject {
     (this._createMeshOptions as PlaneOptions).size = s;
     return this;
   }
 
-  width(w: number) {
+  width(w: number): PlaneSceneObject {
     (this._createMeshOptions as PlaneOptions).width = w;
     return this;
   }
 
-  height(h: number) {
+  height(h: number): PlaneSceneObject {
     (this._createMeshOptions as PlaneOptions).height = h;
     return this;
   }
 
-  doublesided() {
+  doublesided(): PlaneSceneObject {
     (this._createMeshOptions as PlaneOptions).sideOrientation =
       SideOrientation.DOUBLESIDE;
     return this;

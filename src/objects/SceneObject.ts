@@ -6,7 +6,7 @@ import {
   SceneObjectOperations,
   RefreshRate,
 } from '../types';
-import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
+import type { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 
 export class SceneObject {
   static _counters = { environmentSnapshot: 1 };
@@ -105,8 +105,10 @@ export class SceneObject {
               (sceneMesh) =>
                 sceneMesh !== mesh && probe.renderList.push(sceneMesh)
             );
-            (mesh.material as StandardMaterial).reflectionTexture =
-              probe.cubeTexture;
+            if (mesh.material) {
+              (mesh.material as StandardMaterial).reflectionTexture =
+                probe.cubeTexture;
+            }
           }
         );
       });
