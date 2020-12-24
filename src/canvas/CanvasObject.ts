@@ -1,4 +1,4 @@
-import type { Control, CreateControl } from '../types';
+import type { Canvas, Control } from '../types';
 
 // https://doc.babylonjs.com/divingDeeper/gui/gui#position-and-size
 const PROPERTIES = [
@@ -13,14 +13,21 @@ const PROPERTIES = [
 ] as const;
 
 export class CanvasObject {
-  _createControl: CreateControl;
+  static _counters = {};
+
+  _name: string;
+  _createControlOptions: object;
   _operations: Array<(control: Control) => void>;
 
-  constructor(
-    createControl: CreateControl,
-    properties?: { [key: string]: (...args: any) => void }
-  ) {
-    this._createControl = createControl;
+  constructor(className: string, name?: string) {
+    if (name) {
+      this._name = name;
+    } else {
+      const counter = CanvasObject._counters[className] || 1;
+      this._name = `${className}(${counter})`;
+      CanvasObject._counters[className] = counter + 1;
+    }
+    this._createControlOptions = {};
     this._operations = [];
 
     for (let prop of PROPERTIES) {
@@ -29,17 +36,17 @@ export class CanvasObject {
         return this;
       };
     }
-
-    for (let prop of Object.keys(properties || {})) {
-      this[prop] = properties[prop].bind(this);
-    }
   }
 
-  async createControl(): Promise<Control> {
-    const control = await this._createControl();
+  async createControl(options: object): Promise<Control> {
+    throw new Error('CanvasObject descendants must override createControl');
+  }
+
+  async appendTo(texture: any) {
+    const control = await this.createControl(this._createControlOptions);
     for (let operation of this._operations) {
       operation(control);
     }
-    return control;
+    texture.addControl(control);
   }
 }

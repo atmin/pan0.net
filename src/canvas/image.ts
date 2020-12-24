@@ -1,18 +1,18 @@
 import { CanvasObject } from './CanvasObject';
 
-export const image = (name: string) =>
-  new CanvasObject(
-    async function () {
-      const { Image } = await import('@babylonjs/gui/2D/controls/image');
-      return new Image(name || `image(${counter++})`, this._url);
-    },
+export const image = (name?: string) => new ImageCanvasObject('image', name);
+class ImageCanvasObject extends CanvasObject {
+  async createControl({ url }) {
+    const { Image } = await import('@babylonjs/gui/2D/controls/image');
+    return new Image(this._name, url);
+  }
 
-    {
-      source(url) {
-        this._url = url;
-        return this;
-      },
-    }
-  );
+  source(url) {
+    (this._createControlOptions as ImageOptions).url = url;
+    return this;
+  }
+}
 
-let counter = 1;
+interface ImageOptions {
+  url: string;
+}

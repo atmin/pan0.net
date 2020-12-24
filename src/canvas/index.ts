@@ -1,5 +1,5 @@
 import { CanvasObject } from './CanvasObject';
-import type { AbstractMesh, Canvas, Control, Texture } from '../types';
+import type { AbstractMesh, Canvas, Texture } from '../types';
 
 export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
   _width: null,
@@ -22,10 +22,9 @@ export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
   },
 
   async createTexture(mesh: AbstractMesh): Promise<Texture> {
-    const [{ AdvancedDynamicTexture }, { Image }] = await Promise.all([
-      import('@babylonjs/gui/2D/advancedDynamicTexture'),
-      import('@babylonjs/gui/2D/controls/image'),
-    ]);
+    const { AdvancedDynamicTexture } = await import(
+      '@babylonjs/gui/2D/advancedDynamicTexture'
+    );
     const texture = AdvancedDynamicTexture.CreateForMeshTexture(
       mesh,
       this._width || this._size,
@@ -33,11 +32,9 @@ export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
     );
 
     for (let obj of objects) {
-      texture.addControl(await obj.createControl());
+      await obj.appendTo(texture);
     }
 
     return texture;
   },
 });
-
-let counter = 1;
