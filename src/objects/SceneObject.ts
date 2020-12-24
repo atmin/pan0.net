@@ -2,7 +2,7 @@ import { createMaterial } from './createMaterial';
 import {
   BabylonScene,
   MaterialOptions,
-  Mesh,
+  AbstractMesh,
   SceneObjectOperations,
 } from '../types';
 
@@ -26,7 +26,10 @@ export class SceneObject {
     this._operations = [];
   }
 
-  async createMesh(_options: object, _scene: BabylonScene): Promise<Mesh> {
+  async createMesh(
+    _options: object,
+    _scene: BabylonScene
+  ): Promise<AbstractMesh | Array<AbstractMesh>> {
     throw new Error('SceneObject descendants must override createMesh');
   }
 
@@ -35,23 +38,38 @@ export class SceneObject {
       import('@babylonjs/core/Meshes/mesh'),
       import('@babylonjs/core/Maths/math.vector'),
     ]);
-    const mesh = await this.createMesh(this._createMeshOptions, scene);
-    mesh.receiveShadows = true;
-    mesh.checkCollisions = true;
+    const createdMeshes = await this.createMesh(this._createMeshOptions, scene);
+    const meshes = Array.isArray(createdMeshes)
+      ? createdMeshes
+      : [createdMeshes];
 
-    for (let operation of this._operations) {
-      operation(mesh, { Mesh, Vector3 });
+    for (let mesh of meshes) {
+      mesh.receiveShadows = true;
+      mesh.checkCollisions = true;
+
+      for (let operation of this._operations) {
+        operation(mesh, { Mesh, Vector3 });
+      }
+      if (this._createMaterialOptions) {
+        mesh.material = await createMaterial(
+          this._createMaterialOptions,
+          mesh,
+          scene
+        );
+      }
     }
-    mesh.material = await createMaterial(
-      this._createMaterialOptions,
-      mesh,
-      scene
-    );
   }
 
   position(v: [number, number, number]) {
     this._operations.push((mesh, { Vector3 }) => {
       mesh.position = new Vector3(...v);
+    });
+    return this;
+  }
+
+  scaling(v: [number, number, number]) {
+    this._operations.push((mesh, { Vector3 }) => {
+      mesh.scaling = new Vector3(...v);
     });
     return this;
   }

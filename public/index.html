@@ -15,8 +15,12 @@
       });
 
   scene(
-    greenBox('https://loremflickr.com/320/240/frog?lock=3'),
-    greenBox('https://loremflickr.com/320/240/frog?lock=4').position([0, 3, 5]),
+    gltf()
+      .source('https://playground.babylonjs.com/scenes/BoomBox/BoomBox.gltf')
+      .position([0, 0.09, 0])
+      .scaling([-8, 8, -8]),
+    // greenBox('https://loremflickr.com/320/240/frog?lock=3'),
+    // greenBox('https://loremflickr.com/320/240/frog?lock=4').position([0, 3, 5]),
 
     // box().size(2).material({
     //   type: 'standard',
