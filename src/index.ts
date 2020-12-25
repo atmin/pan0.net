@@ -1,17 +1,8 @@
 import { scene } from './scene';
-import { canvas } from './canvas';
-import { image } from './canvas/image';
 import { color } from './color';
-import { box } from './objects/box';
-import { plane } from './objects/plane';
-import { sphere } from './objects/sphere';
-import { gltf } from './objects/gltf';
+import { canvas, image } from './canvas';
+import { box, plane, sphere, gltf } from './objects';
 
-(globalThis as any).scene = scene;
-(globalThis as any).canvas = canvas;
-(globalThis as any).image = image;
-(globalThis as any).color = color;
-(globalThis as any).box = box;
-(globalThis as any).plane = plane;
-(globalThis as any).sphere = sphere;
-(globalThis as any).gltf = gltf;
+for (let func of [scene, canvas, image, color, box, plane, sphere, gltf]) {
+  (globalThis as any)[func.name] = func;
+}

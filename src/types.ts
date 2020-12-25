@@ -76,7 +76,6 @@ export type SceneObjectOperations = Array<
     scene: BabylonScene;
     Mesh: typeof Mesh;
     Vector3: typeof Vector3;
-    Vector4: typeof Vector4;
   }) => void
 >;
 
