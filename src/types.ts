@@ -1,12 +1,14 @@
-import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
-import type { Mesh } from '@babylonjs/core/Meshes/mesh';
 import type {
   Color4,
   Plane,
   Vector3,
   Vector4,
 } from '@babylonjs/core/Maths/math';
+import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
+import type { Mesh } from '@babylonjs/core/Meshes/mesh';
+import type { CSG } from '@babylonjs/core/Meshes/csg';
 import type { Material } from '@babylonjs/core/Materials/material';
+import type { MultiMaterial } from '@babylonjs/core/Materials/multiMaterial';
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 import type { Control } from '@babylonjs/gui/2D/controls/control';
@@ -69,15 +71,6 @@ export type CreateMesh = (
 ) => Promise<Mesh>;
 
 export type CreateControl = () => Promise<Control>;
-
-export type SceneObjectOperations = Array<
-  (context: {
-    mesh: AbstractMesh;
-    scene: BabylonScene;
-    Mesh: typeof Mesh;
-    Vector3: typeof Vector3;
-  }) => void
->;
 
 export enum SideOrientation {
   FRONTSIDE = 0,

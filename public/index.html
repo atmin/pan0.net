@@ -5,6 +5,7 @@
       //
       .size(2.4)
       .width(3.2)
+      .height(1.3)
       .position([0, 2, 4])
       .material({
         albedoColor: color.GREEN,
@@ -17,20 +18,23 @@
   scene(
     gltf()
       .source('https://playground.babylonjs.com/scenes/BoomBox/BoomBox.gltf')
-      .position([0, 0.08, -0.5])
-      .scaling([8, 8, 8])
+      .position([-4, 1, -2.5])
+      .scaling([100, 100, 100])
       .rotation([0, Math.PI / 2, 0])
       .environmentSnapshot(),
 
-    greenBox('https://loremflickr.com/320/240/frog?lock=3'),
-    sphere()
-      .diameterX(3)
-      .diameterZ(2)
-      .material({
-        albedoTexture: 'https://loremflickr.com/320/240/frog?lock=4',
-        metallic: 0,
-      })
-      .position([0, 3, 0]),
+    greenBox('https://loremflickr.com/320/240/frog?lock=3')
+      .position([0, 0.5, 0])
+      .subtract(
+        sphere()
+          .diameterX(3)
+          .diameterZ(2)
+          .material({
+            albedoTexture: 'https://loremflickr.com/320/240/frog?lock=4',
+            metallic: 0,
+          })
+          .position([0, 1, 0])
+      ),
     // greenBox('https://loremflickr.com/320/240/frog?lock=4').position([0, 3, 5]),
 
     // box().size(2).material({
@@ -54,6 +58,7 @@
       .width(3)
       .height(2)
       .doublesided()
+      .rotation([Math.PI / 16, 0, 0])
       .material({
         // albedoColor: color.BLUE,
         metallic: 0.5,

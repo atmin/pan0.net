@@ -5,7 +5,7 @@ import type { BabylonScene, SideOrientation } from '../types';
 /**
  * Create a box.
  */
-export const sphere = (name?: string) => new SphereSceneObject('box', name);
+export const sphere = (name?: string) => new SphereSceneObject('sphere', name);
 
 class SphereSceneObject extends SceneObject {
   async createMesh(options: SphereOptions, scene: BabylonScene) {

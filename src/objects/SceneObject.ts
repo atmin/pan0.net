@@ -1,20 +1,18 @@
-import { createMaterial } from './createMaterial';
-import {
-  BabylonScene,
-  MaterialOptions,
-  AbstractMesh,
-  SceneObjectOperations,
-  RefreshRate,
-} from '../types';
+import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
+
+import { createMaterial } from './createMaterial';
+import { BabylonScene, MaterialOptions, Mesh, RefreshRate } from '../types';
 
 export class SceneObject {
   static _counters = { environmentSnapshot: 1 };
 
   _name: string;
+  _mesh: Mesh;
+  _scene: BabylonScene;
   _createMeshOptions: object;
   _createMaterialOptions: MaterialOptions;
-  _operations: SceneObjectOperations;
+  _operations: Array<() => Promise<void>>;
 
   constructor(className: string, name?: string) {
     if (name) {
@@ -28,57 +26,50 @@ export class SceneObject {
     this._operations = [];
   }
 
-  async createMesh(
-    _options: object,
-    _scene: BabylonScene
-  ): Promise<AbstractMesh | Array<AbstractMesh>> {
+  async createMesh(_options: object, _scene: BabylonScene): Promise<Mesh> {
     throw new Error('SceneObject descendants must override createMesh');
   }
 
-  async appendTo(scene: BabylonScene) {
-    const [{ Mesh }, { Vector3 }] = await Promise.all([
-      import('@babylonjs/core/Meshes/mesh'),
-      import('@babylonjs/core/Maths/math.vector'),
-    ]);
-    const createdMeshes = await this.createMesh(this._createMeshOptions, scene);
-    const meshes = Array.isArray(createdMeshes)
-      ? createdMeshes
-      : [createdMeshes];
-
-    for (let mesh of meshes) {
-      mesh.receiveShadows = true;
-      mesh.checkCollisions = true;
-
-      for (let operation of this._operations) {
-        operation({ mesh, scene, Mesh, Vector3 });
-      }
-      if (this._createMaterialOptions) {
-        mesh.material = await createMaterial(
-          this._createMaterialOptions,
-          mesh,
-          scene
-        );
-      }
+  async applyOperations() {
+    for (let operation of this._operations) {
+      await operation();
     }
   }
 
+  async appendTo(scene: BabylonScene) {
+    this._scene = scene;
+    this._mesh = await this.createMesh(this._createMeshOptions, scene);
+    this._mesh.receiveShadows = true;
+    this._mesh.checkCollisions = true;
+
+    if (this._createMaterialOptions) {
+      this._mesh.material = await createMaterial(
+        this._createMaterialOptions,
+        this._mesh,
+        scene
+      );
+    }
+
+    await this.applyOperations();
+  }
+
   position(v: [number, number, number]): SceneObject {
-    this._operations.push(({ mesh, Vector3 }) => {
-      mesh.position = new Vector3(...v);
+    this._operations.push(async () => {
+      this._mesh.position = new Vector3(...v);
     });
     return this;
   }
 
   scaling(v: [number, number, number]): SceneObject {
-    this._operations.push(({ mesh, Vector3 }) => {
-      mesh.scaling = new Vector3(...v);
+    this._operations.push(async () => {
+      this._mesh.scaling = new Vector3(...v);
     });
     return this;
   }
 
   rotation(v: [number, number, number]): SceneObject {
-    this._operations.push(({ mesh, Vector3 }) => {
-      mesh.rotation = new Vector3(...v);
+    this._operations.push(async () => {
+      this._mesh.rotation = new Vector3(...v);
     });
     return this;
   }
@@ -89,24 +80,24 @@ export class SceneObject {
   }
 
   environmentSnapshot(): SceneObject {
-    this._operations.push(({ mesh, scene, Vector3 }) => {
-      scene.onAfterRenderObservable.addOnce(() => {
+    this._operations.push(async () => {
+      this._scene.onAfterRenderObservable.addOnce(() => {
         import('@babylonjs/core/Probes/reflectionProbe').then(
           ({ ReflectionProbe }) => {
             const probe = new ReflectionProbe(
               `environmentSnapshot(${SceneObject._counters
                 .environmentSnapshot++})`,
               256,
-              scene
+              this._scene
             );
             probe.refreshRate = RefreshRate.RENDER_ONCE;
-            probe.position = mesh.position;
-            scene.meshes.forEach(
+            probe.position = this._mesh.position;
+            this._scene.meshes.forEach(
               (sceneMesh) =>
-                sceneMesh !== mesh && probe.renderList.push(sceneMesh)
+                sceneMesh !== this._mesh && probe.renderList.push(sceneMesh)
             );
-            if (mesh.material) {
-              (mesh.material as StandardMaterial).reflectionTexture =
+            if (this._mesh.material) {
+              (this._mesh.material as StandardMaterial).reflectionTexture =
                 probe.cubeTexture;
             }
           }
@@ -115,5 +106,54 @@ export class SceneObject {
     });
 
     return this;
+  }
+
+  _csg(
+    sceneObjects: Array<SceneObject>,
+    method: 'unionInPlace' | 'subtractInPlace' | 'intersectInPlace'
+  ): SceneObject {
+    this._operations.push(async () => {
+      const [{ CSG }, { MultiMaterial }] = await Promise.all([
+        import('@babylonjs/core/Meshes/csg'),
+        import('@babylonjs/core/Materials/multiMaterial'),
+      ]);
+      const csg = CSG.FromMesh(this._mesh);
+      const material = new MultiMaterial(
+        `material(${this._name})`,
+        this._scene
+      );
+      material.subMaterials.push(this._mesh.material);
+      this._mesh.dispose();
+      for (let sceneObject of sceneObjects) {
+        sceneObject._mesh = await sceneObject.createMesh(
+          sceneObject._createMeshOptions,
+          this._scene
+        );
+        await sceneObject.applyOperations();
+        csg[method](CSG.FromMesh(sceneObject._mesh));
+        material.subMaterials.push(
+          await createMaterial(
+            sceneObject._createMaterialOptions,
+            sceneObject._mesh,
+            this._scene
+          )
+        );
+        sceneObject._mesh.dispose();
+      }
+      this._mesh = csg.toMesh(this._name, material, this._scene, true);
+    });
+    return this;
+  }
+
+  union(...sceneObjects: Array<SceneObject>): SceneObject {
+    return this._csg(sceneObjects, 'unionInPlace');
+  }
+
+  subtract(...sceneObjects: Array<SceneObject>): SceneObject {
+    return this._csg(sceneObjects, 'subtractInPlace');
+  }
+
+  intersect(...sceneObjects: Array<SceneObject>): SceneObject {
+    return this._csg(sceneObjects, 'intersectInPlace');
   }
 }
