@@ -95,27 +95,31 @@ export class SceneObject {
 
   environmentSnapshot(): SceneObject {
     this._operations.push(async () => {
-      this._scene.onAfterRenderObservable.addOnce(() => {
-        import('@babylonjs/core/Probes/reflectionProbe').then(
-          ({ ReflectionProbe }) => {
-            const probe = new ReflectionProbe(
-              `environmentSnapshot(${SceneObject._counters
-                .environmentSnapshot++})`,
-              256,
-              this._scene
-            );
-            probe.refreshRate = RefreshRate.RENDER_ONCE;
-            probe.position = this._mesh.position;
-            this._scene.meshes.forEach(
-              (sceneMesh) =>
-                sceneMesh !== this._mesh && probe.renderList.push(sceneMesh)
-            );
-            if (this._mesh.material) {
-              (this._mesh.material as StandardMaterial).reflectionTexture =
-                probe.cubeTexture;
-            }
-          }
+      this._scene.onAfterRenderObservable.addOnce(async () => {
+        const [{ ReflectionProbe }, { MultiMaterial }] = await Promise.all([
+          import('@babylonjs/core/Probes/reflectionProbe'),
+          import('@babylonjs/core/Materials/multiMaterial'),
+        ]);
+        const probe = new ReflectionProbe(
+          `environmentSnapshot(${SceneObject._counters.environmentSnapshot++})`,
+          256,
+          this._scene
         );
+        probe.refreshRate = RefreshRate.RENDER_ONCE;
+        probe.position = this._mesh.position;
+        this._scene.meshes.forEach(
+          (sceneMesh) =>
+            sceneMesh !== this._mesh && probe.renderList.push(sceneMesh)
+        );
+        if (this._mesh.material) {
+          const materials =
+            this._mesh.material instanceof MultiMaterial
+              ? this._mesh.material.subMaterials
+              : [this._mesh.material];
+          for (let material of materials)
+            (material as StandardMaterial).reflectionTexture =
+              probe.cubeTexture;
+        }
       });
     });
 
