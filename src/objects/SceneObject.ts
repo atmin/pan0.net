@@ -1,5 +1,6 @@
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
+import type { MultiMaterial } from '@babylonjs/core/Materials/multiMaterial';
 
 import { createMaterial } from './createMaterial';
 import { BabylonScene, MaterialOptions, Mesh, RefreshRate } from '../types';
@@ -96,10 +97,9 @@ export class SceneObject {
   environmentSnapshot(): SceneObject {
     this._operations.push(async () => {
       this._scene.onAfterRenderObservable.addOnce(async () => {
-        const [{ ReflectionProbe }, { MultiMaterial }] = await Promise.all([
-          import('@babylonjs/core/Probes/reflectionProbe'),
-          import('@babylonjs/core/Materials/multiMaterial'),
-        ]);
+        const { ReflectionProbe } = await import(
+          '@babylonjs/core/Probes/reflectionProbe'
+        );
         const probe = new ReflectionProbe(
           `environmentSnapshot(${SceneObject._counters.environmentSnapshot++})`,
           256,
@@ -112,10 +112,8 @@ export class SceneObject {
             sceneMesh !== this._mesh && probe.renderList.push(sceneMesh)
         );
         if (this._mesh.material) {
-          const materials =
-            this._mesh.material instanceof MultiMaterial
-              ? this._mesh.material.subMaterials
-              : [this._mesh.material];
+          const materials = (this._mesh.material as MultiMaterial)
+            .subMaterials || [this._mesh.material];
           for (let material of materials)
             (material as StandardMaterial).reflectionTexture =
               probe.cubeTexture;
