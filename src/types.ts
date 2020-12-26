@@ -127,10 +127,6 @@ interface SceneObjectBase<T> {
   material: (opts: MaterialOptions) => T;
 }
 export interface SceneObject extends SceneObjectBase<SceneObject> {
-  meshOptions: object;
-  materialOptions: MaterialOptions;
-  textures: { [key: string]: MaterialTexture };
-  operations: SceneObjectOperations;
   createMesh: CreateMesh;
   appendTo(scene: BabylonScene): void;
 }
