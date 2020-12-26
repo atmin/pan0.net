@@ -74,6 +74,20 @@ export class SceneObject {
     return this;
   }
 
+  receiveShadows(b: boolean = true): SceneObject {
+    this._operations.push(async () => {
+      this._mesh.receiveShadows = b;
+    });
+    return this;
+  }
+
+  checkCollisions(b: boolean = true): SceneObject {
+    this._operations.push(async () => {
+      this._mesh.checkCollisions = b;
+    });
+    return this;
+  }
+
   material(options: MaterialOptions): SceneObject {
     this._createMaterialOptions = options;
     return this;
