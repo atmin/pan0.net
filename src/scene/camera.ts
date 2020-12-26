@@ -6,8 +6,10 @@ export function camera({
   fov = 1,
   speed = 0.25,
   angularSensibility = 2000,
-  touchAngularSensibility = 2500,
+  touchAngularSensibility = 2000,
   ellipsoid = [0.8, 0.9, 0.8],
+  minZ = 0.5,
+  maxZ = 10000,
   applyGravity = true,
   checkCollisions = true,
 } = {}): Scene {
@@ -30,6 +32,8 @@ export function camera({
         camera.angularSensibility = angularSensibility;
         camera.touchAngularSensibility = touchAngularSensibility;
         camera.fov = fov;
+        camera.minZ = minZ;
+        camera.maxZ = maxZ;
         camera.attachControl(
           scene.getEngine().getRenderingCanvas() as HTMLElement,
           true
