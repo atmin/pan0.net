@@ -112,9 +112,11 @@ interface StandardMaterialOptions {
   // TODO: rest of StandardMaterial props
 }
 
-interface PBRMaterialOptions {
+export interface PBRMaterialOptions {
   type: 'pbr';
   reflectionTexture?: MaterialTexture;
+  metallic: number;
+  roughness: number;
   // TODO: rest PBRMaterial props
 }
 

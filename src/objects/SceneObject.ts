@@ -89,6 +89,13 @@ export class SceneObject {
     return this;
   }
 
+  opacity(o: number): SceneObject {
+    this._operations.push(async () => {
+      this._mesh.visibility = o;
+    });
+    return this;
+  }
+
   material(options: MaterialOptions): SceneObject {
     this._createMaterialOptions = options;
     return this;

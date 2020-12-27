@@ -1,6 +1,7 @@
 import {
   Material,
   MaterialOptions,
+  PBRMaterialOptions,
   BabylonScene,
   AbstractMesh,
 } from '../types';
@@ -22,7 +23,14 @@ export async function createMaterial(
     import('@babylonjs/core/Maths/math'),
   ]);
   const { type, ...opts } = options;
-  const { material, colorProps, textureProps, otherProps } = ((): {
+  const {
+    materialType,
+    material,
+    colorProps,
+    textureProps,
+    otherProps,
+  } = ((): {
+    materialType: 'standard' | 'pbr';
     material: Material;
     colorProps: string[];
     textureProps: string[];
@@ -85,6 +93,7 @@ export async function createMaterial(
 
     if (materialType === 'standard') {
       return {
+        materialType,
         material: new StandardMaterial('TODO', scene),
         colorProps: standardMaterialColorProps,
         textureProps: standardMaterialTextureProps,
@@ -93,6 +102,7 @@ export async function createMaterial(
     }
 
     return {
+      materialType,
       material: new PBRMaterial('TODO', scene),
       colorProps: pbrMaterialColorProps,
       textureProps: pbrMaterialTextureProps,
@@ -121,6 +131,15 @@ export async function createMaterial(
     ) {
       material[textureProps[i]] = await texture.createTexture(mesh);
     }
+  }
+
+  if (
+    materialType === 'pbr' &&
+    !opts.hasOwnProperty('metallic') &&
+    !opts.hasOwnProperty('roughness')
+  ) {
+    (opts as PBRMaterialOptions).metallic = 0;
+    (opts as PBRMaterialOptions).roughness = 1;
   }
 
   otherProps.forEach((option) => {
