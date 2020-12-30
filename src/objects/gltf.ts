@@ -14,28 +14,21 @@ class GltfSceneObject extends SceneObject {
     const pathnameArray = parsed.pathname.split('/');
     const filename = pathnameArray.pop();
     const pathname = pathnameArray.join('/');
-    return SceneLoader.ImportMeshAsync(
+
+    const mesh = new Mesh(this._name, scene);
+
+    SceneLoader.ImportMeshAsync(
       '',
       parsed.origin + pathname + '/',
       filename,
       scene
     ).then((result) => {
-      const mesh = Mesh.MergeMeshes(
-        (result.meshes as Array<Mesh>).filter(
-          (mesh) => mesh.name !== '__root__'
-        ),
-        true,
-        false,
-        null,
-        false,
-        true
-      );
-      (result.meshes as Array<Mesh>)
-        .find((mesh) => mesh.name === '__root__')
-        .dispose();
-      mesh.name = this._name;
-      return mesh;
+      for (let gltfMesh of result.meshes) {
+        mesh.addChild(gltfMesh);
+      }
     });
+
+    return mesh;
   }
 
   source(url: string) {

@@ -3,9 +3,11 @@ import type { BabylonScene, Scene } from '../types';
 export function ground({
   color = [0.6, 0.6, 0.6],
   checkCollisions = true,
+  visible = true,
 }: {
   color?: [number, number, number];
   checkCollisions?: boolean;
+  visible?: boolean;
 } = {}): Scene {
   (this as Scene)._createGround = async (scene: BabylonScene) => {
     const [
@@ -33,6 +35,7 @@ export function ground({
     ground.material = groundMaterial;
     ground.checkCollisions = checkCollisions;
     ground.receiveShadows = true;
+    ground.visibility = visible ? 1 : 0;
     return ground;
   };
   return this;

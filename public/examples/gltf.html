@@ -1,0 +1,11 @@
+<script src="../../latest/main.js"></script>
+<script>
+  scene(
+    gltf().source(
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Sponza/glTF/Sponza.gltf'
+    )
+  )
+    .ground({ visible: false })
+    .camera({ applyGravity: false })
+    .render();
+</script>

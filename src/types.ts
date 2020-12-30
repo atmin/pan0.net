@@ -126,6 +126,12 @@ interface SceneObjectBase<T> {
   position: (
     v?: [number, number, number]
   ) => typeof v extends undefined ? [number, number, number] : T;
+  scaling: (
+    v?: [number, number, number]
+  ) => typeof v extends undefined ? [number, number, number] : T;
+  rotation: (
+    v?: [number, number, number]
+  ) => typeof v extends undefined ? [number, number, number] : T;
   material: (opts: MaterialOptions) => T;
 }
 export interface SceneObject extends SceneObjectBase<SceneObject> {
@@ -133,7 +139,8 @@ export interface SceneObject extends SceneObjectBase<SceneObject> {
   appendTo(scene: BabylonScene): void;
 }
 
-export interface MutableSceneObject extends SceneObjectBase<SceneObject> {
+export interface MutableSceneObject
+  extends SceneObjectBase<MutableSceneObject> {
   readonly name: string;
   replace: (...objects: SceneObject[]) => void;
   remove: () => void;

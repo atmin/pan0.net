@@ -92,7 +92,29 @@ const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
     return this;
   },
 
-  // TODO: implement rest
+  scaling(v) {
+    if (!v) {
+      const { x, y, z } = mesh.scaling;
+      return [x, y, z];
+    }
+
+    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
+      mesh.scaling = new Vector3(...v);
+    });
+    return this;
+  },
+
+  rotation(v) {
+    if (!v) {
+      const { x, y, z } = mesh.rotation;
+      return [x, y, z];
+    }
+
+    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
+      mesh.rotation = new Vector3(...v);
+    });
+    return this;
+  },
 
   material() {
     return this;
