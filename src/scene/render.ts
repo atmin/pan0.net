@@ -4,12 +4,16 @@ import '@babylonjs/core/Materials/standardMaterial';
 // import '@babylonjs/core/Rendering/edgesRenderer';
 import '@babylonjs/core/Materials/Textures/Loaders/envTextureLoader';
 // import '@babylonjs/core/Helpers/sceneHelpers';
+import {
+  PointerEventTypes,
+  PointerInfo,
+} from '@babylonjs/core/Events/pointerEvents';
 import 'pepjs';
 
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-import { Scene } from '../types';
+import type { Scene } from '../types';
 
 export async function render() {
   const canvas = document.createElement('canvas');
@@ -57,10 +61,28 @@ export async function render() {
     self._createGround(scene),
   ]);
 
-  this._eventHandlers.init.forEach((handler) => handler());
+  self._eventHandlers.init.forEach((handler) => handler());
+
+  scene.onPointerObservable.add((pointerInfo: PointerInfo) => {
+    const key = {
+      [PointerEventTypes.POINTERDOWN]: 'pointerdown',
+      [PointerEventTypes.POINTERUP]: 'pointerup',
+      [PointerEventTypes.POINTERMOVE]: 'pointermove',
+      [PointerEventTypes.POINTERWHEEL]: 'pointerwheel',
+      [PointerEventTypes.POINTERPICK]: 'pointerpick',
+      [PointerEventTypes.POINTERTAP]: 'pointertap',
+      [PointerEventTypes.POINTERDOUBLETAP]: 'pointerdoubletap',
+    }[pointerInfo.type];
+
+    for (let handler of self._eventHandlers[key]) {
+      const result = handler(pointerInfo);
+      if (result === false) {
+        break;
+      }
+    }
+  });
 
   (window as any)._scene = scene;
-  (window as any)._sceneData = self._data;
 
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => {

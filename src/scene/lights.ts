@@ -61,7 +61,7 @@ export function lights(
       }
     );
 
-    this.onInit(async () => {
+    (this as Scene).on('init', async () => {
       const shadowGeneratorsRaw = await Promise.all(shadowGeneratorPromises);
       const shadowCasters = scene.meshes.filter(
         (mesh) => !['$ground', '$sky'].includes(mesh.name)

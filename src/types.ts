@@ -6,13 +6,12 @@ import type {
 } from '@babylonjs/core/Maths/math';
 import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
 import type { Mesh } from '@babylonjs/core/Meshes/mesh';
-import type { CSG } from '@babylonjs/core/Meshes/csg';
 import type { Material } from '@babylonjs/core/Materials/material';
-import type { MultiMaterial } from '@babylonjs/core/Materials/multiMaterial';
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import type { Scene as BabylonScene } from '@babylonjs/core/scene';
 import type { Control } from '@babylonjs/gui/2D/controls/control';
-import { Texture } from '@babylonjs/core/Materials/Textures/texture';
+import type { Texture } from '@babylonjs/core/Materials/Textures/texture';
+import type { PointerInfo } from '@babylonjs/core/Events/pointerEvents';
 
 export type {
   AbstractMesh,
@@ -38,6 +37,13 @@ export interface Scene {
   _createSceneObjects: SceneDecorator;
   _eventHandlers: {
     init: Array<() => void>;
+    pointerdown: Array<(pointerInfo: PointerInfo) => void>;
+    pointerup: Array<(pointerInfo: PointerInfo) => void>;
+    pointermove: Array<(pointerInfo: PointerInfo) => void>;
+    pointerwheel: Array<(pointerInfo: PointerInfo) => void>;
+    pointerpick: Array<(pointerInfo: PointerInfo) => void>;
+    pointertap: Array<(pointerInfo: PointerInfo) => void>;
+    pointerdoubletap: Array<(pointerInfo: PointerInfo) => void>;
   };
 
   _data: { [key: string]: any };
@@ -60,7 +66,7 @@ export interface Scene {
 
   data(initialData: { [key: string]: any }): Scene;
 
-  onInit(handler: () => any): Scene;
+  on(event: keyof Scene['_eventHandlers'], handler: () => any): Scene;
 
   render(): void;
 }

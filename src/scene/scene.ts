@@ -19,6 +19,13 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
 
   _eventHandlers: {
     init: [],
+    pointerdown: [],
+    pointerup: [],
+    pointermove: [],
+    pointerwheel: [],
+    pointerpick: [],
+    pointertap: [],
+    pointerdoubletap: [],
   },
   _data: {},
 
@@ -40,8 +47,16 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
     return this;
   },
 
-  onInit(handler) {
-    this._eventHandlers.init.push(handler);
+  on(event, handler) {
+    if (!(event in this._eventHandlers)) {
+      console.error(
+        `scene(...).on(event, handler): Event must be one of ${Object.keys(
+          this._eventHandlers
+        ).join(', ')}`
+      );
+    } else {
+      this._eventHandlers[event].push(handler);
+    }
     return this;
   },
 
@@ -63,17 +78,6 @@ scene.objects = {
   all(): Array<MutableSceneObject> {
     const scene = (window as any)._scene as BabylonScene;
     return scene.meshes.map(createMutableSceneObject);
-  },
-};
-
-scene.data = {
-  get(key: string): any {
-    const data = (window as any)._sceneData;
-    return data[key];
-  },
-  set(key: string, value: any): void {
-    const data = (window as any)._sceneData;
-    data[key] = value;
   },
 };
 
