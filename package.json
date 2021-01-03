@@ -21,24 +21,27 @@
   },
   "license": "MIT",
   "author": "Atanas Minev",
-  "main": "src/index.ts",
   "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build",
-    "test": "echo TODO: jest/snapshots/NullEngine"
+    "start": "NODE_ENV=development webpack serve",
+    "build": "webpack",
+    "test": "echo TODO: jest/snapshots/NullEngine",
+    "_postbuild": "cp -r public/* dist/"
   },
   "dependencies": {
-    "@babylonjs/core": "^4.2.0-alpha.26",
-    "@babylonjs/loaders": "^4.2.0-alpha.26",
-    "fabric": "^4.2.0",
+    "@babylonjs/core": "^4.2.0",
+    "@babylonjs/gui": "^4.2.0",
+    "@babylonjs/loaders": "^4.2.0",
     "pepjs": "^0.5.2"
   },
   "devDependencies": {
-    "jiff": "^0.7.3",
-    "@snowpack/plugin-run-script": "^2.0.2",
-    "prettier": "^2.0.5",
-    "snowpack": "^2.7.5",
-    "typescript": "^3.9.7"
+    "prettier": "^2.2.0",
+    "source-map-loader": "^1.1.2",
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.1.2",
+    "webpack": "^5.6.0",
+    "webpack-bundle-analyzer": "^4.1.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
   },
   "prettier": {
     "singleQuote": true,

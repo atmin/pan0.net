@@ -1,95 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link
-      rel="icon"
-      href="/favicon.ico"
-    />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    />
-    <title>pan</title>
-    <style>
-      html,
-      body {
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      canvas {
-        width: 100%;
-        height: 100%;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas></canvas>
-    <noscript
-      >JavaScript is required to run
-      this 3D scene.</noscript
-    >
-    <script type="module">
-      import box from '/box.js'
-      import ground from '/ground.js'
-      import lights from '/lights.js'
-      import render from '/render.js'
-      import scene from '/scene.js'
-      import sphere from '/sphere.js'
+<script src="/latest/main.js"></script>
+<script>
+  const greenBox = (albedoTexture) =>
+    box().size(2.4).width(3.2).height(1.3).position([0, 2, 4]).material({
+      albedoColor: color.GREEN,
+      albedoTexture: albedoTexture,
+      roughness: 1,
+    });
 
-      render(
-        document.querySelector(
-          'canvas',
+  const ellipsoid = () =>
+    sphere().diameterX(3).diameterZ(2).material({
+      albedoTexture: 'https://loremflickr.com/320/240/frog?lock=4',
+      metallic: 0,
+    });
+
+  scene(
+    gltf()
+      .source('https://playground.babylonjs.com/scenes/BoomBox/BoomBox.gltf')
+      .position([-5, 1, 0])
+      .scaling([100, 100, 100])
+      .rotation([0, Math.PI / 2, 0])
+      .environmentSnapshot()
+      .checkCollisions(false),
+
+    greenBox('https://loremflickr.com/320/240/frog?lock=3')
+      .position([0, 0.5, 0])
+      .subtract(ellipsoid().position([0, 1, 0])),
+
+    ellipsoid().position([-4, 3, 0]),
+
+    plane()
+      .position([5, 1.5, 0])
+      .width(3)
+      .height(2)
+      .doublesided()
+      .rotation([Math.PI / 16, 0, 0])
+      .material({
+        // albedoColor: color.BLUE,
+        metallic: 0.5,
+        roughness: 1,
+        albedoTexture: canvas(
+          image().source('https://loremflickr.com/320/240/cat?lock=4')
         ),
-
-        scene(
-          lights([
-            { type: 'directional' },
-            { type: 'hemispheric' },
-          ]),
-
-          ground(),
-
-          sphere(2)
-            .translate([0, 0, 2])
-            .color([1.5, 1, 0.7])
-            .metallic(1)
-            .roughness(0),
-          // .env_snapshot(),
-
-          box(0.5)
-            .translate([-1, 0.1, -2])
-            .color([0.5, 1, 0.5]),
-          // .metallic(0)
-          // .roughness(1),
-
-          box()
-            .translate([0, 0.1, 0])
-            .color([1, 0.5, 1]),
-
-          ...[
-            1,
-            1.5,
-            2,
-            2.5,
-            3,
-            3.5,
-          ].map((a, i) =>
-            box(a)
-              .translate([
-                a *
-                  4 *
-                  (i % 2 ? -1 : 1),
-                i % 2 ? 0 : 0.1,
-                0,
-              ])
-              .color([a / 4, i / 5, 0]),
-          ),
-        ),
-      )
-    </script>
-  </body>
-</html>
+        bumpTexture: canvas(
+          image().source(
+            'https://upload.wikimedia.org/wikipedia/commons/1/13/Calgary_street_map.png'
+          )
+        )
+          .width(768)
+          .height(512),
+      })
+  )
+    .data({ test: 42 })
+    // .lights(null)
+    .render();
+</script>

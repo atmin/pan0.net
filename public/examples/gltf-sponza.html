@@ -1,0 +1,13 @@
+<script src="../../latest/main.js"></script>
+<script>
+  scene(
+    gltf()
+      .source(
+        'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Sponza/glTF/Sponza.gltf'
+      )
+      .checkCollisions(true)
+      .position([0, 0.1, -10])
+  )
+    .camera({ applyGravity: false })
+    .render();
+</script>

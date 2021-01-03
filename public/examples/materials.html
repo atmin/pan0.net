@@ -1,5 +1,36 @@
-<script src="https://pan0.net/latest"></script>
+<script src="../../latest/main.js"></script>
 <script>
+  scene(
+    sphere()
+      .diameter(2)
+      .position([-5, 1, 0])
+      .material({
+        albedoColor: color.RED,
+      }),
+
+    sphere()
+      .diameter(2)
+      .position([0, 1, 0])
+      .material({
+        albedoColor: color.GREEN,
+        metallic: 1,
+        roughness: 0,
+      })
+      .environmentSnapshot(),
+
+    sphere()
+      .diameter(2)
+      .position([5, 1, 0])
+      .material({
+        albedoColor: color.BLUE,
+        metallic: 0.5,
+        roughness: 0.5,
+      })
+  )
+    .camera({ applyGravity: false })
+    .render();
+</script>
+<script type="TODO: won't be rendered">
   // TODO: https://doc.babylonjs.com/how_to/physically_based_rendering_master
   scene(
     sphere()

@@ -1,7 +1,9 @@
 .env
 .cache
+.parcel-cache
 .build
 build
 dist
 web_modules
 node_modules
+tmp
