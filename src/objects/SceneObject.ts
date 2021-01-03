@@ -37,12 +37,10 @@ export class SceneObject {
     }
   }
 
-  async appendTo(scene: BabylonScene) {
+  async appendTo(scene: BabylonScene): Promise<Mesh> {
     this._scene = scene;
     this._mesh = await this.createMesh(this._createMeshOptions, scene);
     this._mesh.receiveShadows = true;
-    this._mesh.checkCollisions = true;
-
     if (this._createMaterialOptions) {
       this._mesh.material = await createMaterial(
         this._createMaterialOptions,
@@ -50,8 +48,8 @@ export class SceneObject {
         scene
       );
     }
-
     await this.applyOperations();
+    return this._mesh;
   }
 
   position(v: [number, number, number]): SceneObject {
@@ -75,16 +73,16 @@ export class SceneObject {
     return this;
   }
 
-  receiveShadows(b: boolean = true): SceneObject {
+  receiveShadows(b: boolean | ((mesh: Mesh) => boolean) = true): SceneObject {
     this._operations.push(async () => {
-      this._mesh.receiveShadows = b;
+      this._mesh.receiveShadows = typeof b === 'function' ? b(this._mesh) : b;
     });
     return this;
   }
 
-  checkCollisions(b: boolean = true): SceneObject {
+  checkCollisions(b: boolean | ((mesh: Mesh) => boolean) = false): SceneObject {
     this._operations.push(async () => {
-      this._mesh.checkCollisions = b;
+      this._mesh.checkCollisions = typeof b === 'function' ? b(this._mesh) : b;
     });
     return this;
   }
@@ -128,6 +126,15 @@ export class SceneObject {
       });
     });
 
+    return this;
+  }
+
+  children(...objects: Array<SceneObject>): SceneObject {
+    this._operations.push(async () => {
+      for (let object of objects) {
+        this._mesh.addChild(await object.appendTo(this._scene));
+      }
+    });
     return this;
   }
 

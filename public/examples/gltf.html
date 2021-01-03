@@ -1,11 +1,18 @@
 <script src="../../latest/main.js"></script>
 <script>
   scene(
-    gltf().source(
-      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Sponza/glTF/Sponza.gltf'
-    )
+    gltf()
+      .source(
+        'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Sponza/glTF/Sponza.gltf'
+      )
+      .receiveShadows(true)
+      .checkCollisions(true)
+      .position([0, 0.1, -10])
+      .rotation([0, Math.PI / 3, 0])
+    // .scaling([2, 2, 2])
   )
-    .ground({ visible: false })
+    // .ground({ visible: false })
+    // .lights(null)
     .camera({ applyGravity: false })
     .render();
 </script>

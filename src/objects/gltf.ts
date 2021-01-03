@@ -10,7 +10,8 @@ class GltfSceneObject extends SceneObject {
       import('@babylonjs/core/Loading/sceneLoader'),
       import('@babylonjs/core/Meshes/mesh'),
     ]);
-    const parsed = new URL(options.source);
+    const { source, receiveShadows, checkCollisions } = options;
+    const parsed = new URL(source);
     const pathnameArray = parsed.pathname.split('/');
     const filename = pathnameArray.pop();
     const pathname = pathnameArray.join('/');
@@ -24,6 +25,20 @@ class GltfSceneObject extends SceneObject {
       scene
     ).then((result) => {
       for (let gltfMesh of result.meshes) {
+        gltfMesh.position.addInPlace(mesh.position);
+        gltfMesh.rotation.addInPlace(mesh.rotation);
+        gltfMesh.scaling.multiplyInPlace(mesh.scaling);
+
+        gltfMesh.receiveShadows =
+          typeof receiveShadows === 'function'
+            ? receiveShadows(this._mesh)
+            : receiveShadows || false;
+
+        gltfMesh.checkCollisions =
+          typeof checkCollisions === 'function'
+            ? checkCollisions(this._mesh)
+            : checkCollisions || false;
+
         mesh.addChild(gltfMesh);
       }
     });
@@ -35,8 +50,15 @@ class GltfSceneObject extends SceneObject {
     (this._createMeshOptions as GltfOptions).source = url;
     return this;
   }
+
+  checkCollisions(b: boolean | ((mesh: Mesh) => boolean) = true) {
+    (this._createMeshOptions as GltfOptions).checkCollisions = b;
+    return this;
+  }
 }
 
 interface GltfOptions {
   source: string;
+  receiveShadows?: boolean | ((mesh: Mesh) => boolean);
+  checkCollisions?: boolean | ((mesh: Mesh) => boolean);
 }
