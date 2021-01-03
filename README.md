@@ -109,4 +109,4 @@ If you bundle, your bundler of choice must be capable of code-splitting. [`impor
 
 - [Hello, world](https://pan0.net/examples/hello-world.html)
 - [Three balls, different PBR materials](https://pan0.net/examples/materials.html)
-- [Sponza scene loaded from large gltf](https://pan0.net/examples/gltf-sponza.html)
+- [Sponza scene, loaded from large gltf](https://pan0.net/examples/gltf-sponza.html)
