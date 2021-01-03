@@ -21,7 +21,7 @@ export function environment(): Scene {
     scene.gravity = new Vector3(...[0, -9.81, 0]);
     scene.collisionsEnabled = true;
     scene.environmentTexture = new CubeTexture(
-      '/assets/env/default.env',
+      'https://pan0.net/assets/env/default.env',
       scene
     );
 
