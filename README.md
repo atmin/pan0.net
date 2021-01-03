@@ -17,6 +17,7 @@ Focus is on ease of use, consistency and sensible defaults, without sacrificing 
 - powered by [BabylonJS](https://www.babylonjs.com/)
 - _(planned for the future)_ integrated bi-directional source⇔visual editor
 
+<!--
 ## Examples
 
 ### Minimal
@@ -83,7 +84,6 @@ Recommended production usage, a scene of HTML file of two `script` tags:
 ```
 
 [(TODO image of capabilities scene)](https://pan0.net/examples/readme-capabilities-example.html)
--->
 
 ### Usage as NPM module (TODO)
 
@@ -99,13 +99,14 @@ import { scene } from 'pan0.net/scene';
 
 scene(box()).render();
 ```
+-->
 
 If you bundle, your bundler of choice must be capable of code-splitting. [`import` function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#Dynamic_Imports) is used liberally.
 
-### More examples
+### Examples
 
 (NB automatic tests will use these examples to prevent regressions)
 
 - [Hello, world](https://pan0.net/examples/hello-world.html)
-- [Three balls, different PBR materials](https://pan0.net/examples/hello-world.html)
+- [Three balls, different PBR materials](https://pan0.net/examples/materials.html)
 - [Sponza scene loaded from large gltf](https://pan0.net/examples/gltf-sponza.html)
