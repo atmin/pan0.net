@@ -1,0 +1,19 @@
+<script src="../../latest/main.js"></script>
+<script>
+  scene(box())
+    .on(
+      'pointermove',
+      (pointerInfo) => {
+        if (
+          pointerInfo.pickInfo
+            .pickedMesh &&
+          pointerInfo.pickInfo
+            .pickedMesh.name ===
+            'box(1)'
+        ) {
+          console.log(pointerInfo);
+        }
+      }
+    )
+    .render();
+</script>

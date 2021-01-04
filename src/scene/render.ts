@@ -74,8 +74,18 @@ export async function render() {
       [PointerEventTypes.POINTERDOUBLETAP]: 'pointerdoubletap',
     }[pointerInfo.type];
 
+    const pInfo =
+      // BabylonJS does not provide pickInfo on pointermove event
+      // TODO: make it dynamic, pickInfo getter
+      key === 'pointermove'
+        ? {
+            ...pointerInfo,
+            pickInfo: scene.pick(scene.pointerX, scene.pointerY),
+          }
+        : pointerInfo;
+
     for (let handler of self._eventHandlers[key]) {
-      const result = handler(pointerInfo);
+      const result = handler(pInfo);
       if (result === false) {
         break;
       }
