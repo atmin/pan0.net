@@ -76,11 +76,12 @@ export async function render() {
 
     const pInfo =
       // BabylonJS does not provide pickInfo on pointermove event
-      // TODO: make it dynamic, pickInfo getter
       key === 'pointermove'
         ? {
             ...pointerInfo,
-            pickInfo: scene.pick(scene.pointerX, scene.pointerY),
+            get pickInfo() {
+              return scene.pick(scene.pointerX, scene.pointerY);
+            },
           }
         : pointerInfo;
 

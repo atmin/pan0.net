@@ -3,7 +3,13 @@ import type { StandardMaterial } from '@babylonjs/core/Materials/standardMateria
 import type { MultiMaterial } from '@babylonjs/core/Materials/multiMaterial';
 
 import { createMaterial } from './createMaterial';
-import { BabylonScene, MaterialOptions, Mesh, RefreshRate } from '../types';
+import {
+  BabylonScene,
+  SceneObjectEvents,
+  MaterialOptions,
+  Mesh,
+  RefreshRate,
+} from '../types';
 
 export class SceneObject {
   static _counters = { environmentSnapshot: 1 };
@@ -186,4 +192,11 @@ export class SceneObject {
   intersect(...sceneObjects: Array<SceneObject>): SceneObject {
     return this._csg(sceneObjects, 'intersectInPlace');
   }
+
+  on(event: typeof SceneObjectEvents[number], handler: () => void) {}
+
+  onIntersectionEnter(
+    otherMeshName: string,
+    handler: (otherMesh: SceneObject) => void
+  ) {}
 }

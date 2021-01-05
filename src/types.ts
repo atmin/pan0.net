@@ -71,6 +71,21 @@ export interface Scene {
   render(): void;
 }
 
+// https://doc.babylonjs.com/divingDeeper/events/actions#triggers
+export const SceneObjectEvents = [
+  'pick',
+  'doublepick',
+  'pickdown',
+  'pickup',
+  'pickout',
+  'leftpick',
+  'rightpick',
+  'centerpick',
+  'longpress',
+  'pointerenter',
+  'pointerleave',
+] as const;
+
 export type CreateMesh = (
   options: object,
   scene: BabylonScene
