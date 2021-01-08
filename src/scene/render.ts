@@ -13,7 +13,7 @@ import 'pepjs';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-import type { Scene } from '../types';
+import type { Scene, ActionEvent } from '../types';
 
 export async function render() {
   const canvas = document.createElement('canvas');
@@ -61,8 +61,18 @@ export async function render() {
     self._createGround(scene),
   ]);
 
+  //
+  // Process events
+  //
+
+  const [{ ActionManager }, { ExecuteCodeAction }] = await Promise.all([
+    import('@babylonjs/core/Actions/actionManager'),
+    import('@babylonjs/core/Actions/directActions'),
+  ]);
+
   self._eventHandlers.init.forEach((handler) => handler());
 
+  // TODO: maybe deprecate/remove observables in lieu of actions?
   scene.onPointerObservable.add((pointerInfo: PointerInfo) => {
     const key = {
       [PointerEventTypes.POINTERDOWN]: 'pointerdown',
@@ -93,6 +103,16 @@ export async function render() {
     }
   });
 
+  scene.actionManager = new ActionManager(scene);
+  scene.actionManager.registerAction(
+    new ExecuteCodeAction(ActionManager.OnEveryFrameTrigger, () => {
+      for (let handler of self._eventHandlers.frame) {
+        handler();
+      }
+    })
+  );
+
+  // For debugging
   (window as any)._scene = scene;
 
   engine.runRenderLoop(() => scene.render());

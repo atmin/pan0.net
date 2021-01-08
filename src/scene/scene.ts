@@ -19,6 +19,7 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
 
   _eventHandlers: {
     init: [],
+    frame: [],
     pointerdown: [],
     pointerup: [],
     pointermove: [],

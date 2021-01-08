@@ -5,6 +5,7 @@ import type {
   Vector4,
 } from '@babylonjs/core/Maths/math';
 import type { AbstractMesh } from '@babylonjs/core/Meshes/abstractMesh';
+import type { ActionEvent } from '@babylonjs/core/Actions/actionEvent';
 import type { Mesh } from '@babylonjs/core/Meshes/mesh';
 import type { Material } from '@babylonjs/core/Materials/material';
 import type { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
@@ -15,6 +16,7 @@ import type { PointerInfo } from '@babylonjs/core/Events/pointerEvents';
 
 export type {
   AbstractMesh,
+  ActionEvent,
   Mesh,
   Material,
   Color4,
@@ -37,6 +39,7 @@ export interface Scene {
   _createSceneObjects: SceneDecorator;
   _eventHandlers: {
     init: Array<() => void>;
+    frame: Array<() => void>;
     pointerdown: Array<(pointerInfo: PointerInfo) => void>;
     pointerup: Array<(pointerInfo: PointerInfo) => void>;
     pointermove: Array<(pointerInfo: PointerInfo) => void>;
