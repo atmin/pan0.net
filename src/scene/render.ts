@@ -13,7 +13,7 @@ import 'pepjs';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-import type { Scene, ActionEvent } from '../types';
+import type { Scene } from '../types';
 
 export async function render() {
   const canvas = document.createElement('canvas');
@@ -112,7 +112,21 @@ export async function render() {
     })
   );
 
-  // For debugging
+  if (self._showInspector) {
+    import('@babylonjs/inspector').then(() => {
+      scene.debugLayer.show();
+      document.getElementById('scene-explorer-host').style.zIndex = '1';
+      document.addEventListener('keyup', (e) => {
+        if (e.code === 'KeyI') {
+          scene.debugLayer.isVisible()
+            ? scene.debugLayer.hide()
+            : scene.debugLayer.show();
+        }
+      });
+    });
+  }
+
+  // For debugging. Remove when `scene.objects` interface becomes sufficient
   (window as any)._scene = scene;
 
   engine.runRenderLoop(() => scene.render());

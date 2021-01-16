@@ -28,7 +28,7 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
     pointertap: [],
     pointerdoubletap: [],
   },
-  _data: {},
+  _showInspector: false,
 
   async _createSceneObjects(scene) {
     await Promise.all(
@@ -58,6 +58,11 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
     } else {
       this._eventHandlers[event].push(handler);
     }
+    return this;
+  },
+
+  inspect() {
+    this._showInspector = true;
     return this;
   },
 

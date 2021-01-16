@@ -1,0 +1,25 @@
+<!-- https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Box/glTF-Binary/Box.glb -->
+<script src="../../latest/main.js"></script>
+<script>
+  scene(
+    gltf()
+      .source(
+        'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Box/glTF-Binary/Box.glb'
+      )
+      .position([0, 0.5, 0]),
+
+    gltf()
+      .source(
+        'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Box/glTF-Binary/Box.glb'
+      )
+      .position([1, 1.5, 1]),
+
+    gltf()
+      .source(
+        'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Box/glTF-Binary/Box.glb'
+      )
+      .position([2, 2.5, 2])
+  )
+    .inspect()
+    .render();
+</script>

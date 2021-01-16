@@ -25,9 +25,9 @@ class GltfSceneObject extends SceneObject {
       scene
     ).then((result) => {
       for (let gltfMesh of result.meshes) {
+        // gltfMesh.scaling.multiplyInPlace(mesh.scaling);
         gltfMesh.position.addInPlace(mesh.position);
-        gltfMesh.rotation.addInPlace(mesh.rotation);
-        gltfMesh.scaling.multiplyInPlace(mesh.scaling);
+        // gltfMesh.rotation.addInPlace(mesh.rotation);
 
         gltfMesh.receiveShadows =
           typeof receiveShadows === 'function'
@@ -39,7 +39,8 @@ class GltfSceneObject extends SceneObject {
             ? checkCollisions(this._mesh)
             : checkCollisions || false;
 
-        mesh.addChild(gltfMesh);
+        gltfMesh.setParent(mesh);
+        // mesh.addChild(gltfMesh);
       }
     });
 
