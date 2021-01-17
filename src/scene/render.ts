@@ -16,6 +16,9 @@ import { Scene as BabylonScene } from '@babylonjs/core/scene';
 import type { Scene } from '../types';
 
 export async function render() {
+  //
+  // Setup canvas
+  //
   const canvas = document.createElement('canvas');
   canvas.setAttribute('touch-action', 'none');
   canvas.style.position = 'absolute';
@@ -30,6 +33,9 @@ export async function render() {
 
   const self = this as Scene;
 
+  //
+  // Setup defaults
+  //
   if (self._createCamera === null) {
     self.camera();
   }
@@ -54,9 +60,8 @@ export async function render() {
   }
 
   //
-  // Process events
+  // Setup event processing
   //
-
   const [{ ActionManager }, { ExecuteCodeAction }] = await Promise.all([
     import('@babylonjs/core/Actions/actionManager'),
     import('@babylonjs/core/Actions/directActions'),
@@ -102,6 +107,9 @@ export async function render() {
     })
   );
 
+  //
+  // Load inspector on scene().inspect()
+  //
   if (self._showInspector) {
     import('@babylonjs/inspector').then(() => {
       const toggle = () => {
@@ -122,6 +130,20 @@ export async function render() {
     });
   }
 
+  //
+  // Load editor on crudely detecting `edit` URL parameter
+  //
+  if (
+    self._enableEditor &&
+    (location.search === '?edit' ||
+      location.search.search(/edit=.?(?:&:$)*/) > -1)
+  ) {
+    console.log('editor invoked');
+  }
+
+  //
+  // Create and run Babylon scene
+  //
   Promise.all([
     self._createEnvironment(scene),
     self._createGround(scene),

@@ -30,6 +30,7 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
     pointerdoubletap: [],
   },
   _showInspector: false,
+  _enableEditor: true,
 
   _createSceneObjects(scene): Promise<Array<Mesh>> {
     return Promise.all(
@@ -43,11 +44,6 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
   environment,
   lights,
   ground,
-
-  data(initialData) {
-    this._data = initialData;
-    return this;
-  },
 
   on(event, handler) {
     if (!(event in this._eventHandlers)) {
@@ -64,6 +60,11 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
 
   inspect() {
     this._showInspector = true;
+    return this;
+  },
+
+  disableEditor() {
+    this._enableEditor = false;
     return this;
   },
 

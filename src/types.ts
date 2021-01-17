@@ -49,6 +49,7 @@ export interface Scene {
     pointerdoubletap: Array<(pointerInfo: PointerInfo) => void>;
   };
   _showInspector: boolean;
+  _enableEditor: boolean;
 
   camera(options?: {
     type?: 'fps';
@@ -66,11 +67,11 @@ export interface Scene {
 
   ground(): Scene;
 
-  data(initialData: { [key: string]: any }): Scene;
-
   on(event: keyof Scene['_eventHandlers'], handler: () => any): Scene;
 
   inspect(): Scene;
+
+  disableEditor(): Scene;
 
   render(): void;
 }
