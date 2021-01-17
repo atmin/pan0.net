@@ -53,14 +53,6 @@ export async function render() {
     self.ground();
   }
 
-  await Promise.all([
-    self._createSceneObjects(scene),
-    self._createCamera(scene),
-    self._createEnvironment(scene),
-    self._createLights(scene),
-    self._createGround(scene),
-  ]);
-
   //
   // Process events
   //
@@ -69,8 +61,6 @@ export async function render() {
     import('@babylonjs/core/Actions/actionManager'),
     import('@babylonjs/core/Actions/directActions'),
   ]);
-
-  self._eventHandlers.init.forEach((handler) => handler());
 
   // TODO: maybe deprecate/remove observables in lieu of actions?
   scene.onPointerObservable.add((pointerInfo: PointerInfo) => {
@@ -114,23 +104,40 @@ export async function render() {
 
   if (self._showInspector) {
     import('@babylonjs/inspector').then(() => {
-      scene.debugLayer.show();
-      document.getElementById('scene-explorer-host').style.zIndex = '1';
-      document.addEventListener('keyup', (e) => {
-        if (e.code === 'KeyI') {
-          scene.debugLayer.isVisible()
-            ? scene.debugLayer.hide()
-            : scene.debugLayer.show();
+      const toggle = () => {
+        if (scene.debugLayer.isVisible()) {
+          scene.debugLayer.hide();
+        } else {
+          scene.debugLayer.show();
+          document.body.style.margin = '0';
+          document.body.style.padding = '0';
+          document.body.style.height = '100%';
+          document.getElementById('scene-explorer-host').style.zIndex = '1';
+          document.getElementById('scene-explorer-host').style.opacity = '0.95';
+          document.getElementById('inspector-host').style.opacity = '0.95';
         }
-      });
+      };
+      toggle();
+      document.addEventListener('keyup', (e) => e.code === 'KeyI' && toggle());
     });
   }
 
-  // For debugging. Remove when `scene.objects` interface becomes sufficient
-  (window as any)._scene = scene;
+  Promise.all([
+    self._createEnvironment(scene),
+    self._createGround(scene),
+    self._createCamera(scene),
+  ]).then(() => {
+    Promise.all([
+      self._createSceneObjects(scene),
+      self._createLights(scene),
+    ]).then(() => self._eventHandlers.init.forEach((handler) => handler()));
 
-  engine.runRenderLoop(() => scene.render());
-  window.addEventListener('resize', () => {
-    engine.resize();
+    // For debugging. Remove when `scene.objects` interface becomes sufficient
+    (window as any)._scene = scene;
+
+    engine.runRenderLoop(() => scene.render());
+    window.addEventListener('resize', () => {
+      engine.resize();
+    });
   });
 }

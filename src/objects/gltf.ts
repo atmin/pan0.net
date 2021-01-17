@@ -18,29 +18,14 @@ class GltfSceneObject extends SceneObject {
 
     const mesh = new Mesh(this._name, scene);
 
-    SceneLoader.ImportMeshAsync(
+    await SceneLoader.ImportMeshAsync(
       '',
       parsed.origin + pathname + '/',
       filename,
       scene
     ).then((result) => {
       for (let gltfMesh of result.meshes) {
-        // gltfMesh.scaling.multiplyInPlace(mesh.scaling);
-        gltfMesh.position.addInPlace(mesh.position);
-        // gltfMesh.rotation.addInPlace(mesh.rotation);
-
-        gltfMesh.receiveShadows =
-          typeof receiveShadows === 'function'
-            ? receiveShadows(this._mesh)
-            : receiveShadows || false;
-
-        gltfMesh.checkCollisions =
-          typeof checkCollisions === 'function'
-            ? checkCollisions(this._mesh)
-            : checkCollisions || false;
-
         gltfMesh.setParent(mesh);
-        // mesh.addChild(gltfMesh);
       }
     });
 

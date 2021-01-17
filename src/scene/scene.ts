@@ -9,6 +9,7 @@ import type {
   SceneObject,
   MutableSceneObject,
   AbstractMesh,
+  Mesh,
 } from '../types';
 
 export const scene = (...objects: Array<SceneObject>): Scene => ({
@@ -30,8 +31,8 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
   },
   _showInspector: false,
 
-  async _createSceneObjects(scene) {
-    await Promise.all(
+  _createSceneObjects(scene): Promise<Array<Mesh>> {
+    return Promise.all(
       objects
         .filter((obj) => typeof obj.appendTo === 'function')
         .map((obj) => obj.appendTo(scene))

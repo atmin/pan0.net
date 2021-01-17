@@ -17,6 +17,7 @@ export class SceneObject {
   _name: string;
   _mesh: Mesh;
   _scene: BabylonScene;
+  _opacity: number;
   _createMeshOptions: object;
   _createMaterialOptions: MaterialOptions;
   _operations: Array<() => Promise<void>>;
@@ -31,6 +32,7 @@ export class SceneObject {
     }
     this._createMeshOptions = {};
     this._operations = [];
+    this._opacity = 1;
   }
 
   async createMesh(_options: object, _scene: BabylonScene): Promise<Mesh> {
@@ -44,17 +46,21 @@ export class SceneObject {
   }
 
   async appendTo(scene: BabylonScene): Promise<Mesh> {
+    const setVisibility = () => (this._mesh.visibility = this._opacity);
     this._scene = scene;
     this._mesh = await this.createMesh(this._createMeshOptions, scene);
+    this._mesh.visibility = 0;
     this._mesh.receiveShadows = true;
     if (this._createMaterialOptions) {
-      this._mesh.material = await createMaterial(
-        this._createMaterialOptions,
-        this._mesh,
-        scene
+      createMaterial(this._createMaterialOptions, this._mesh, scene).then(
+        (material) => {
+          this._mesh.material = material;
+          this.applyOperations().then(setVisibility);
+        }
       );
+    } else {
+      this.applyOperations().then(setVisibility);
     }
-    await this.applyOperations();
     return this._mesh;
   }
 
@@ -94,9 +100,7 @@ export class SceneObject {
   }
 
   opacity(o: number): SceneObject {
-    this._operations.push(async () => {
-      this._mesh.visibility = o;
-    });
+    this._opacity = o;
     return this;
   }
 

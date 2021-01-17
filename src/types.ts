@@ -161,7 +161,7 @@ interface SceneObjectBase<T> {
 }
 export interface SceneObject extends SceneObjectBase<SceneObject> {
   createMesh: CreateMesh;
-  appendTo(scene: BabylonScene): void;
+  appendTo(scene: BabylonScene): Promise<Mesh>;
 }
 
 export interface MutableSceneObject
