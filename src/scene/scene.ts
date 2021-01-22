@@ -29,7 +29,7 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
     pointertap: [],
     pointerdoubletap: [],
   },
-  _showInspector: false,
+  _enableDebug: true,
   _enableEditor: true,
 
   _createSceneObjects(scene): Promise<Array<Mesh>> {
@@ -58,12 +58,12 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
     return this;
   },
 
-  inspect() {
-    this._showInspector = true;
+  disableDebug() {
+    this._enableDebug = false;
     return this;
   },
 
-  disableEditor() {
+  disableEdit() {
     this._enableEditor = false;
     return this;
   },

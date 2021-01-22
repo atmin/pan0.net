@@ -110,7 +110,11 @@ export async function render() {
   //
   // Load inspector on scene().inspect()
   //
-  if (self._showInspector) {
+  if (
+    self._enableDebug &&
+    (location.search === '?debug' ||
+      location.search.search(/debug=.?(?:&:$)*/) > -1)
+  ) {
     import('@babylonjs/inspector').then(() => {
       const toggle = () => {
         if (scene.debugLayer.isVisible()) {

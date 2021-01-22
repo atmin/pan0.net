@@ -48,7 +48,7 @@ export interface Scene {
     pointertap: Array<(pointerInfo: PointerInfo) => void>;
     pointerdoubletap: Array<(pointerInfo: PointerInfo) => void>;
   };
-  _showInspector: boolean;
+  _enableDebug: boolean;
   _enableEditor: boolean;
 
   camera(options?: {
@@ -69,9 +69,9 @@ export interface Scene {
 
   on(event: keyof Scene['_eventHandlers'], handler: () => any): Scene;
 
-  inspect(): Scene;
+  disableDebug(): Scene;
 
-  disableEditor(): Scene;
+  disableEdit(): Scene;
 
   render(): void;
 }
