@@ -1,4 +1,6 @@
-import type { BabylonScene, Scene } from '../types';
+import groundBuilderBundle from '../bundles/groundBuilder';
+import materialsBundle from '../bundles/materials';
+import type { BabylonScene, Scene } from '../common/types';
 
 export function ground({
   color = [0.6, 0.6, 0.6],
@@ -12,13 +14,8 @@ export function ground({
   (this as Scene)._createGround = async (scene: BabylonScene) => {
     const [
       { GroundBuilder },
-      { BackgroundMaterial },
-      { Color3 },
-    ] = await Promise.all([
-      import('@babylonjs/core/Meshes/Builders/groundBuilder'),
-      import('@babylonjs/core/Materials/Background/backgroundMaterial'),
-      import('@babylonjs/core/Maths/math.color'),
-    ]);
+      { BackgroundMaterial, Color3 },
+    ] = await Promise.all([groundBuilderBundle(), materialsBundle()]);
     const ground = GroundBuilder.CreateGround(
       '$ground',
       {

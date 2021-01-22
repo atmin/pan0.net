@@ -1,3 +1,5 @@
+import commonBundle from '../bundles/common';
+import materialsBundle from '../bundles/materials';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import type { MultiMaterial } from '@babylonjs/core/Materials/multiMaterial';
@@ -9,7 +11,7 @@ import {
   MaterialOptions,
   Mesh,
   RefreshRate,
-} from '../types';
+} from '../common/types';
 
 export class SceneObject {
   static _counters = { environmentSnapshot: 1 };
@@ -46,6 +48,7 @@ export class SceneObject {
   }
 
   async appendTo(scene: BabylonScene): Promise<Mesh> {
+    // TODO: use mesh.setEnabled() instead
     const setVisibility = () => (this._mesh.visibility = this._opacity);
     this._scene = scene;
     this._mesh = await this.createMesh(this._createMeshOptions, scene);
@@ -112,9 +115,7 @@ export class SceneObject {
   environmentSnapshot(): SceneObject {
     this._operations.push(async () => {
       this._scene.onAfterRenderObservable.addOnce(async () => {
-        const { ReflectionProbe } = await import(
-          '@babylonjs/core/Probes/reflectionProbe'
-        );
+        const { ReflectionProbe } = await materialsBundle();
         const probe = new ReflectionProbe(
           `environmentSnapshot(${SceneObject._counters.environmentSnapshot++})`,
           256,
@@ -153,10 +154,7 @@ export class SceneObject {
     method: 'unionInPlace' | 'subtractInPlace' | 'intersectInPlace'
   ): SceneObject {
     this._operations.push(async () => {
-      const [{ CSG }, { MultiMaterial }] = await Promise.all([
-        import('@babylonjs/core/Meshes/csg'),
-        import('@babylonjs/core/Materials/multiMaterial'),
-      ]);
+      const { CSG, MultiMaterial } = await commonBundle();
       const csg = CSG.FromMesh(this._mesh);
       const material = new MultiMaterial(
         `material(${this._name})`,

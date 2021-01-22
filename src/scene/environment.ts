@@ -1,4 +1,7 @@
-import type { BabylonScene, Scene } from '../types';
+import commonBundle from '../bundles/common';
+import boxBuilderBundle from '../bundles/boxBuilder';
+import materialsBundle from '../bundles/materials';
+import type { BabylonScene, Scene } from '../common/types';
 
 /**
  * Create environment. TODO: Make configurable.
@@ -7,16 +10,12 @@ export function environment(): Scene {
   (this as Scene)._createEnvironment = async (scene: BabylonScene) => {
     const [
       { BoxBuilder },
-      { PBRMaterial },
-      { CubeTexture },
-      { Texture },
+      { PBRMaterial, CubeTexture, Texture },
       { Vector3 },
     ] = await Promise.all([
-      import('@babylonjs/core/Meshes/Builders/boxBuilder'),
-      import('@babylonjs/core/Materials/PBR/pbrMaterial'),
-      import('@babylonjs/core/Materials/Textures/cubeTexture'),
-      import('@babylonjs/core/Materials/Textures/texture'),
-      import('@babylonjs/core/Maths/math.vector'),
+      boxBuilderBundle(),
+      materialsBundle(),
+      commonBundle(),
     ]);
     scene.gravity = new Vector3(...[0, -9.81, 0]);
     scene.collisionsEnabled = true;

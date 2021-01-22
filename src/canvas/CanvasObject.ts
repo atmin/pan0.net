@@ -1,4 +1,4 @@
-import type { Canvas, Control } from '../types';
+import type { Canvas, Control } from '../common/types';
 
 // https://doc.babylonjs.com/divingDeeper/gui/gui#position-and-size
 const PROPERTIES = [

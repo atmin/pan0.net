@@ -1,5 +1,12 @@
+import boxBuilderBundle from '../bundles/boxBuilder';
+import commonBundle from '../bundles/common';
 import { SceneObject } from './SceneObject';
-import type { Color4, Vector4, BabylonScene, SideOrientation } from '../types';
+import type {
+  Color4,
+  Vector4,
+  BabylonScene,
+  SideOrientation,
+} from '../common/types';
 
 /**
  * Create a box.
@@ -9,8 +16,8 @@ export const box = (name?: string) => new BoxSceneObject('box', name);
 class BoxSceneObject extends SceneObject {
   async createMesh(options: BoxOptions, scene: BabylonScene) {
     const [{ BoxBuilder }, { Vector3 }] = await Promise.all([
-      import('@babylonjs/core/Meshes/Builders/boxBuilder'),
-      import('@babylonjs/core/Maths/math.vector'),
+      boxBuilderBundle(),
+      commonBundle(),
     ]);
     const mesh = BoxBuilder.CreateBox(this._name, options, scene);
     mesh.position = new Vector3(

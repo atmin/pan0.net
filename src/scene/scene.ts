@@ -1,7 +1,9 @@
+import commonBundle from '../bundles/common';
 import { camera } from './camera';
 import { environment } from './environment';
 import { lights } from './lights';
 import { ground } from './ground';
+import { render } from './render';
 
 import type {
   BabylonScene,
@@ -10,7 +12,7 @@ import type {
   MutableSceneObject,
   AbstractMesh,
   Mesh,
-} from '../types';
+} from '../common/types';
 
 export const scene = (...objects: Array<SceneObject>): Scene => ({
   _createCamera: null,
@@ -68,11 +70,8 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
     return this;
   },
 
-  async render() {
-    const { render } = await import(
-      /* webpackChunkName: "render" */ './render'
-    );
-    render.call(this);
+  render() {
+    setTimeout(() => render.call(this));
   },
 });
 
@@ -98,7 +97,7 @@ const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
       return [x, y, z];
     }
 
-    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
+    commonBundle().then(({ Vector3 }) => {
       mesh.position = new Vector3(...v);
     });
     return this;
@@ -110,7 +109,7 @@ const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
       return [x, y, z];
     }
 
-    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
+    commonBundle().then(({ Vector3 }) => {
       mesh.scaling = new Vector3(...v);
     });
     return this;
@@ -122,7 +121,7 @@ const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
       return [x, y, z];
     }
 
-    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
+    commonBundle().then(({ Vector3 }) => {
       mesh.rotation = new Vector3(...v);
     });
     return this;

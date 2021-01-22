@@ -1,4 +1,6 @@
-import type { Scene } from '../types';
+import commonBundle from '../bundles/common';
+import universalCameraBundle from '../bundles/universalCamera';
+import type { Scene } from '../common/types';
 
 export function camera({
   type = 'fps',
@@ -17,8 +19,8 @@ export function camera({
     case 'fps': {
       (this as Scene)._createCamera = async (scene) => {
         const [{ UniversalCamera }, { Vector3 }] = await Promise.all([
-          import('@babylonjs/core/Cameras/universalCamera'),
-          import('@babylonjs/core/Maths/math.vector'),
+          universalCameraBundle(),
+          commonBundle(),
         ]);
         const camera = new UniversalCamera(
           'camera',

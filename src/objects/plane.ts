@@ -1,5 +1,7 @@
+import commonBundle from '../bundles/common';
+import planeBuilderBundle from '../bundles/planeBuilder';
 import { SceneObject } from './SceneObject';
-import { Plane, Vector4, BabylonScene, SideOrientation } from '../types';
+import { Plane, Vector4, BabylonScene, SideOrientation } from '../common/types';
 
 /**
  * Create a plane.
@@ -9,8 +11,8 @@ export const plane = (name?: string) => new PlaneSceneObject('plane', name);
 class PlaneSceneObject extends SceneObject {
   async createMesh(options: PlaneOptions, scene: BabylonScene) {
     const [{ PlaneBuilder }, { Vector3 }] = await Promise.all([
-      import('@babylonjs/core/Meshes/Builders/planeBuilder'),
-      import('@babylonjs/core/Maths/math.vector'),
+      planeBuilderBundle(),
+      commonBundle(),
     ]);
     const mesh = PlaneBuilder.CreatePlane(this._name, options, scene);
     mesh.position = new Vector3(

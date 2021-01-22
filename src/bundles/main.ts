@@ -1,7 +1,7 @@
-import { scene } from './scene';
-import { color } from './color';
-import { canvas, image } from './canvas';
-import { empty, box, plane, sphere, gltf } from './objects';
+import { scene } from '../scene';
+import { color } from '../common/color';
+import { canvas, image } from '../canvas';
+import { empty, box, plane, sphere, gltf } from '../objects';
 
 for (const [name, func] of [
   ['scene', scene],

@@ -1,5 +1,6 @@
+import canvasBundle from '../bundles/canvas';
 import { CanvasObject } from './CanvasObject';
-import type { AbstractMesh, Canvas, Texture } from '../types';
+import type { AbstractMesh, Canvas, Texture } from '../common/types';
 
 export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
   _width: null,
@@ -22,9 +23,7 @@ export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
   },
 
   async createTexture(mesh: AbstractMesh): Promise<Texture> {
-    const { AdvancedDynamicTexture } = await import(
-      '@babylonjs/gui/2D/advancedDynamicTexture'
-    );
+    const { AdvancedDynamicTexture } = await canvasBundle();
     const texture = AdvancedDynamicTexture.CreateForMeshTexture(
       mesh,
       this._width || this._size,

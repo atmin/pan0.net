@@ -13,7 +13,10 @@ import 'pepjs';
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene as BabylonScene } from '@babylonjs/core/scene';
 
-import type { Scene } from '../types';
+import actionsBundle from '../bundles/actions';
+import inspectorBundle from '../bundles/inspector';
+
+import type { Scene } from '../common/types';
 
 export async function render() {
   //
@@ -62,10 +65,7 @@ export async function render() {
   //
   // Setup event processing
   //
-  const [{ ActionManager }, { ExecuteCodeAction }] = await Promise.all([
-    import('@babylonjs/core/Actions/actionManager'),
-    import('@babylonjs/core/Actions/directActions'),
-  ]);
+  const { ActionManager, ExecuteCodeAction } = await actionsBundle();
 
   // TODO: maybe deprecate/remove observables in lieu of actions?
   scene.onPointerObservable.add((pointerInfo: PointerInfo) => {
@@ -111,7 +111,7 @@ export async function render() {
   // Load inspector on scene().inspect()
   //
   if (self._showInspector) {
-    import('@babylonjs/inspector').then(() => {
+    inspectorBundle().then(() => {
       const toggle = () => {
         if (scene.debugLayer.isVisible()) {
           scene.debugLayer.hide();
