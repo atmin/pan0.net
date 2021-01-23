@@ -15,6 +15,7 @@ module.exports = {
         test: /\.tsx?$/,
         use: {
           loader: 'ts-loader',
+          // transpileOnly in prod more reduces build time from 155s to 133s
           ...(process.env.NODE_ENV === 'development' && {
             options: {
               // Faster build
