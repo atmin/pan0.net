@@ -10,12 +10,18 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.js$/, loader: 'source-map-loader', enforce: 'pre' },
+      {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'src'),
+        loader: 'source-map-loader',
+        enforce: 'pre',
+      },
       {
         test: /\.tsx?$/,
+        include: path.resolve(__dirname, 'src'),
         use: {
           loader: 'ts-loader',
-          // transpileOnly in prod more reduces build time from 155s to 133s
+          // transpileOnly in prod more reduces build time from 67s to 54s
           ...(process.env.NODE_ENV === 'development' && {
             options: {
               // Faster build
@@ -23,7 +29,6 @@ module.exports = {
             },
           }),
         },
-        exclude: /node_modules/,
       },
     ],
   },
