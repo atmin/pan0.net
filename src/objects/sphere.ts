@@ -1,4 +1,4 @@
-import { Vector4 } from '@babylonjs/core/Maths/math.vector';
+import { Vector3, Vector4 } from '@babylonjs/core/Maths/math.vector';
 import { SceneObject } from './SceneObject';
 import type { BabylonScene, SideOrientation } from '../types';
 
@@ -9,10 +9,9 @@ export const sphere = (name?: string) => new SphereSceneObject('sphere', name);
 
 class SphereSceneObject extends SceneObject {
   async createMesh(options: SphereOptions, scene: BabylonScene) {
-    const [{ SphereBuilder }, { Vector3 }] = await Promise.all([
-      import('@babylonjs/core/Meshes/Builders/sphereBuilder'),
-      import('@babylonjs/core/Maths/math.vector'),
-    ]);
+    const { SphereBuilder } = await import(
+      '@babylonjs/core/Meshes/Builders/sphereBuilder'
+    );
     const mesh = SphereBuilder.CreateSphere(this._name, options, scene);
     mesh.position = new Vector3(
       0,

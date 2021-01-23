@@ -1,3 +1,4 @@
+import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { camera } from './camera';
 import { environment } from './environment';
 import { lights } from './lights';
@@ -98,9 +99,7 @@ const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
       return [x, y, z];
     }
 
-    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
-      mesh.position = new Vector3(...v);
-    });
+    mesh.position = new Vector3(...v);
     return this;
   },
 
@@ -110,9 +109,7 @@ const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
       return [x, y, z];
     }
 
-    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
-      mesh.scaling = new Vector3(...v);
-    });
+    mesh.scaling = new Vector3(...v);
     return this;
   },
 
@@ -122,9 +119,7 @@ const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
       return [x, y, z];
     }
 
-    import('@babylonjs/core/Maths/math.vector').then(({ Vector3 }) => {
-      mesh.rotation = new Vector3(...v);
-    });
+    mesh.rotation = new Vector3(...v);
     return this;
   },
 

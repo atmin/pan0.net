@@ -1,3 +1,4 @@
+import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type {
   BabylonScene,
   LightDefinition,
@@ -17,11 +18,9 @@ export function lights(
         switch (def.type) {
           case 'directional': {
             const [
-              { Vector3 },
               { DirectionalLight },
               { ShadowGenerator },
             ] = await Promise.all([
-              import('@babylonjs/core/Maths/math.vector'),
               import('@babylonjs/core/Lights/directionalLight'),
               import('@babylonjs/core/Lights/Shadows/shadowGenerator'),
             ]);
@@ -46,10 +45,9 @@ export function lights(
           }
 
           case 'hemispheric': {
-            const [{ Vector3 }, { HemisphericLight }] = await Promise.all([
-              import('@babylonjs/core/Maths/math.vector'),
-              import('@babylonjs/core/Lights/hemisphericLight'),
-            ]);
+            const { HemisphericLight } = await import(
+              '@babylonjs/core/Lights/hemisphericLight'
+            );
             new HemisphericLight(
               `$hemisphericLight(${i + 1})`,
               new Vector3(...(def.direction || [0, 1, 0])),
