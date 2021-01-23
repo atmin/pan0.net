@@ -6,6 +6,5 @@
     "noImplicitAny": false,
     "module": "esnext",
     "target": "es5"
-  },
-  "exclude": ["./src_old"]
+  }
 }
