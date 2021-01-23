@@ -1,6 +1,7 @@
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
+import { CSG } from '@babylonjs/core/Meshes/csg';
+import { MultiMaterial } from '@babylonjs/core/Materials/multiMaterial';
 import type { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
-import type { MultiMaterial } from '@babylonjs/core/Materials/multiMaterial';
 
 import { createMaterial } from './createMaterial';
 import {
@@ -153,10 +154,6 @@ export class SceneObject {
     method: 'unionInPlace' | 'subtractInPlace' | 'intersectInPlace'
   ): SceneObject {
     this._operations.push(async () => {
-      const [{ CSG }, { MultiMaterial }] = await Promise.all([
-        import('@babylonjs/core/Meshes/csg'),
-        import('@babylonjs/core/Materials/multiMaterial'),
-      ]);
       const csg = CSG.FromMesh(this._mesh);
       const material = new MultiMaterial(
         `material(${this._name})`,

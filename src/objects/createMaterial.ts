@@ -1,3 +1,8 @@
+import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
+import { PBRMaterial } from '@babylonjs/core/Materials/PBR/pbrMaterial';
+import { Texture } from '@babylonjs/core/Materials/Textures/texture';
+import { Color3 } from '@babylonjs/core/Maths/math.color';
+
 import {
   Material,
   MaterialOptions,
@@ -11,17 +16,6 @@ export async function createMaterial(
   mesh: AbstractMesh,
   scene: BabylonScene
 ): Promise<Material> {
-  const [
-    { StandardMaterial },
-    { PBRMaterial },
-    { Texture },
-    { Color3 },
-  ] = await Promise.all([
-    import('@babylonjs/core/Materials/standardMaterial'),
-    import('@babylonjs/core/Materials/PBR/pbrMaterial'),
-    import('@babylonjs/core/Materials/Textures/texture'),
-    import('@babylonjs/core/Maths/math'),
-  ]);
   const { type, ...opts } = options;
   const {
     materialType,
