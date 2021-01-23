@@ -8,6 +8,10 @@ import {
   PointerEventTypes,
   PointerInfo,
 } from '@babylonjs/core/Events/pointerEvents';
+
+import { ActionManager } from '@babylonjs/core/Actions/actionManager';
+import { ExecuteCodeAction } from '@babylonjs/core/Actions/directActions';
+
 import 'pepjs';
 
 import { Engine } from '@babylonjs/core/Engines/engine';
@@ -62,10 +66,6 @@ export async function render() {
   //
   // Setup event processing
   //
-  const [{ ActionManager }, { ExecuteCodeAction }] = await Promise.all([
-    import('@babylonjs/core/Actions/actionManager'),
-    import('@babylonjs/core/Actions/directActions'),
-  ]);
 
   // TODO: maybe deprecate/remove observables in lieu of actions?
   scene.onPointerObservable.add((pointerInfo: PointerInfo) => {
