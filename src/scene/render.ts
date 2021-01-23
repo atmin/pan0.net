@@ -123,13 +123,11 @@ export async function render() {
         if (scene.debugLayer.isVisible()) {
           scene.debugLayer.hide();
         } else {
-          scene.debugLayer.show();
+          scene.debugLayer.show({ embedMode: true });
           document.body.style.margin = '0';
           document.body.style.padding = '0';
           document.body.style.height = '100%';
-          document.getElementById('scene-explorer-host').style.zIndex = '1';
-          document.getElementById('scene-explorer-host').style.opacity = '0.95';
-          document.getElementById('inspector-host').style.opacity = '0.95';
+          document.getElementById('embed-host').style.opacity = '0.95';
         }
       };
       toggle();
@@ -145,7 +143,24 @@ export async function render() {
     (location.search === '?edit' ||
       location.search.search(/edit=.?(?:&:$)*/) > -1)
   ) {
-    console.log('editor invoked');
+    Promise.resolve().then(() => {
+      const editorHost = document.createElement('div');
+      editorHost.id = 'editor-host';
+      editorHost.style.position = 'relative';
+      editorHost.style.width = '400px';
+      editorHost.style.zIndex = '1';
+      // editorHost.style.backgroundColor = '#333333';
+      editorHost.style.opacity = '0.95';
+      document.body.prepend(editorHost);
+      document.body.style.display = 'flex';
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      document.body.style.height = '100%';
+      import(
+        /* webpackChunkName: "editor" */
+        '../editor'
+      );
+    });
   }
 
   //
