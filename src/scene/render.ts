@@ -108,7 +108,7 @@ export async function render() {
   );
 
   //
-  // Load inspector on scene().inspect()
+  // Load inspector on crudely detecting `debug` URL parameter
   //
   if (
     self._enableDebug &&
