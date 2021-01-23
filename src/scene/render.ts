@@ -156,6 +156,7 @@ export async function render() {
       document.body.style.margin = '0';
       document.body.style.padding = '0';
       document.body.style.height = '100%';
+      document.body.style.overflow = 'hidden';
       import(
         /* webpackChunkName: "editor" */
         '../editor'
