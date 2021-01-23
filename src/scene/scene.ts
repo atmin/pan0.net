@@ -71,7 +71,8 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
 
   async render() {
     const { render } = await import(
-      /* webpackChunkName: "render" */ './render'
+      /* webpackChunkName: "render" */
+      './render'
     );
     render.call(this);
   },

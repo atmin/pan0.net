@@ -5,7 +5,10 @@ export const empty = () => new EmptySceneObject('empty');
 
 class EmptySceneObject extends SceneObject {
   async createMesh(_options: {}, scene: BabylonScene) {
-    const { Mesh } = await import('@babylonjs/core/Meshes/mesh');
+    const { Mesh } = await import(
+      /* webpackChunkName: "mesh" */
+      '@babylonjs/core/Meshes/mesh'
+    );
     return new Mesh(this._name, scene);
   }
 }

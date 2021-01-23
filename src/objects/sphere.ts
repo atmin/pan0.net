@@ -10,6 +10,7 @@ export const sphere = (name?: string) => new SphereSceneObject('sphere', name);
 class SphereSceneObject extends SceneObject {
   async createMesh(options: SphereOptions, scene: BabylonScene) {
     const { SphereBuilder } = await import(
+      /* webpackChunkName: "sphereBuilder" */
       '@babylonjs/core/Meshes/Builders/sphereBuilder'
     );
     const mesh = SphereBuilder.CreateSphere(this._name, options, scene);

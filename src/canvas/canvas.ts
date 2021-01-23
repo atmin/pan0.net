@@ -23,6 +23,7 @@ export const canvas = (...objects: Array<CanvasObject>): Canvas => ({
 
   async createTexture(mesh: AbstractMesh): Promise<Texture> {
     const { AdvancedDynamicTexture } = await import(
+      /* webpackChunkName: "advancedDynamicTexture" */
       '@babylonjs/gui/2D/advancedDynamicTexture'
     );
     const texture = AdvancedDynamicTexture.CreateForMeshTexture(

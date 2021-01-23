@@ -18,6 +18,7 @@ export function camera({
     case 'fps': {
       (this as Scene)._createCamera = async (scene) => {
         const { UniversalCamera } = await import(
+          /* webpackChunkName: "universalCamera" */
           '@babylonjs/core/Cameras/universalCamera'
         );
         const camera = new UniversalCamera(

@@ -10,6 +10,7 @@ export const box = (name?: string) => new BoxSceneObject('box', name);
 class BoxSceneObject extends SceneObject {
   async createMesh(options: BoxOptions, scene: BabylonScene) {
     const { BoxBuilder } = await import(
+      /* webpackChunkName: "boxBuilder" */
       '@babylonjs/core/Meshes/Builders/boxBuilder'
     );
     const mesh = BoxBuilder.CreateBox(this._name, options, scene);

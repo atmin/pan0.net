@@ -11,6 +11,7 @@ import type { BabylonScene, Scene } from '../types';
 export function environment(): Scene {
   (this as Scene)._createEnvironment = async (scene: BabylonScene) => {
     const { BoxBuilder } = await import(
+      /* webpackChunkName: "boxBuilder" */
       '@babylonjs/core/Meshes/Builders/boxBuilder'
     );
     scene.gravity = new Vector3(...[0, -9.81, 0]);

@@ -21,8 +21,14 @@ export function lights(
               { DirectionalLight },
               { ShadowGenerator },
             ] = await Promise.all([
-              import('@babylonjs/core/Lights/directionalLight'),
-              import('@babylonjs/core/Lights/Shadows/shadowGenerator'),
+              import(
+                /* webpackChunkName: "directionalLight" */
+                '@babylonjs/core/Lights/directionalLight'
+              ),
+              import(
+                /* webpackChunkName: "shadowGenerator" */
+                '@babylonjs/core/Lights/Shadows/shadowGenerator'
+              ),
             ]);
             const light = new DirectionalLight(
               `$directionalLight(${i + 1})`,

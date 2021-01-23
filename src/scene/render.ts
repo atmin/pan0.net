@@ -115,7 +115,10 @@ export async function render() {
     (location.search === '?debug' ||
       location.search.search(/debug=.?(?:&:$)*/) > -1)
   ) {
-    import('@babylonjs/inspector').then(() => {
+    import(
+      /* webpackChunkName: "inspector" */
+      '@babylonjs/inspector'
+    ).then(() => {
       const toggle = () => {
         if (scene.debugLayer.isVisible()) {
           scene.debugLayer.hide();

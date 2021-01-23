@@ -10,6 +10,7 @@ export const plane = (name?: string) => new PlaneSceneObject('plane', name);
 class PlaneSceneObject extends SceneObject {
   async createMesh(options: PlaneOptions, scene: BabylonScene) {
     const { PlaneBuilder } = await import(
+      /* webpackChunkName: "planeBuilder" */
       '@babylonjs/core/Meshes/Builders/planeBuilder'
     );
     const mesh = PlaneBuilder.CreatePlane(this._name, options, scene);

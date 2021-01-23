@@ -13,6 +13,7 @@ export function ground({
 } = {}): Scene {
   (this as Scene)._createGround = async (scene: BabylonScene) => {
     const { GroundBuilder } = await import(
+      /* webpackChunkName: "groundBuilder" */
       '@babylonjs/core/Meshes/Builders/groundBuilder'
     );
     const ground = GroundBuilder.CreateGround(

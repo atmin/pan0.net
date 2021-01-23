@@ -114,6 +114,7 @@ export class SceneObject {
     this._operations.push(async () => {
       this._scene.onAfterRenderObservable.addOnce(async () => {
         const { ReflectionProbe } = await import(
+          /* webpackChunkName: "reflectionProbe" */
           '@babylonjs/core/Probes/reflectionProbe'
         );
         const probe = new ReflectionProbe(
