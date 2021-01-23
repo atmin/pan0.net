@@ -52,6 +52,7 @@ export function lights(
 
           case 'hemispheric': {
             const { HemisphericLight } = await import(
+              /* webpackChunkName: "hemisphericLight" */
               '@babylonjs/core/Lights/hemisphericLight'
             );
             new HemisphericLight(

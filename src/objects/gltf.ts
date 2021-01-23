@@ -1,11 +1,12 @@
-import { BabylonScene, Mesh } from '../types';
+import { Mesh } from '@babylonjs/core/Meshes/mesh';
+import { BabylonScene } from '../types';
 import { SceneObject } from './SceneObject';
 
 export const gltf = () => new GltfSceneObject('gltf');
 
 class GltfSceneObject extends SceneObject {
   async createMesh(options: GltfOptions, scene: BabylonScene) {
-    const [_sideEffect, { SceneLoader }, { Mesh }] = await Promise.all([
+    const [_sideEffect, { SceneLoader }] = await Promise.all([
       import(
         /* webpackChunkName: "glTFLoader" */
         '@babylonjs/loaders/glTF/2.0/glTFLoader'
@@ -13,10 +14,6 @@ class GltfSceneObject extends SceneObject {
       import(
         /* webpackChunkName: "sceneLoader" */
         '@babylonjs/core/Loading/sceneLoader'
-      ),
-      import(
-        /* webpackChunkName: "mesh" */
-        '@babylonjs/core/Meshes/mesh'
       ),
     ]);
     const { source, receiveShadows, checkCollisions } = options;
