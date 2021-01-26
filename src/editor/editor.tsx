@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import babel from 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
 import MonacoEditor from '@monaco-editor/react';
@@ -13,6 +13,25 @@ export const Editor = () => {
   const [ast, setAst] = useState(null);
   const [position, setPosition] = useState(null);
 
+  const format = useCallback(
+    (text: string) =>
+      prettier.format(text, {
+        parser(text, { babel }) {
+          const ast = babel(text);
+          setAst(ast);
+          // For debug purposes
+          (window as any)._ast = ast;
+          return ast;
+        },
+        plugins: [babel],
+        printWidth: 40,
+        semi: false,
+        trailingComma: 'es5' as const,
+      }),
+
+    []
+  );
+
   const handleEditorDidMount = useCallback(
     (editor, monaco) => {
       editorRef.current = editor;
@@ -23,19 +42,7 @@ export const Editor = () => {
           return [
             {
               range: model.getFullModelRange(),
-              text: prettier.format(model.getValue(), {
-                parser(text, { babel }) {
-                  const ast = babel(text);
-                  setAst(ast);
-                  // For debug purposes
-                  (window as any)._ast = ast;
-                  return ast;
-                },
-                plugins: [babel],
-                printWidth: 40,
-                semi: false,
-                trailingComma: 'es5' as const,
-              }),
+              text: format(model.getValue()),
             },
           ];
         },
@@ -60,18 +67,21 @@ export const Editor = () => {
         // For debug purposes
         (window as any)._position = position;
       });
-
-      findSource().then((src) => {
-        setSource(src);
-        editor.getAction('editor.action.formatDocument').run();
-      });
     },
     [editorRef]
   );
 
+  useEffect(() => {
+    if (editorRef) {
+      findSource().then((src) => {
+        setSource(format(src));
+      });
+    }
+  }, [editorRef]);
+
   const handleEditorChange = useCallback(
     (value, op) => {
-      setSource(value);
+      setSource(format(value));
     },
     [editorRef]
   );
