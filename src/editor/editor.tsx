@@ -27,7 +27,8 @@ export const Editor = () => {
                 parser(text, { babel }) {
                   const ast = babel(text);
                   setAst(ast);
-                  //   console.log(ast);
+                  // For debug purposes
+                  (window as any)._ast = ast;
                   return ast;
                 },
                 plugins: [babel],
@@ -45,12 +46,24 @@ export const Editor = () => {
         label: 'Save',
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S],
         run() {
-          localStorage.setItem(location.pathname, editor.getValue());
+          editorRef.current
+            .getAction('editor.action.formatDocument')
+            .run()
+            .then(() => {
+              localStorage.setItem(location.pathname, editor.getValue());
+            });
         },
       });
 
       editor.onDidChangeCursorPosition(({ position }) => {
         setPosition(position);
+        // For debug purposes
+        (window as any)._position = position;
+      });
+
+      findSource().then((src) => {
+        setSource(src);
+        editor.getAction('editor.action.formatDocument').run();
       });
     },
     [editorRef]
@@ -59,18 +72,9 @@ export const Editor = () => {
   const handleEditorChange = useCallback(
     (value, op) => {
       setSource(value);
-      clearTimeout(formatterRef.current);
-      formatterRef.current = setTimeout(() => {
-        editorRef.current.getAction('editor.action.formatDocument').run();
-      }, 500);
     },
     [editorRef]
   );
-
-  findSource().then((src) => {
-    setSource(src);
-    // editor.getAction('editor.action.formatDocument').run();
-  });
 
   return (
     <MonacoEditor
@@ -79,7 +83,6 @@ export const Editor = () => {
       defaultValue={source}
       theme="vs-dark"
       options={{
-        // formatOnType: true,
         minimap: { enabled: false },
         // automaticLayout: true,
       }}

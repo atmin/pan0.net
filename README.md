@@ -15,7 +15,8 @@ Focus is on ease of use, consistency and sensible defaults, without sacrificing 
 - high-level, compact, declarative scene code
 - fully typed, get editor hints and inline documentation
 - powered by [BabylonJS](https://www.babylonjs.com/)
-- _(planned for the future)_ integrated bi-directional source⇔visual editor
+- integrated bi-directional source⇔visual editor. Add `?edit` to any scene URL
+- integrated debugger. Add `?debug` to any scene URL
 
 <!--
 ## Examples

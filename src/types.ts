@@ -167,6 +167,7 @@ export interface SceneObject extends SceneObjectBase<SceneObject> {
 
 export interface MutableSceneObject
   extends SceneObjectBase<MutableSceneObject> {
+  readonly mesh: Mesh;
   readonly name: string;
   replace: (...objects: SceneObject[]) => void;
   remove: () => void;

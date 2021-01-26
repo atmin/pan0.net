@@ -82,7 +82,7 @@ scene.objects = {
   get(name: string): MutableSceneObject | null {
     const scene = (window as any)._scene as BabylonScene;
     const mesh = scene.getMeshByName(name);
-    return mesh === null ? null : createMutableSceneObject(mesh);
+    return mesh === null ? null : createMutableSceneObject(mesh as Mesh);
   },
 
   all(): Array<MutableSceneObject> {
@@ -91,7 +91,8 @@ scene.objects = {
   },
 };
 
-const createMutableSceneObject = (mesh: AbstractMesh): MutableSceneObject => ({
+const createMutableSceneObject = (mesh: Mesh): MutableSceneObject => ({
+  mesh,
   name: mesh.name,
 
   position(v) {
