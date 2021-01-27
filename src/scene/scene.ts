@@ -69,6 +69,14 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
     return this;
   },
 
+  async renderTo(canvas) {
+    const { renderTo } = await import(
+      /* webpackChunkName: "render" */
+      './render'
+    );
+    return renderTo.call(this, canvas);
+  },
+
   async render() {
     const { render } = await import(
       /* webpackChunkName: "render" */

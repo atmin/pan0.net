@@ -73,6 +73,8 @@ export interface Scene {
 
   disableEdit(): Scene;
 
+  renderTo(canvas: HTMLCanvasElement): Promise<BabylonScene>;
+
   render(): void;
 }
 
