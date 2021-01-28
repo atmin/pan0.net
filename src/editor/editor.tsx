@@ -3,34 +3,30 @@ import babel from 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
 import MonacoEditor from '@monaco-editor/react';
 
-export const Editor = () => {
+export const format = (text: string) => {
+  let ast;
+  const source = prettier.format(text, {
+    parser(text, { babel }) {
+      ast = babel(text);
+      return ast;
+    },
+    plugins: [babel],
+    printWidth: 40,
+    semi: false,
+    trailingComma: 'es5' as const,
+  });
+  return { source, ast };
+};
+
+export type EditorPosition = { lineNumber: number; column: number };
+
+export const Editor: React.FC<{
+  source: string;
+  setSource: (newSource: string) => void;
+  setAST: (newAST: any) => void;
+  setPosition: (newPosition: EditorPosition) => void;
+}> = ({ source, setSource, setAST, setPosition }) => {
   const editorRef = useRef(null);
-  const formatterRef = useRef(null);
-
-  const [source, setSource] = useState(
-    localStorage.getItem(location.pathname) || ''
-  );
-  const [ast, setAst] = useState(null);
-  const [position, setPosition] = useState(null);
-
-  const format = useCallback(
-    (text: string) =>
-      prettier.format(text, {
-        parser(text, { babel }) {
-          const ast = babel(text);
-          setAst(ast);
-          // For debug purposes
-          (window as any)._ast = ast;
-          return ast;
-        },
-        plugins: [babel],
-        printWidth: 40,
-        semi: false,
-        trailingComma: 'es5' as const,
-      }),
-
-    []
-  );
 
   const handleEditorDidMount = useCallback(
     (editor, monaco) => {
@@ -39,10 +35,13 @@ export const Editor = () => {
       // useful AST tools: https://astexplorer.net/ https://ts-ast-viewer.com/
       monaco.languages.registerDocumentFormattingEditProvider('javascript', {
         provideDocumentFormattingEdits(model: any) {
+          const { source: text, ast } = format(model.getValue());
+          setSource(text);
+          setAST(ast);
           return [
             {
               range: model.getFullModelRange(),
-              text: format(model.getValue()),
+              text,
             },
           ];
         },
@@ -64,56 +63,30 @@ export const Editor = () => {
 
       editor.onDidChangeCursorPosition(({ position }) => {
         setPosition(position);
-        // For debug purposes
-        (window as any)._position = position;
       });
     },
     [editorRef]
   );
 
-  useEffect(() => {
-    if (editorRef) {
-      findSource().then((src) => {
-        setSource(format(src));
-      });
-    }
-  }, [editorRef]);
-
   const handleEditorChange = useCallback(
     (value, op) => {
-      setSource(format(value));
+      const { source, ast } = format(value);
+      setSource(source);
+      setAST(ast);
     },
     [editorRef]
   );
 
   return (
     <MonacoEditor
-      height="100vh"
       defaultLanguage="javascript"
       defaultValue={source}
       theme="vs-dark"
       options={{
         minimap: { enabled: false },
-        // automaticLayout: true,
       }}
       onMount={handleEditorDidMount}
       onChange={handleEditorChange}
     />
   );
-};
-
-/**
- * Find the source code of the current scene.
- * Currently, iterates only the inline script tags and finds
- * the first to use the scene() function
- *
- * TODO: iterate script src="..." tags, fetch and check for scene()
- */
-const findSource = async (): Promise<string> => {
-  for (const script of document.querySelectorAll('script')) {
-    if (script.innerText.match(/scene\([\s\S]*?\)[\s\S]*?\.render\(\)/)) {
-      return Promise.resolve(script.innerText);
-    }
-  }
-  return Promise.resolve('');
 };

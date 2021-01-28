@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import { setAndStartTimer } from '@babylonjs/core';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import SplitPane from 'react-split-pane';
 
 import { Scene } from '../types';
-import { Editor } from './editor';
+import { Editor, EditorPosition, format } from './Editor';
 
 const styles = `
   body {
@@ -69,7 +70,10 @@ const Canvas: React.FC<{ scene: Scene }> = ({ scene }) => {
   const ref = useRef<HTMLCanvasElement | null>(null);
   useEffect(() => {
     if (ref) {
-      scene.renderTo(ref.current);
+      scene.renderTo(ref.current).then((_scene) => {
+        // For debugging. Remove when `scene.objects` interface becomes sufficient
+        (window as any)._scene = _scene;
+      });
     }
   }, [ref]);
   return (
@@ -78,6 +82,44 @@ const Canvas: React.FC<{ scene: Scene }> = ({ scene }) => {
       style={{ width: '100%', height: '100%' }}
       ref={ref}
     ></canvas>
+  );
+};
+
+const App: React.FC<{ scene: Scene }> = ({ scene }) => {
+  const [source, setSource] = useState<string>('');
+  const [ast, setAST] = useState(null);
+  const [position, setPosition] = useState<EditorPosition>(null);
+
+  useEffect(() => {
+    findSource().then((src) => {
+      const { source, ast } = format(src);
+      setSource(source);
+      setAST(ast);
+      setPosition({ lineNumber: 1, column: 1 });
+    });
+  }, []);
+
+  return (
+    <SplitPane defaultSize="33%" split="vertical">
+      <div>
+        <div style={{ height: '50%' }}>
+          <Editor
+            source={source}
+            setSource={setSource}
+            setAST={setAST}
+            setPosition={setPosition}
+          />
+        </div>
+        <div style={{ height: '50%', overflow: 'auto' }}>
+          <pre>
+            {JSON.stringify(position)}
+            <br />
+            {JSON.stringify(ast, null, 2)}
+          </pre>
+        </div>
+      </div>
+      <Canvas scene={scene} />
+    </SplitPane>
   );
 };
 
@@ -92,12 +134,21 @@ export const startEditorApp = (scene: Scene) => {
     },
   });
   document.body.appendChild(root);
+  ReactDOM.render(<App scene={scene} />, root);
+};
 
-  ReactDOM.render(
-    <SplitPane defaultSize="33%" split="vertical">
-      <Editor />
-      <Canvas scene={scene} />
-    </SplitPane>,
-    root
-  );
+/**
+ * Find the source code of the current scene.
+ * Currently, iterates only the inline script tags and finds
+ * the first to use the scene() function
+ *
+ * TODO: iterate script src="..." tags, fetch and check for scene()
+ */
+const findSource = async (): Promise<string> => {
+  for (const script of document.querySelectorAll('script')) {
+    if (script.innerText.match(/scene\([\s\S]*?\)[\s\S]*?\.render\(\)/)) {
+      return Promise.resolve(script.innerText);
+    }
+  }
+  return Promise.resolve('');
 };

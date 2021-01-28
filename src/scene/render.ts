@@ -121,7 +121,7 @@ export async function renderTo(
           for (const entry of entries) {
             if (entry.target === canvas) {
               clearTimeout(timeout);
-              timeout = setTimeout(() => engine.resize(), 100);
+              timeout = setTimeout(() => engine.resize(), 50);
             }
           }
         }
