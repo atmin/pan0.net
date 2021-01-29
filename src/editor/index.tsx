@@ -1,9 +1,9 @@
-import { setAndStartTimer } from '@babylonjs/core';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import SplitPane from 'react-split-pane';
 
 import { Scene } from '../types';
+import { SceneViewer } from './SceneViewer';
 import { Editor, EditorPosition, format } from './Editor';
 
 const styles = `
@@ -89,6 +89,7 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
   const [source, setSource] = useState<string>('');
   const [ast, setAST] = useState(null);
   const [position, setPosition] = useState<EditorPosition>(null);
+  const [isResizing, setIsResizing] = useState<boolean>(false);
 
   useEffect(() => {
     findSource().then((src) => {
@@ -99,10 +100,23 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
     });
   }, []);
 
+  const onDragStarted = useCallback(() => {
+    setIsResizing(true);
+  }, []);
+
+  const onDragFinished = useCallback(() => {
+    setIsResizing(false);
+  }, []);
+
   return (
-    <SplitPane defaultSize="33%" split="vertical">
+    <SplitPane
+      defaultSize="33%"
+      split="vertical"
+      onDragStarted={onDragStarted}
+      onDragFinished={onDragFinished}
+    >
       <div>
-        <div style={{ height: '50%' }}>
+        <div style={{ height: '70%' }}>
           <Editor
             source={source}
             setSource={setSource}
@@ -110,7 +124,7 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
             setPosition={setPosition}
           />
         </div>
-        <div style={{ height: '50%', overflow: 'auto' }}>
+        <div style={{ height: '30%', overflow: 'auto' }}>
           <pre>
             {JSON.stringify(position)}
             <br />
@@ -118,7 +132,8 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
           </pre>
         </div>
       </div>
-      <Canvas scene={scene} />
+      {/* <Canvas scene={scene} /> */}
+      <SceneViewer source={source} isResizing={isResizing} />
     </SplitPane>
   );
 };
@@ -146,7 +161,11 @@ export const startEditorApp = (scene: Scene) => {
  */
 const findSource = async (): Promise<string> => {
   for (const script of document.querySelectorAll('script')) {
-    if (script.innerText.match(/scene\([\s\S]*?\)[\s\S]*?\.render\(\)/)) {
+    if (
+      script.innerText.match(
+        /scene\([\s\S]*?\)[\s\S]*?\.renderT?o?\([\s\S]*?\)/
+      )
+    ) {
       return Promise.resolve(script.innerText);
     }
   }
