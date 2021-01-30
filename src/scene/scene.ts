@@ -6,6 +6,7 @@ import { ground } from './ground';
 
 import type {
   BabylonScene,
+  SceneFunction,
   Scene,
   SceneObject,
   MutableSceneObject,
@@ -13,7 +14,9 @@ import type {
   Mesh,
 } from '../types';
 
-export const scene = (...objects: Array<SceneObject>): Scene => ({
+export const scene: SceneFunction = ((
+  ...objects: Array<SceneObject>
+): Scene => ({
   _createCamera: null,
   _createEnvironment: null,
   _createGround: null,
@@ -82,61 +85,62 @@ export const scene = (...objects: Array<SceneObject>): Scene => ({
       /* webpackChunkName: "render" */
       './render'
     );
-    render.call(this);
+    const babylonScene = await render.call(this);
+    Object.assign(scene, { babylon: babylonScene, self: this });
   },
-});
+})) as SceneFunction;
 
-scene.objects = {
-  get(name: string): MutableSceneObject | null {
-    const scene = (window as any)._scene as BabylonScene;
-    const mesh = scene.getMeshByName(name);
-    return mesh === null ? null : createMutableSceneObject(mesh as Mesh);
-  },
+// scene.objects = {
+//   get(name: string): MutableSceneObject | null {
+//     const scene = (window as any)._scene as BabylonScene;
+//     const mesh = scene.getMeshByName(name);
+//     return mesh === null ? null : createMutableSceneObject(mesh as Mesh);
+//   },
 
-  all(): Array<MutableSceneObject> {
-    const scene = (window as any)._scene as BabylonScene;
-    return scene.meshes.map(createMutableSceneObject);
-  },
-};
+//   all(): Array<MutableSceneObject> {
+//     const scene = (window as any)._scene as BabylonScene;
+//     return scene.meshes.map(createMutableSceneObject);
+//   },
+// };
 
-const createMutableSceneObject = (mesh: Mesh): MutableSceneObject => ({
-  mesh,
-  name: mesh.name,
+// const createMutableSceneObject = (mesh: Mesh): MutableSceneObject => ({
+//   mesh,
+//   name: mesh.name,
 
-  position(v) {
-    if (!v) {
-      const { x, y, z } = mesh.position;
-      return [x, y, z];
-    }
+//   position(v) {
+//     if (!v) {
+//       const { x, y, z } = mesh.position;
+//       return [x, y, z];
+//     }
 
-    mesh.position = new Vector3(...v);
-    return this;
-  },
+//     mesh.position = new Vector3(...v);
+//     return this;
+//   },
 
-  scaling(v) {
-    if (!v) {
-      const { x, y, z } = mesh.scaling;
-      return [x, y, z];
-    }
+//   scaling(v) {
+//     if (!v) {
+//       const { x, y, z } = mesh.scaling;
+//       return [x, y, z];
+//     }
 
-    mesh.scaling = new Vector3(...v);
-    return this;
-  },
+//     mesh.scaling = new Vector3(...v);
+//     return this;
+//   },
 
-  rotation(v) {
-    if (!v) {
-      const { x, y, z } = mesh.rotation;
-      return [x, y, z];
-    }
+//   rotation(v) {
+//     if (!v) {
+//       const { x, y, z } = mesh.rotation;
+//       return [x, y, z];
+//     }
 
-    mesh.rotation = new Vector3(...v);
-    return this;
-  },
+//     mesh.rotation = new Vector3(...v);
+//     return this;
+//   },
 
-  material() {
-    return this;
-  },
+//   material() {
+//     return this;
+//   },
 
-  replace(...objects) {},
-  remove() {},
-});
+//   replace(...objects) {},
+//   remove() {},
+// });

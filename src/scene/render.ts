@@ -83,7 +83,7 @@ export async function renderTo(
           }
         : pointerInfo;
 
-    for (let handler of self._eventHandlers[key]) {
+    for (const handler of self._eventHandlers[key]) {
       const result = handler(pInfo);
       if (result === false) {
         break;
@@ -94,7 +94,7 @@ export async function renderTo(
   babylonScene.actionManager = new ActionManager(babylonScene);
   babylonScene.actionManager.registerAction(
     new ExecuteCodeAction(ActionManager.OnEveryFrameTrigger, () => {
-      for (let handler of self._eventHandlers.frame) {
+      for (const handler of self._eventHandlers.frame) {
         handler();
       }
     })
@@ -111,7 +111,11 @@ export async function renderTo(
     Promise.all([
       self._createSceneObjects(babylonScene),
       self._createLights(babylonScene),
-    ]).then(() => self._eventHandlers.init.forEach((handler) => handler()));
+    ]).then(() => {
+      for (const handler of self._eventHandlers.init) {
+        handler();
+      }
+    });
 
     engine.runRenderLoop(() => babylonScene.render());
     if ((window as any).ResizeObserver) {
@@ -174,10 +178,7 @@ export async function render() {
   //
   // Render scene
   //
-  const scene = await self.renderTo(canvas);
-
-  // For debugging. Remove when `scene.objects` interface becomes sufficient
-  (window as any)._scene = scene;
+  const babylonScene = await self.renderTo(canvas);
 
   //
   // Load inspector on crudely detecting `debug` URL parameter
@@ -192,10 +193,10 @@ export async function render() {
       '@babylonjs/inspector'
     ).then(() => {
       const toggle = () => {
-        if (scene.debugLayer.isVisible()) {
-          scene.debugLayer.hide();
+        if (babylonScene.debugLayer.isVisible()) {
+          babylonScene.debugLayer.hide();
         } else {
-          scene.debugLayer.show({ embedMode: true });
+          babylonScene.debugLayer.show({ embedMode: true });
           document.body.style.margin = '0';
           document.body.style.padding = '0';
           document.body.style.height = '100%';
@@ -206,4 +207,6 @@ export async function render() {
       document.addEventListener('keyup', (e) => e.code === 'KeyI' && toggle());
     });
   }
+
+  return babylonScene;
 }

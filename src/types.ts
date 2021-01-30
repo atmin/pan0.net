@@ -31,6 +31,11 @@ export type {
 
 export type SceneDecorator = (scene: BabylonScene) => void;
 
+export type SceneFunction = ((...objects: Array<SceneObject>) => Scene) & {
+  babylon: BabylonScene;
+  self: Scene;
+};
+
 export interface Scene {
   _createCamera: SceneDecorator;
   _createEnvironment: SceneDecorator;

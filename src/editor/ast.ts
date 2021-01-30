@@ -34,7 +34,9 @@ interface Identifier {
 }
 
 export const findSceneObjects = (ast: AST | null) => {
-  if (!ast) return [];
+  if (!ast) {
+    return [];
+  }
 
   const sceneExpressions = ast.program.body.filter(
     (node: ASTNode) =>
@@ -46,7 +48,9 @@ export const findSceneObjects = (ast: AST | null) => {
         node.expression.callee.property.name === 'renderTo')
   ) as [ExpressionStatement];
 
-  console.assert(sceneExpressions.length === 1);
+  if (sceneExpressions.length !== 1) {
+    return [];
+  }
 
   let sceneCall = sceneExpressions[0].expression.callee as MemberExpression;
   while (

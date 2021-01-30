@@ -1,13 +1,18 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 
-import { Scene } from '../types';
+import { AST, findSceneObjects } from './ast';
+import { SceneFunction } from '../types';
+import { Vector3 } from '@babylonjs/core/Maths/math';
 
-export const SceneViewer: React.FC<{ source: string; isResizing: boolean }> = ({
-  source,
-  isResizing,
-}) => {
+export const SceneViewer: React.FC<{
+  source: string;
+  ast: AST;
+  editorPosition: any;
+  isResizing: boolean;
+}> = ({ source, ast, editorPosition, isResizing }) => {
   const frameRef = useRef<HTMLIFrameElement | null>(null);
-  const [scene, setScene] = useState<Scene | null>(null);
+  const [position, setPosition] = useState<Vector3 | null>(null);
+  const [rotation, setRotation] = useState<Vector3 | null>(null);
   const timeoutRef = useRef(null);
   const [debouncedSource, setDebouncedSource] = useState<string>(source);
 
@@ -15,34 +20,40 @@ export const SceneViewer: React.FC<{ source: string; isResizing: boolean }> = ({
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
+    if (!findSceneObjects(ast).length) {
+      return;
+    }
     timeoutRef.current = setTimeout(() => {
       setDebouncedSource(source);
       timeoutRef.current = null;
     }, 2000);
-  }, [source]);
+  }, [source, ast, editorPosition]);
 
   useEffect(() => {
-    const newScene = ((frameRef.current.contentWindow as unknown) as {
-      scene: Scene;
-    }).scene;
+    const { scene } = frameRef.current.contentWindow as any;
+    setPosition(scene?.babylon?.activeCamera?.position);
+    setRotation(scene?.babylon?.activeCamera?.rotation);
+  }, [frameRef, debouncedSource]);
 
-    // if (scene && newScene) {
-    //   newScene.activeCamera.position = scene.activeCamera.position.clone();
-    //   newScene.activeCamera.rotation = scene.activeCamera.rotation.clone();
-    // }
-
-    setScene(newScene);
-  }, [debouncedSource]);
+  const onLoad = useCallback(() => {
+    const { scene } = frameRef.current.contentWindow as any;
+    if (position) {
+      scene.babylon.activeCamera.position = position;
+    }
+    if (rotation) {
+      scene.babylon.activeCamera.rotation = rotation;
+    }
+  }, [position, rotation]);
 
   const srcDoc = `
-  <script src="${
-    process.env.NODE_ENV === 'development'
-      ? '../latest/main.js'
-      : 'https://pan0.net/latest/main.js'
-  }"></script>
-  <script>
-    ${debouncedSource}
-  </script>
+    <script src="${
+      process.env.NODE_ENV === 'development'
+        ? '../latest/main.js'
+        : 'https://pan0.net/latest/main.js'
+    }"></script>
+    <script>
+      ${debouncedSource}
+    </script>
   `;
 
   return (
@@ -56,6 +67,7 @@ export const SceneViewer: React.FC<{ source: string; isResizing: boolean }> = ({
           ...(isResizing && { display: 'none' }),
         }}
         ref={frameRef}
+        onLoad={onLoad}
       >
         This browser does not support iframes
       </iframe>

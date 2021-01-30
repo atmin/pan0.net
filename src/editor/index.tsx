@@ -67,25 +67,6 @@ const css = document.createElement('style');
 css.appendChild(document.createTextNode(styles));
 document.head.appendChild(css);
 
-const Canvas: React.FC<{ scene: Scene }> = ({ scene }) => {
-  const ref = useRef<HTMLCanvasElement | null>(null);
-  useEffect(() => {
-    if (ref) {
-      scene.renderTo(ref.current).then((_scene) => {
-        // For debugging. Remove when `scene.objects` interface becomes sufficient
-        (window as any)._scene = _scene;
-      });
-    }
-  }, [ref]);
-  return (
-    <canvas
-      touch-action="none"
-      style={{ width: '100%', height: '100%' }}
-      ref={ref}
-    ></canvas>
-  );
-};
-
 const App: React.FC<{ scene: Scene }> = ({ scene }) => {
   const [source, setSource] = useState<string>('');
   const [ast, setAST] = useState<AST | null>(null);
@@ -95,8 +76,8 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
   useEffect(() => {
     findSource().then((src) => {
       const { source, ast } = format(src);
-      setSource(source);
       setAST(ast);
+      setSource(source);
       setPosition({ lineNumber: 1, column: 1 });
     });
   }, []);
@@ -142,7 +123,12 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
         </div>
       </div>
       {/* <Canvas scene={scene} /> */}
-      <SceneViewer source={source} isResizing={isResizing} />
+      <SceneViewer
+        source={source}
+        ast={ast}
+        editorPosition={position}
+        isResizing={isResizing}
+      />
     </SplitPane>
   );
 };
