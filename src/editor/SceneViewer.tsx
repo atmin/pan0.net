@@ -11,9 +11,11 @@ export const SceneViewer: React.FC<{
   isResizing: boolean;
 }> = ({ source, ast, editorPosition, isResizing }) => {
   const frameRef = useRef<HTMLIFrameElement | null>(null);
+  const timeoutRef = useRef(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [background, setBackground] = useState<string>('gray');
   const [position, setPosition] = useState<Vector3 | null>(null);
   const [rotation, setRotation] = useState<Vector3 | null>(null);
-  const timeoutRef = useRef(null);
   const [debouncedSource, setDebouncedSource] = useState<string>(source);
 
   useEffect(() => {
@@ -31,8 +33,17 @@ export const SceneViewer: React.FC<{
 
   useEffect(() => {
     const { scene } = frameRef.current.contentWindow as any;
+    scene?.babylon?.onAfterRenderObservable?.addOnce(() => {
+      const canvas = frameRef.current.contentDocument.querySelector('canvas');
+      setBackground(`url("${canvas.toDataURL()}")`);
+    });
+  }, [source]);
+
+  useEffect(() => {
+    const { scene } = frameRef.current.contentWindow as any;
     setPosition(scene?.babylon?.activeCamera?.position);
     setRotation(scene?.babylon?.activeCamera?.rotation);
+    setIsLoading(true);
   }, [frameRef, debouncedSource]);
 
   const onLoad = useCallback(() => {
@@ -43,6 +54,7 @@ export const SceneViewer: React.FC<{
     if (rotation) {
       scene.babylon.activeCamera.rotation = rotation;
     }
+    setIsLoading(false);
   }, [position, rotation]);
 
   const srcDoc = `
@@ -57,14 +69,14 @@ export const SceneViewer: React.FC<{
   `;
 
   return (
-    <div style={{ width: '100%', height: '100%', background: 'gray' }}>
+    <div style={{ width: '100%', height: '100%', background }}>
       <iframe
         srcDoc={srcDoc}
         style={{
           border: 'none',
           width: '100%',
           height: '100%',
-          ...(isResizing && { display: 'none' }),
+          ...((isResizing || isLoading) && { display: 'none' }),
         }}
         ref={frameRef}
         onLoad={onLoad}

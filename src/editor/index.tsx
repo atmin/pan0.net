@@ -122,7 +122,6 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
           ></textarea>
         </div>
       </div>
-      {/* <Canvas scene={scene} /> */}
       <SceneViewer
         source={source}
         ast={ast}
