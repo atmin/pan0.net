@@ -83,7 +83,7 @@ export const SceneViewer: React.FC<{
           width: '100%',
           height: '100%',
           ...(isResizing && { pointerEvents: 'none' }),
-          ...(isLoading && { display: 'none' }),
+          ...(isLoading && { opacity: 0 }),
         }}
         ref={frameRef}
         onLoad={onLoad}

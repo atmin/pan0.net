@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import babel from 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
 import MonacoEditor from '@monaco-editor/react';
