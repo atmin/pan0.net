@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import SplitPane from 'react-split-pane';
 
 import { Scene } from '../types';
+import { AST, findSceneObjects } from './ast';
 import { SceneViewer } from './SceneViewer';
 import { Editor, EditorPosition, format } from './Editor';
 
@@ -87,7 +88,7 @@ const Canvas: React.FC<{ scene: Scene }> = ({ scene }) => {
 
 const App: React.FC<{ scene: Scene }> = ({ scene }) => {
   const [source, setSource] = useState<string>('');
-  const [ast, setAST] = useState(null);
+  const [ast, setAST] = useState<AST | null>(null);
   const [position, setPosition] = useState<EditorPosition>(null);
   const [isResizing, setIsResizing] = useState<boolean>(false);
 
@@ -124,12 +125,20 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
             setPosition={setPosition}
           />
         </div>
-        <div style={{ height: '30%', overflow: 'auto' }}>
-          <pre>
-            {JSON.stringify(position)}
-            <br />
-            {JSON.stringify(ast, null, 2)}
-          </pre>
+        <div
+          style={{ height: '30%', display: 'flex', flexDirection: 'column' }}
+        >
+          <div>{JSON.stringify(position)}</div>
+          {/* <textarea
+            style={{ flexGrow: 1 }}
+            value={JSON.stringify(ast, null, 2)}
+            readOnly
+          ></textarea> */}
+          <textarea
+            style={{ flexGrow: 1 }}
+            value={JSON.stringify(findSceneObjects(ast).length, null, 2)}
+            readOnly
+          ></textarea>
         </div>
       </div>
       {/* <Canvas scene={scene} /> */}

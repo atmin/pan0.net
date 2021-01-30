@@ -3,8 +3,10 @@ import babel from 'prettier/parser-babel';
 import prettier from 'prettier/standalone';
 import MonacoEditor from '@monaco-editor/react';
 
+import { AST } from './ast';
+
 export const format = (text: string) => {
-  let ast;
+  let ast: AST;
   const source = prettier.format(text, {
     parser(text, { babel }) {
       ast = babel(text);

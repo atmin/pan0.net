@@ -5,7 +5,11 @@ export const SceneViewer: React.FC<{ source: string; isResizing: boolean }> = ({
   isResizing,
 }) => {
   const srcDoc = `
-  <script src="https://pan0.net/latest/main.js"></script>
+  <script src="${
+    process.env.NODE_ENV === 'development'
+      ? '../latest/main.js'
+      : 'https://pan0.net/latest/main.js'
+  }"></script>
   <script>
     ${source}
   </script>
