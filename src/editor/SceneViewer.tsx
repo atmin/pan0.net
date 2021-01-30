@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 
 import { AST, findSceneObjects } from './ast';
-import { SceneFunction } from '../types';
 import { Vector3 } from '@babylonjs/core/Maths/math';
 
 export const SceneViewer: React.FC<{
@@ -69,14 +68,22 @@ export const SceneViewer: React.FC<{
   `;
 
   return (
-    <div style={{ width: '100%', height: '100%', background }}>
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        background,
+        ...(isLoading && { filter: 'grayscale(100%)' }),
+      }}
+    >
       <iframe
         srcDoc={srcDoc}
         style={{
           border: 'none',
           width: '100%',
           height: '100%',
-          ...((isResizing || isLoading) && { display: 'none' }),
+          ...(isResizing && { pointerEvents: 'none' }),
+          ...(isLoading && { display: 'none' }),
         }}
         ref={frameRef}
         onLoad={onLoad}

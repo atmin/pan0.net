@@ -117,7 +117,9 @@ export async function renderTo(
       }
     });
 
-    engine.runRenderLoop(() => babylonScene.render());
+    engine.runRenderLoop(() => {
+      babylonScene.render();
+    });
     if ((window as any).ResizeObserver) {
       let timeout = null;
       const observer = new (window as any).ResizeObserver(

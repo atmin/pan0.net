@@ -63,6 +63,16 @@ export const Editor: React.FC<{
         },
       });
 
+      editor.addAction({
+        id: 'open',
+        label: 'Open',
+        keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_O],
+        run() {
+          const value = localStorage.getItem(location.pathname);
+          editor.setValue(value);
+        },
+      });
+
       editor.onDidChangeCursorPosition(({ position }) => {
         setPosition(position);
       });
