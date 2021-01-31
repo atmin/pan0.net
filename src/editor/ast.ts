@@ -62,3 +62,10 @@ export const findSceneObjects = (ast: AST | null) => {
 
   return sceneCall.object.arguments;
 };
+
+export const astId = (node: ASTNode): string => {
+  return '';
+};
+
+// TODO: remove
+Object.assign(window, { findSceneObjects, astId });

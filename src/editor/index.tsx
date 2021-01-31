@@ -77,6 +77,8 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
     findSource().then((src) => {
       const { source, ast } = format(src);
       setAST(ast);
+      // TODO: remove
+      Object.assign(window, { ast });
       setSource(source);
       setPosition({ lineNumber: 1, column: 1 });
     });
@@ -97,30 +99,13 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
       onDragStarted={onDragStarted}
       onDragFinished={onDragFinished}
     >
-      <div>
-        <div style={{ height: '70%' }}>
-          <Editor
-            source={source}
-            setSource={setSource}
-            setAST={setAST}
-            setPosition={setPosition}
-          />
-        </div>
-        <div
-          style={{ height: '30%', display: 'flex', flexDirection: 'column' }}
-        >
-          <div>{JSON.stringify(position)}</div>
-          {/* <textarea
-            style={{ flexGrow: 1 }}
-            value={JSON.stringify(ast, null, 2)}
-            readOnly
-          ></textarea> */}
-          <textarea
-            style={{ flexGrow: 1 }}
-            value={JSON.stringify(findSceneObjects(ast).length, null, 2)}
-            readOnly
-          ></textarea>
-        </div>
+      <div style={{ height: '100%' }}>
+        <Editor
+          source={source}
+          setSource={setSource}
+          setAST={setAST}
+          setPosition={setPosition}
+        />
       </div>
       <SceneViewer
         source={source}
