@@ -1,94 +1,87 @@
-import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { camera } from './camera';
 import { environment } from './environment';
 import { lights } from './lights';
 import { ground } from './ground';
 
-import type {
-  BabylonScene,
-  SceneFunction,
-  Scene,
-  SceneObject,
-  MutableSceneObject,
-  AbstractMesh,
-  Mesh,
-} from '../types';
+import type { SceneFunction, Scene, SceneObject, Mesh } from '../types';
 
-export const scene: SceneFunction = ((
-  ...objects: Array<SceneObject>
-): Scene => ({
-  _createCamera: null,
-  _createEnvironment: null,
-  _createGround: null,
-  _createLights: null,
+export const scene: SceneFunction = Object.assign(
+  (...objects: Array<SceneObject>): Scene => ({
+    _createCamera: null,
+    _createEnvironment: null,
+    _createGround: null,
+    _createLights: null,
 
-  _eventHandlers: {
-    init: [],
-    frame: [],
-    pointerdown: [],
-    pointerup: [],
-    pointermove: [],
-    pointerwheel: [],
-    pointerpick: [],
-    pointertap: [],
-    pointerdoubletap: [],
-  },
-  _enableDebug: true,
-  _enableEditor: true,
+    _eventHandlers: {
+      init: [],
+      frame: [],
+      pointerdown: [],
+      pointerup: [],
+      pointermove: [],
+      pointerwheel: [],
+      pointerpick: [],
+      pointertap: [],
+      pointerdoubletap: [],
+    },
+    _enableDebug: true,
+    _enableEditor: true,
 
-  _createSceneObjects(scene): Promise<Array<Mesh>> {
-    return Promise.all(
-      objects
-        .filter((obj) => typeof obj.appendTo === 'function')
-        .map((obj) => obj.appendTo(scene))
-    );
-  },
-
-  camera,
-  environment,
-  lights,
-  ground,
-
-  on(event, handler) {
-    if (!(event in this._eventHandlers)) {
-      console.error(
-        `scene(...).on(event, handler): Event must be one of ${Object.keys(
-          this._eventHandlers
-        ).join(', ')}`
+    _createSceneObjects(scene): Promise<Array<Mesh>> {
+      return Promise.all(
+        objects
+          .filter((obj) => typeof obj.appendTo === 'function')
+          .map((obj) => obj.appendTo(scene))
       );
-    } else {
-      this._eventHandlers[event].push(handler);
-    }
-    return this;
-  },
+    },
 
-  disableDebug() {
-    this._enableDebug = false;
-    return this;
-  },
+    camera,
+    environment,
+    lights,
+    ground,
 
-  disableEdit() {
-    this._enableEditor = false;
-    return this;
-  },
+    on(event, handler) {
+      if (!(event in this._eventHandlers)) {
+        console.error(
+          `scene(...).on(event, handler): Event must be one of ${Object.keys(
+            this._eventHandlers
+          ).join(', ')}`
+        );
+      } else {
+        this._eventHandlers[event].push(handler);
+      }
+      return this;
+    },
 
-  async renderTo(canvas) {
-    const { renderTo } = await import(
-      /* webpackChunkName: "render" */
-      './render'
-    );
-    return renderTo.call(this, canvas);
-  },
+    disableDebug() {
+      this._enableDebug = false;
+      return this;
+    },
 
-  async render() {
-    const { render } = await import(
-      /* webpackChunkName: "render" */
-      './render'
-    );
-    const babylonScene = await render.call(this);
-    Object.assign(scene, { babylon: babylonScene, self: this });
-  },
-})) as SceneFunction;
+    disableEdit() {
+      this._enableEditor = false;
+      return this;
+    },
+
+    async renderTo(canvas) {
+      const { renderTo } = await import(
+        /* webpackChunkName: "render" */
+        './render'
+      );
+      return renderTo.call(this, canvas);
+    },
+
+    async render() {
+      const { render } = await import(
+        /* webpackChunkName: "render" */
+        './render'
+      );
+      const babylonScene = await render.call(this);
+      Object.assign(scene, { babylon: babylonScene, self: this });
+    },
+  }),
+
+  { babylon: null, self: null }
+);
 
 // scene.objects = {
 //   get(name: string): MutableSceneObject | null {
