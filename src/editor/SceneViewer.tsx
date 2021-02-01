@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 
-import { AST, findSceneObjects } from './ast';
 import { Vector3 } from '@babylonjs/core/Maths/math';
+
+import { AST, findSceneObjects } from './ast';
 
 export const SceneViewer: React.FC<{
   source: string;

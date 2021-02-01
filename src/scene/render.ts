@@ -3,7 +3,9 @@ import '@babylonjs/core/Collisions/collisionCoordinator';
 import '@babylonjs/core/Materials/standardMaterial';
 // import '@babylonjs/core/Rendering/edgesRenderer';
 import '@babylonjs/core/Materials/Textures/Loaders/envTextureLoader';
-// import '@babylonjs/core/Helpers/sceneHelpers';
+// importEffectLayerSceneComponent '@babylonjs/core/Helpers/sceneHelpers';
+// import '@babylonjs/core/Rendering/boundingBoxRenderer';
+// import '@babylonjs/core/Layers/effectLayerSceneComponent';
 import {
   PointerEventTypes,
   PointerInfo,
@@ -22,7 +24,10 @@ import type { Scene } from '../types';
 export async function renderTo(
   canvas: HTMLCanvasElement
 ): Promise<BabylonScene> {
-  const engine = new Engine(canvas);
+  const engine = new Engine(canvas, true, {
+    // Needed for highlight layer
+    stencil: true,
+  });
   const babylonScene = new BabylonScene(engine);
 
   const self = this as Scene;

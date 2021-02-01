@@ -1,5 +1,7 @@
 // https://astexplorer.net/
 
+// https://cancerberosgx.github.io/demos/cannabis/typescript-ast-query-editor/
+
 export interface AST {
   program: { body: Array<object> };
 }
@@ -33,11 +35,7 @@ interface Identifier {
   name: string;
 }
 
-export const findSceneObjects = (ast: AST | null) => {
-  if (!ast) {
-    return [];
-  }
-
+export const findSceneExpression = (ast: AST): ExpressionStatement | null => {
   const sceneExpressions = ast.program.body.filter(
     (node: ASTNode) =>
       node.type === 'ExpressionStatement' &&
@@ -48,11 +46,20 @@ export const findSceneObjects = (ast: AST | null) => {
         node.expression.callee.property.name === 'renderTo')
   ) as [ExpressionStatement];
 
-  if (sceneExpressions.length !== 1) {
+  if (sceneExpressions.length === 1) {
+    return sceneExpressions[0];
+  }
+  return null;
+};
+
+export const findSceneObjects = (ast: AST | null) => {
+  if (!ast) {
     return [];
   }
 
-  let sceneCall = sceneExpressions[0].expression.callee as MemberExpression;
+  const sceneExpression = findSceneExpression(ast);
+
+  let sceneCall = sceneExpression.expression.callee as MemberExpression;
   while (
     sceneCall.type === 'MemberExpression' &&
     sceneCall.object.callee.type !== 'Identifier'
@@ -68,4 +75,4 @@ export const astId = (node: ASTNode): string => {
 };
 
 // TODO: remove
-Object.assign(window, { findSceneObjects, astId });
+Object.assign(window, { findSceneExpression, findSceneObjects, astId });

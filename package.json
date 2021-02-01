@@ -33,12 +33,14 @@
     "@babylonjs/inspector": "^4.2.0",
     "@babylonjs/loaders": "^4.2.0",
     "@monaco-editor/react": "^4.0.7",
+    "esquery": "^1.3.1",
     "pepjs": "^0.5.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-split-pane": "^0.1.92"
   },
   "devDependencies": {
+    "@types/esquery": "^1.0.1",
     "@types/prettier": "^2.1.6",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",

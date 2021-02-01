@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import SplitPane from 'react-split-pane';
+import query from 'esquery';
+
+import '@babylonjs/core/Rendering/boundingBoxRenderer';
 
 import { Scene } from '../types';
 import { AST, findSceneObjects } from './ast';
@@ -78,7 +81,7 @@ const App: React.FC<{ scene: Scene }> = ({ scene }) => {
       const { source, ast } = format(src);
       setAST(ast);
       // TODO: remove
-      Object.assign(window, { ast });
+      Object.assign(window, { ast, query });
       setSource(source);
       setPosition({ lineNumber: 1, column: 1 });
     });
